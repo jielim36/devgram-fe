@@ -1,8 +1,118 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import AppTitle from "@/components/appTitle/AppTitle";
+import "@/style/color.css"
+import GithubLightIcon from "@/assets/icon/github-light.svg";
+import GithubDarkIcon from "@/assets/icon/github-dark.svg";
+import GoogleIcon from "@/assets/icon/google.svg";
+import ThemeToggleButton from "@/components/ThemeToggleButton/ThemeToggleButton";
+import { useTheme } from "@/utils/ThemeProvider";
+
 const Login = () => {
 
+    const { theme } = useTheme();
+
+    const handleLogin = (provider: string) => {
+        window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
+    };
+
     return (
-        <h1>Login</h1>
+        <>
+            <ThemeToggleButton className="absolute top-1 right-1" />
+            <div className={`w-screen h-screen flex justify-center items-center ${theme === 'light' ? "bg-gradient" : "bg-gradient-dark"}`}>
+                <Card className="w-[300px] sm:w-[400px] flex flex-col p-5 gap-4">
+                    <AppTitle className={"text-center"} defaultColor={false} />
+                    <LoginForm />
+                    <p className="text-center text-sm leading-none pt-4">Login with third-party</p>
+                    <div className="flex flex-row gap-4 justify-center">
+                        <Button variant="outline" size="icon" onClick={() => handleLogin('github')}>
+                            <img src={theme === 'light' ? GithubLightIcon : GithubDarkIcon} alt="" width={48} />
+                        </Button>
+                        <Button variant="outline" size="icon" onClick={() => handleLogin('google')}>
+                            <img src={GoogleIcon} alt="" width={48} />
+                        </Button>
+                    </div>
+                </Card>
+            </div>
+        </>
     );
+
+}
+
+export const userFormSchema = z.object({
+    username: z.string().min(5, {
+        message: "Username must be at least 5 characters.",
+    }).max(24, {
+        message: "Username must be at most 24 characters.",
+    }),
+    password: z.string().min(8, {
+        message: "Password must be at least 8 characters.",
+    }).max(36, {
+        message: "Password must be at most 36 characters.",
+    }),
+});
+
+const LoginForm = () => {
+
+    const form = useForm<z.infer<typeof userFormSchema>>({
+        resolver: zodResolver(userFormSchema),
+        defaultValues: {
+            username: "",
+            password: "",
+        },
+    })
+
+    function onSubmit(values: z.infer<typeof userFormSchema>) {
+        console.log(values)
+    }
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Username</FormLabel>
+                            <FormControl>
+                                <Input placeholder="" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                                <Input type="password" placeholder="" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit" className="bg-gradient w-full ">Login</Button>
+            </form>
+        </Form>
+    )
 
 }
 
