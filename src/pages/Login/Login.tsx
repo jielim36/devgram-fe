@@ -39,10 +39,10 @@ const Login = () => {
                     <p className="text-center text-sm leading-none pt-4">Login with third-party</p>
                     <div className="flex flex-row gap-4 justify-center">
                         <Button variant="outline" size="icon" onClick={() => handleLogin('github')}>
-                            <img src={theme === 'light' ? GithubLightIcon : GithubDarkIcon} alt="" width={48} />
+                            <img src={theme === 'light' ? GithubLightIcon : GithubDarkIcon} alt="" width={32} />
                         </Button>
                         <Button variant="outline" size="icon" onClick={() => handleLogin('google')}>
-                            <img src={GoogleIcon} alt="" width={48} />
+                            <img src={GoogleIcon} alt="" width={32} />
                         </Button>
                     </div>
                 </Card>
