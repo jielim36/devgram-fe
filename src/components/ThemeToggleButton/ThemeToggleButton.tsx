@@ -11,7 +11,7 @@ function ThemeToggleButton({ className }: { className?: string }) {
     const { setTheme, theme } = useTheme()
 
     return (
-        <Tabs defaultValue="light" className={`w-[104px] ${className}`}>
+        <Tabs defaultValue={theme} className={`w-[104px] ${className}`}>
             <TabsList className="flex justify-between relative rounded-full">
                 <Card
                     className={`absolute bottom-0 left-0 w-1/2 h-full transition-transform transform flex items-center justify-center
