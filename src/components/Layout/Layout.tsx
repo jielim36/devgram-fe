@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { Card } from "../ui/card";
 import { cn } from "@/lib/utils"
 // import Icons from "@/components/Icon/Icon"
@@ -28,7 +28,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { InboxIcon, PlusIcon, SearchIcon, SendIcon } from "lucide-react";
+import { ClapperboardIcon, HomeIcon, InboxIcon, PlusIcon, SearchIcon, SendIcon, TrendingUpIcon, UserCheckIcon, UserRoundIcon, UsersRoundIcon } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { useTheme } from "@/utils/ThemeProvider";
 import { Label } from "../ui/label";
@@ -37,12 +37,49 @@ import DotContainer from "../Dot/Dot";
 import { User } from "@/types";
 import { useGetMe } from "@/hooks/useUsers";
 
+
+type LeftSideNavigationItem = {
+    title: string;
+    icon: React.ReactNode;
+    href: string;
+}
+
+const LeftSideNavigationItems: LeftSideNavigationItem[] = [
+    {
+        title: "Home",
+        icon: <HomeIcon />,
+        href: "/",
+    },
+    {
+        title: "Popular",
+        icon: <TrendingUpIcon />,
+        href: "/popular",
+    },
+    {
+        title: "Reels",
+        icon: <ClapperboardIcon />,
+        href: "/reels",
+    },
+    {
+        title: "Following",
+        icon: <UsersRoundIcon />,
+        href: "/following",
+    },
+    {
+        title: "Profile",
+        icon: <UserRoundIcon />,
+        href: "/profile",
+    }
+]
+
 const Layout = () => {
 
+    const location = useLocation();
     const { theme } = useTheme();
     const [user, setUser] = useState<User | null>(null);
 
     const { data, isError } = useGetMe();
+
 
     useEffect(() => {
         if (data) {
@@ -57,8 +94,10 @@ const Layout = () => {
     if (!user) return "NO USER";
 
     return (
-        <>
-            <Card className="flex flex-row justify-between items-center h-14 rounded-none px-8">
+        <div className="h-screen w-screen flex flex-col">
+
+            {/* Top Navigation */}
+            <Card className="w-screen flex flex-row justify-between items-center h-14 rounded-none px-8">
                 <AppTitle className="flex-none text-white" defaultColor={theme === 'light'} />
                 <div className="relative w-96">
                     <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -74,8 +113,28 @@ const Layout = () => {
                     </div>
                 </div>
             </Card>
-            <Outlet />
-        </>
+
+            <div className="w-screen h-full flex flex-row">
+                {/* Side Navigation */}
+                <Card className="w-52 h-full rounded-none py-6">
+                    <ul className="flex flex-col gap-3">
+                        {LeftSideNavigationItems.map((item) => (
+                            <li key={item.title}>
+                                <Link to={item.href} className={`flex flex-row items-center gap-4 p-4 rounded-md hover:bg-accent hover:text-accent-foreground ${location.pathname === item.href ? "font-bold" : ""}`}>
+                                    {item.icon}
+                                    <span>{item.title}</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </Card>
+
+                {/* Content */}
+                <div>
+                    <Outlet />
+                </div>
+            </div>
+        </div>
     )
 }
 

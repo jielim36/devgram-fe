@@ -8,6 +8,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import Popular from '@/pages/Popular/Popular';
+import Reels from '@/pages/Reels/Reels';
+import Following from '@/pages/Following/Following';
+import Profile from '@/pages/Profile/Profile';
 
 function App() {
 
@@ -20,6 +24,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
+              <Route path='/popular' element={<Popular />} />
+              <Route path='/reels' element={<Reels />} />
+              <Route path='/following' element={<Following />} />
+              <Route path='/profile' element={<Profile />} />
             </Route>
             <Route path='/login' element={<Login />} />
           </Routes>
