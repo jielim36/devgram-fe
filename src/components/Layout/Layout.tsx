@@ -133,7 +133,8 @@ export function NavigationMenuComponent({ user }: { user: UserProps }) {
                         <NavigationMenuTrigger>
                             <SendIcon />
                         </NavigationMenuTrigger>
-                    } />
+                    }
+                    />
                     <NavigationMenuContent>
                         <ul className="flex flex-col w-80">
                             <ListItem href="/chat/1001">
@@ -173,9 +174,12 @@ export function NavigationMenuComponent({ user }: { user: UserProps }) {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger>
-                        <InboxIcon />
-                    </NavigationMenuTrigger>
+                    <DotContainer children={
+                        <NavigationMenuTrigger>
+                            <InboxIcon />
+                        </NavigationMenuTrigger>
+                    }
+                    />
                     <NavigationMenuContent>
                         <ul className="flex flex-col w-80">
                             {components.map((component) => (
