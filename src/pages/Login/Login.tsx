@@ -109,7 +109,7 @@ const LoginForm = () => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="bg-gradient w-full text-white ">Login</Button>
+                <Button type="submit" className="w-full">Login</Button>
             </form>
         </Form>
     )

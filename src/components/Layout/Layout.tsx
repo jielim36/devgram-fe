@@ -27,7 +27,13 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 import { ClapperboardIcon, HomeIcon, InboxIcon, PlusIcon, SearchIcon, SendIcon, TrendingUpIcon, UserCheckIcon, UserRoundIcon, UsersRoundIcon } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { useTheme } from "@/utils/ThemeProvider";
@@ -36,7 +42,8 @@ import { useEffect, useState } from "react";
 import DotContainer from "../Dot/Dot";
 import { User } from "@/types";
 import { useGetMe } from "@/hooks/useUsers";
-
+import { Separator } from "../ui/separator";
+import "@/style/color.css";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -80,6 +87,56 @@ const Layout = () => {
 
     const { data, isError } = useGetMe();
 
+    const stories = [
+        {
+            id: 1,
+            name: "Grace Ng",
+            avatar: user?.avatar_url,
+            stories: [
+                {
+                    id: 1,
+                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
+                    time: "2h",
+                },
+                {
+                    id: 2,
+                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
+                    time: "2h",
+                },
+                {
+                    id: 3,
+                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
+                    time: "2h",
+                },
+            ],
+        },
+        {
+            id: 2,
+            name: "Lim Yee Jie",
+            avatar: user?.avatar_url,
+            stories: [
+                {
+                    id: 1,
+                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
+                    time: "2h",
+                },
+                {
+                    id: 2,
+                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
+                    time: "2h",
+                },
+                {
+                    id: 3,
+                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
+                    time: "2h",
+                },
+            ],
+        },
+    ]
+
+
+
+
 
     useEffect(() => {
         if (data) {
@@ -97,13 +154,13 @@ const Layout = () => {
         <div className="h-screen w-screen flex flex-col">
 
             {/* Top Navigation */}
-            <Card className="w-screen flex flex-row justify-between items-center h-14 rounded-none px-8">
-                <AppTitle className="flex-none text-white" defaultColor={theme === 'light'} />
+            <Card className="w-screen flex flex-row justify-between items-center h-16 rounded-none px-8">
+                <AppTitle className="flex-none text-white" defaultColor={theme === 'light'} isBold={true} />
                 <div className="relative w-96">
                     <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search" className="pl-8" />
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
                     <Button className="bg-gradient">
                         <PlusIcon color="white" />
                     </Button>
@@ -116,7 +173,7 @@ const Layout = () => {
 
             <div className="w-screen h-full flex flex-row">
                 {/* Side Navigation */}
-                <Card className="w-52 h-full rounded-none py-6">
+                <Card className="w-52 h-full rounded-none py-4">
                     <ul className="flex flex-col gap-3">
                         {LeftSideNavigationItems.map((item) => (
                             <li key={item.title}>
@@ -127,6 +184,30 @@ const Layout = () => {
                             </li>
                         ))}
                     </ul>
+                    <Accordion type="single" defaultValue="stories" collapsible className="w-full px-4">
+                        <Separator />
+                        <AccordionItem value="stories">
+                            <AccordionTrigger>Stories</AccordionTrigger>
+                            <AccordionContent>
+                                <ul>
+                                    {stories.map((story) => (
+                                        <li key={story.id}>
+                                            <div className="flex flex-row items-center gap-3 py-1 rounded-md hover:bg-accent hover:text-accent-foreground">
+                                                <div className="bg-gradient-2 p-[2px] rounded-full">
+                                                    <div className="rounded-full p-[1px] card-color">
+                                                        <Avatar>
+                                                            <AvatarImage src={story.avatar} />
+                                                        </Avatar>
+                                                    </div>
+                                                </div>
+                                                <span>{story.name}</span>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </Card>
 
                 {/* Content */}
