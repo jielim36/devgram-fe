@@ -32,36 +32,29 @@ import { InboxIcon, PlusIcon, SearchIcon, SendIcon } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { useTheme } from "@/utils/ThemeProvider";
 import { Label } from "../ui/label";
-import axiosClient from "@/utils/axiosClient";
 import { useEffect, useState } from "react";
-import { UserProps } from "@/types/EntityType";
 import DotContainer from "../Dot/Dot";
+import { User } from "@/types";
+import { useGetMe } from "@/hooks/useUsers";
 
 const Layout = () => {
 
     const { theme } = useTheme();
-    const [user, setUser] = useState<UserProps | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
-    const fetchUser = async () => {
-        try {
-            const { data } = await axiosClient.get('/user/me');
-            setUser(data);
-            console.log(data);
-
-            if (!data) {
-                window.location.href = '/login';
-            }
-        } catch (error) {
-            console.error(error);
-            window.location.href = '/login';
-        }
-    }
+    const { data, isError } = useGetMe();
 
     useEffect(() => {
-        fetchUser();
-    }, []);
+        if (data) {
+            setUser(data.data);
+        }
+    }, [data]);
 
-    if (!user) return null
+    if (isError) {
+        window.location.href = '/login';
+    }
+
+    if (!user) return "NO USER";
 
     return (
         <>
@@ -71,12 +64,12 @@ const Layout = () => {
                     <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search" className="pl-8" />
                 </div>
-                <div className="flex gap-10">
+                <div className="flex gap-4">
                     <Button className="bg-gradient">
                         <PlusIcon color="white" />
                     </Button>
                     <NavigationMenuComponent user={user} />
-                    <div className="px-6">
+                    <div className="">
                         <ProfileMenu user={user} />
                     </div>
                 </div>
@@ -124,7 +117,7 @@ const components: { title: string; href: string; description: string }[] = [
     },
 ]
 
-export function NavigationMenuComponent({ user }: { user: UserProps }) {
+export function NavigationMenuComponent({ user }: { user: User }) {
     return (
         <NavigationMenu>
             <NavigationMenuList>
@@ -215,9 +208,9 @@ const ListItem = React.forwardRef<
                     {...props}
                 >
                     <div className="text-sm font-medium leading-none">{title}</div>
-                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                    <div className="text-sm leading-snug">
                         {children}
-                    </p>
+                    </div>
                 </a>
             </NavigationMenuLink>
         </li>
@@ -225,7 +218,7 @@ const ListItem = React.forwardRef<
 })
 ListItem.displayName = "ListItem"
 
-const ProfileMenu = ({ user }: { user: UserProps }) => {
+const ProfileMenu = ({ user }: { user: User }) => {
 
     const { theme, setTheme } = useTheme();
 

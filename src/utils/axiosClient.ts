@@ -30,10 +30,8 @@ const axiosClient: AxiosInstance = axios.create({
 //     }
 // );
 
-// 添加响应拦截器
 axiosClient.interceptors.response.use(
     (response: AxiosResponse): AxiosResponse => {
-        // 对响应数据做些什么
         return response;
     },
     (error: AxiosError): Promise<AxiosError> => {

@@ -1,4 +1,4 @@
-export type UserProps = {
+export type User = {
     id: number;
     github_id?: string;
     google_id?: string;
