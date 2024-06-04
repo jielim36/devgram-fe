@@ -44,6 +44,7 @@ import { User } from "@/types";
 import { useGetMe } from "@/hooks/useUsers";
 import { Separator } from "../ui/separator";
 import "@/style/color.css";
+import AvatarContainer from "../AvatarContainer/AvatarContainer";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -151,10 +152,10 @@ const Layout = () => {
     if (!user) return "NO USER";
 
     return (
-        <div className="h-screen w-screen flex flex-col">
+        <div className="min-h-scree h-full w-screen flex flex-col">
 
             {/* Top Navigation */}
-            <Card className="w-screen flex flex-row justify-between items-center h-16 rounded-none px-8">
+            <Card className="w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
                 <AppTitle className="flex-none text-white" defaultColor={theme === 'light'} isBold={true} />
                 <div className="relative w-96">
                     <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -171,9 +172,9 @@ const Layout = () => {
                 </div>
             </Card>
 
-            <div className="w-screen h-full flex flex-row">
+            <div className="relative w-screen h-full flex flex-row">
                 {/* Side Navigation */}
-                <Card className="w-52 h-full rounded-none py-4">
+                <Card className="fixed w-64 h-full rounded-none py-4 top-16">
                     <ul className="flex flex-col gap-3">
                         {LeftSideNavigationItems.map((item) => (
                             <li key={item.title}>
@@ -193,13 +194,7 @@ const Layout = () => {
                                     {stories.map((story) => (
                                         <li key={story.id}>
                                             <div className="flex flex-row items-center gap-3 py-1 rounded-md hover:bg-accent hover:text-accent-foreground">
-                                                <div className="bg-gradient-2 p-[2px] rounded-full">
-                                                    <div className="rounded-full p-[1px] card-color">
-                                                        <Avatar>
-                                                            <AvatarImage src={story.avatar} />
-                                                        </Avatar>
-                                                    </div>
-                                                </div>
+                                                <AvatarContainer avatar_url={story.avatar} hasStory={story.stories.length > 0} />
                                                 <span>{story.name}</span>
                                             </div>
                                         </li>
@@ -211,9 +206,9 @@ const Layout = () => {
                 </Card>
 
                 {/* Content */}
-                <div>
-                    <Outlet />
+                <div className="pt-16">
                 </div>
+                <Outlet />
             </div>
         </div>
     )
@@ -369,9 +364,7 @@ const ProfileMenu = ({ user }: { user: User }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="outline-0">
-                <Avatar className="select-none">
-                    <AvatarImage src={user.avatar_url} />
-                </Avatar>
+                <AvatarContainer avatar_url={user.avatar_url} hasStory={false} />
             </DropdownMenuTrigger>
             <DropdownMenuContent sideOffset={3} align="end" className=" w-48">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>

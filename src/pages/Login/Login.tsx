@@ -36,7 +36,7 @@ const Login = () => {
                 <Card className="w-[300px] sm:w-[400px] flex flex-col p-5 gap-4">
                     <AppTitle className={"text-center"} defaultColor={false} />
                     <LoginForm />
-                    <p className="text-center text-sm leading-none pt-4">Login with third-party</p>
+                    <p className="text-center text-sm leading-none pt-4 text-muted-foreground">Login with third-party</p>
                     <div className="flex flex-row gap-4 justify-center">
                         <Button variant="outline" size="icon" onClick={() => handleLogin('github')}>
                             <img src={theme === 'light' ? GithubLightIcon : GithubDarkIcon} alt="" width={32} />
