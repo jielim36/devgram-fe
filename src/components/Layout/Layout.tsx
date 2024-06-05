@@ -135,10 +135,6 @@ const Layout = () => {
         },
     ]
 
-
-
-
-
     useEffect(() => {
         if (data) {
             setUser(data.data);
@@ -152,10 +148,10 @@ const Layout = () => {
     if (!user) return "NO USER";
 
     return (
-        <div className="min-h-scree h-full w-screen flex flex-col">
+        <div className="min-h-screen h-full w-full flex flex-col">
 
             {/* Top Navigation */}
-            <Card className="w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
+            <Card className="fixed w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
                 <AppTitle className="flex-none text-white" defaultColor={theme === 'light'} isBold={true} />
                 <div className="relative w-96">
                     <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -172,7 +168,7 @@ const Layout = () => {
                 </div>
             </Card>
 
-            <div className="relative w-screen h-full flex flex-row">
+            <div className="relative w-screen h-screen flex flex-row">
                 {/* Side Navigation */}
                 <Card className="fixed w-64 h-full rounded-none py-4 top-16">
                     <ul className="flex flex-col gap-3">
@@ -206,9 +202,9 @@ const Layout = () => {
                 </Card>
 
                 {/* Content */}
-                <div className="pt-16">
+                <div className="relative pt-16 w-full h-full overflow-y-auto">
+                    <Outlet />
                 </div>
-                <Outlet />
             </div>
         </div>
     )

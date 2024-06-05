@@ -8,11 +8,23 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import { Button } from "../ui/button";
-import { BookMarkedIcon, BookmarkIcon, HeartIcon, MenuIcon, MessageCircleIcon, SendIcon, UserCircleIcon, UserRoundIcon } from "lucide-react";
+import { BookMarkedIcon, BookmarkIcon, EllipsisIcon, HeartIcon, MenuIcon, MessageCircleIcon, SendIcon, UserCircleIcon, UserRoundIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useState } from "react";
 import { Avatar, AvatarImage } from "../ui/avatar";
+import { Input } from "../ui/input";
+import FloatPostItem from "./FloatPostItem";
+import PostSwiper from "../Swiper/PostSwiper";
+
 type PostItemProps = {
     user: User;
     post: Post;
@@ -20,38 +32,19 @@ type PostItemProps = {
 
 const PostItem: React.FC<PostItemProps> = ({ user, post }) => {
 
-    const totalImages = post.images.length;
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-    const setCurrentIndex = (index: number) => {
-        setCurrentImageIndex(index);
-    }
-
     return (
         <Card className="flex flex-col">
-            <div className="flex flex-row gap-2 p-1 justify-center items-center">
+            <div className="flex flex-row gap-2 py-1 px-2 justify-center items-center">
                 <AvatarContainer avatar_url={user.avatar_url} hasStory={user.stories != undefined && user.stories?.length > 0} className="flex-none" />
                 <div className="flex-auto flex flex-col justify-center">
                     <p>{user.username}</p>
                 </div>
                 <Button variant="link" size={"icon"}>
-                    <MenuIcon />
+                    <EllipsisIcon />
                 </Button>
             </div>
-            <Carousel className="relative" setCurrentIndex={setCurrentIndex}>
-                <CarouselContent className="select-none">
-                    {post.images.map((image, index) => (
-                        <CarouselItem key={index}>
-                            <img src={image} alt="post" className="w-full h-[300px] object-cover" />
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                {totalImages > 1 && (
-                    <Badge className="absolute top-2 right-2">{currentImageIndex + 1}/{totalImages}</Badge>
-                )}
-                {/* <CarouselPrevious />
-                <CarouselNext /> */}
-            </Carousel>
+
+            <PostSwiper postImages={post.images} />
 
             {/* Interaction List */}
             <div className="flex flex-row justify-between">
@@ -59,9 +52,14 @@ const PostItem: React.FC<PostItemProps> = ({ user, post }) => {
                     <Button variant={"link"} size="icon">
                         <HeartIcon />
                     </Button>
-                    <Button variant={"link"} size="icon">
-                        <MessageCircleIcon />
-                    </Button>
+                    <Dialog>
+                        <DialogTrigger>
+                            <MessageCircleIcon />
+                        </DialogTrigger>
+                        <DialogContent className="p-2 w-3/4" disableCloseBtn>
+                            <FloatPostItem user={user} post={post} />
+                        </DialogContent>
+                    </Dialog>
                     <Button variant={"link"} size="icon">
                         <SendIcon />
                     </Button>
@@ -78,13 +76,34 @@ const PostItem: React.FC<PostItemProps> = ({ user, post }) => {
                         <UserRoundIcon className="bg-slate-200 rounded-full text-slate-500" />
                         <UserRoundIcon className="bg-stone-300 rounded-full text-stone-600 -translate-x-1/3" />
                     </div>
-                    <span>Liked by jetsonn_ and 15,375 others</span>
+                    <div>
+                        Liked by
+                        <span className="font-bold">
+                            {" "}jetsonn_ {" "}
+                        </span>
+                        and 15,375 others</div>
                 </div>
-                <span>{user.username} My monday moments!</span>
-                <span className="text-muted-foreground">View all 38 comments</span>
-                <div className="flex flex-col">
-                    <span>joshuaw_yaku 哈哈哈哈哈</span>
-                    <span>jetsonn_ wtf is this?</span>
+                <span className="line-clamp-2"><span className="font-bold">{user.username}</span> My monday moments! If you are a developer, please help me answer this survey!</span>
+                <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all 38 comments</span>
+                <div className="flex flex-col" onClick={() => { }}>
+                    <div className="flex flex-row gap-1">
+                        <p className="font-bold">joshuaw_yaku</p>
+                        <p className="line-clamp-1">哈哈哈哈哈</p>
+                    </div>
+                    <div className="flex flex-row gap-1">
+                        <p className="font-bold">jetsonn_</p>
+                        <p className="line-clamp-1">wtf is this? fsdsf sdfdsfsd fdsfsdfsd dsfdsfds dsfdsfsdf dsfdsfdsfsd dsfsdfds dsfsdfdsf dsfdsfsdf dfsdfsdfds dfsdfsd dsfsdfs</p>
+                    </div>
+                </div>
+                <div className="flex w-full items-center space-x-2 pt-4">
+                    <Dialog>
+                        <DialogTrigger className="w-full">
+                            <Input type="text" placeholder="Add comment" className="w-full" />
+                        </DialogTrigger>
+                        <DialogContent className="p-2 w-3/4" disableCloseBtn>
+                            <FloatPostItem user={user} post={post} />
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
 

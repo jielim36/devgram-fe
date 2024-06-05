@@ -11,9 +11,15 @@ dependencies:
   '@radix-ui/react-accordion':
     specifier: ^1.1.2
     version: registry.npmjs.org/@radix-ui/react-accordion@1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-aspect-ratio':
+    specifier: ^1.0.3
+    version: registry.npmjs.org/@radix-ui/react-aspect-ratio@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-avatar':
     specifier: ^1.0.4
     version: registry.npmjs.org/@radix-ui/react-avatar@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-dialog':
+    specifier: ^1.0.5
+    version: registry.npmjs.org/@radix-ui/react-dialog@1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-dropdown-menu':
     specifier: ^2.0.6
     version: registry.npmjs.org/@radix-ui/react-dropdown-menu@2.0.6(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -65,6 +71,9 @@ dependencies:
   react-router-dom:
     specifier: ^6.23.1
     version: registry.npmjs.org/react-router-dom@6.23.1(react-dom@18.3.1)(react@18.3.1)
+  swiper:
+    specifier: ^11.1.4
+    version: registry.npmjs.org/swiper@11.1.4
   tailwind-merge:
     specifier: ^2.3.0
     version: registry.npmjs.org/tailwind-merge@2.3.0
@@ -931,6 +940,30 @@ packages:
       react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
     dev: false
 
+  registry.npmjs.org/@radix-ui/react-aspect-ratio@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-fXR5kbMan9oQqMuacfzlGG/SQMcmMlZ4wrvpckv8SgUulD0MMpspxJrxg/Gp/ISV3JfV1AeSWTYK9GvxA4ySwA==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@radix-ui/react-aspect-ratio/-/react-aspect-ratio-1.0.3.tgz}
+    id: registry.npmjs.org/@radix-ui/react-aspect-ratio/1.0.3
+    name: '@radix-ui/react-aspect-ratio'
+    version: 1.0.3
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.24.6
+      '@radix-ui/react-primitive': registry.npmjs.org/@radix-ui/react-primitive@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@types/react': registry.npmjs.org/@types/react@18.3.3
+      '@types/react-dom': registry.npmjs.org/@types/react-dom@18.3.0
+      react: registry.npmjs.org/react@18.3.1
+      react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
+    dev: false
+
   registry.npmjs.org/@radix-ui/react-avatar@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-kVK2K7ZD3wwj3qhle0ElXhOjbezIgyl2hVvgwfIdexL3rN6zJmy5AqqIf+D31lxVppdzV8CjAfZ6PklkmInZLw==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@radix-ui/react-avatar/-/react-avatar-1.0.4.tgz}
     id: registry.npmjs.org/@radix-ui/react-avatar/1.0.4
@@ -1048,6 +1081,43 @@ packages:
       '@babel/runtime': registry.npmjs.org/@babel/runtime@7.24.6
       '@types/react': registry.npmjs.org/@types/react@18.3.3
       react: registry.npmjs.org/react@18.3.1
+    dev: false
+
+  registry.npmjs.org/@radix-ui/react-dialog@1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-GjWJX/AUpB703eEBanuBnIWdIXg6NvJFCXcNlSZk4xdszCdhrJgBoUd1cGk67vFO+WdA2pfI/plOpqz/5GUP6Q==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@radix-ui/react-dialog/-/react-dialog-1.0.5.tgz}
+    id: registry.npmjs.org/@radix-ui/react-dialog/1.0.5
+    name: '@radix-ui/react-dialog'
+    version: 1.0.5
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.24.6
+      '@radix-ui/primitive': registry.npmjs.org/@radix-ui/primitive@1.0.1
+      '@radix-ui/react-compose-refs': registry.npmjs.org/@radix-ui/react-compose-refs@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-context': registry.npmjs.org/@radix-ui/react-context@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-dismissable-layer': registry.npmjs.org/@radix-ui/react-dismissable-layer@1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-focus-guards': registry.npmjs.org/@radix-ui/react-focus-guards@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-focus-scope': registry.npmjs.org/@radix-ui/react-focus-scope@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-id': registry.npmjs.org/@radix-ui/react-id@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-portal': registry.npmjs.org/@radix-ui/react-portal@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-presence': registry.npmjs.org/@radix-ui/react-presence@1.0.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-primitive': registry.npmjs.org/@radix-ui/react-primitive@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-slot': registry.npmjs.org/@radix-ui/react-slot@1.0.2(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-use-controllable-state': registry.npmjs.org/@radix-ui/react-use-controllable-state@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@types/react': registry.npmjs.org/@types/react@18.3.3
+      '@types/react-dom': registry.npmjs.org/@types/react-dom@18.3.0
+      aria-hidden: registry.npmjs.org/aria-hidden@1.2.4
+      react: registry.npmjs.org/react@18.3.1
+      react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
+      react-remove-scroll: registry.npmjs.org/react-remove-scroll@2.5.5(@types/react@18.3.3)(react@18.3.1)
     dev: false
 
   registry.npmjs.org/@radix-ui/react-direction@1.0.1(@types/react@18.3.3)(react@18.3.1):
@@ -4057,6 +4127,13 @@ packages:
     name: supports-preserve-symlinks-flag
     version: 1.0.0
     engines: {node: '>= 0.4'}
+
+  registry.npmjs.org/swiper@11.1.4:
+    resolution: {integrity: sha512-1n7kbYJB2dFEpUHRFszq7gys/ofIBrMNibwTiMvPHwneKND/t9kImnHt6CfGPScMHgI+dWMbGTycCKGMoOO1KA==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/swiper/-/swiper-11.1.4.tgz}
+    name: swiper
+    version: 11.1.4
+    engines: {node: '>= 4.7.0'}
+    dev: false
 
   registry.npmjs.org/tailwind-merge@2.3.0:
     resolution: {integrity: sha512-vkYrLpIP+lgR0tQCG6AP7zZXCTLc1Lnv/CCRT3BqJ9CZ3ui2++GPaGb1x/ILsINIMSYqqvrpqjUFsMNLlW99EA==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/tailwind-merge/-/tailwind-merge-2.3.0.tgz}
