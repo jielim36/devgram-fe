@@ -43,6 +43,7 @@ import { useGetMe } from "@/hooks/useUsers";
 import { Separator } from "../ui/separator";
 import "@/style/color.css";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
+import ImageCropContainer from "../ImageCrop/ImageCrop";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -156,9 +157,11 @@ const Layout = () => {
                     <Input placeholder="Search" className="pl-8" />
                 </div>
                 <div className="flex gap-4 items-center">
-                    <Button className="bg-gradient">
-                        <PlusIcon color="white" />
-                    </Button>
+                    <ImageCropContainer trigger={
+                        <Button className="bg-gradient">
+                            <PlusIcon color="white" />
+                        </Button>
+                    } />
                     <NavigationMenuComponent user={user} />
                     <div className="">
                         <ProfileMenu user={user} />
