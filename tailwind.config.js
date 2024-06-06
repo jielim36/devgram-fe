@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        xs: "480px",
+      },
       colors: {
         appPink: "#f36e9a",
         appOrange: "#ff930f",

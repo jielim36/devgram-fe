@@ -150,7 +150,7 @@ const Layout = () => {
 
             {/* Top Navigation */}
             <Card className="w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
-                <AppTitle className="flex-none text-white" defaultColor={theme === 'light'} isBold={true} />
+                <AppTitle className="flex-none text-white hidden md:block" defaultColor={theme === 'light'} isBold={true} />
                 <div className="relative w-96">
                     <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search" className="pl-8" />
@@ -166,20 +166,20 @@ const Layout = () => {
                 </div>
             </Card>
 
-            <div className="w-screen h-screen flex flex-row">
+            <div className="w-screen h-screen flex flex-col xs:flex-row">
                 {/* Side Navigation */}
-                <Card className="w-64 h-full rounded-none py-4">
-                    <ul className="flex flex-col gap-3">
+                <Card className="w-16 lg:w-64 h-full rounded-none py-4 hidden xs:block">
+                    <ul className="flex flex-col gap-3 items-center lg:items-start">
                         {LeftSideNavigationItems.map((item) => (
                             <li key={item.title}>
                                 <Link to={item.href} className={`flex flex-row items-center gap-4 p-4 rounded-md hover:bg-accent hover:text-accent-foreground ${location.pathname === item.href ? "font-bold" : ""}`}>
                                     {item.icon}
-                                    <span>{item.title}</span>
+                                    <span className="hidden lg:block">{item.title}</span>
                                 </Link>
                             </li>
                         ))}
                     </ul>
-                    <Accordion type="single" defaultValue="stories" collapsible className="w-full px-4">
+                    <Accordion type="single" defaultValue="stories" collapsible className="w-full px-4 hidden lg:block">
                         <Separator />
                         <AccordionItem value="stories">
                             <AccordionTrigger>Stories</AccordionTrigger>
@@ -189,7 +189,7 @@ const Layout = () => {
                                         <li key={story.id}>
                                             <div className="flex flex-row items-center gap-3 py-1 rounded-md hover:bg-accent hover:text-accent-foreground">
                                                 <AvatarContainer avatar_url={story.avatar} hasStory={story.stories.length > 0} />
-                                                <span>{story.name}</span>
+                                                {/* <span>{story.name}</span> */}
                                             </div>
                                         </li>
                                     ))}
@@ -199,10 +199,25 @@ const Layout = () => {
                     </Accordion>
                 </Card>
 
+
                 {/* Content */}
                 <div className="relative w-full h-full overflow-y-auto py-8">
                     <Outlet />
                 </div>
+
+                {/* Mobile bottom navigate */}
+                <Card className="h-16 xs:hidden relative bottom-16">
+                    <ul className="flex flex-row gap-3 justify-between items-center">
+                        {LeftSideNavigationItems.map((item) => (
+                            <li key={item.title}>
+                                <Link to={item.href} className={`flex flex-row items-center gap-4 p-4 rounded-md hover:bg-accent hover:text-accent-foreground ${location.pathname === item.href ? "font-bold" : ""}`}>
+                                    {item.icon}
+                                    <span className="hidden lg:block">{item.title}</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </Card>
             </div>
         </div>
     )

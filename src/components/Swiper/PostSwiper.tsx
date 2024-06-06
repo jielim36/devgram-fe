@@ -9,9 +9,10 @@ import "@/style/color.css"
 type SwiperContainerProps = {
     postImages: string[];
     className?: string;
+    swiperClassName?: string;
 }
 
-const PostSwiper: React.FC<SwiperContainerProps> = ({ postImages, className }) => {
+const PostSwiper: React.FC<SwiperContainerProps> = ({ postImages, className, swiperClassName }) => {
 
     const [swiper, setSwiper] = useState<any>();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -21,7 +22,7 @@ const PostSwiper: React.FC<SwiperContainerProps> = ({ postImages, className }) =
     }
 
     return (
-        <div className={`relative ${className}`}>
+        <div className={`relative h-fit ${className}`}>
             <Swiper
                 effect={'coverflow'}
                 grabCursor={true}
@@ -38,7 +39,7 @@ const PostSwiper: React.FC<SwiperContainerProps> = ({ postImages, className }) =
                 pagination={true}
                 modules={[EffectCoverflow, Pagination, Controller]}
                 controller={{ control: swiper }}
-                className='select-none'
+                className={`select-none ${swiperClassName}`}
                 onSlideChange={handleSlideChange}
                 onSwiper={setSwiper}
             >
@@ -50,7 +51,7 @@ const PostSwiper: React.FC<SwiperContainerProps> = ({ postImages, className }) =
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <Badge className="absolute top-2 right-2 z-10">{currentImageIndex + 1}/{postImages.length}</Badge>
+            <Badge className="absolute top-2 right-2 z-10 select-none">{currentImageIndex + 1}/{postImages.length}</Badge>
         </div>
     );
 };

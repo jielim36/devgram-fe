@@ -11,7 +11,7 @@ type AvatarContainerProps = {
 
 const AvatarContainer: React.FC<AvatarContainerProps> = ({ avatar_url, hasStory, className, avatarClassName }) => {
     return (
-        <div className={`${hasStory ? "bg-gradient-2" : ""} p-[2px] rounded-full ${className}`}>
+        <div className={`${hasStory ? "bg-gradient-2" : ""} p-[2px] rounded-full cursor-pointer ${className}`}>
             <div className="rounded-full p-[1px] card-color">
                 <Avatar className={`w-9 h-9 ${avatarClassName}`}>
                     <AvatarImage src={avatar_url} />

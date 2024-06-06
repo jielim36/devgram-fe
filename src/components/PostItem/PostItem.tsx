@@ -1,47 +1,33 @@
 import { Post, User } from "@/types";
 import { Card } from "../ui/card";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
 import { Button } from "../ui/button";
-import { BookMarkedIcon, BookmarkIcon, EllipsisIcon, HeartIcon, MenuIcon, MessageCircleIcon, SendIcon, UserCircleIcon, UserRoundIcon } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { useState } from "react";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { BookmarkIcon, EllipsisIcon, HeartIcon, MenuIcon, MessageCircleIcon, SendIcon, UserRoundIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import FloatPostItem from "./FloatPostItem";
 import PostSwiper from "../Swiper/PostSwiper";
+import PostMenuSelection from "./PostMenuSelection";
+import convertDate from "@/utils/convertDateFormat";
 
 type PostItemProps = {
     user: User;
     post: Post;
 }
 
-const PostItem: React.FC<PostItemProps> = ({ user, post }) => {
+const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
     return (
         <Card className="flex flex-col">
             <div className="flex flex-row gap-2 py-1 px-2 justify-center items-center">
-                <AvatarContainer avatar_url={user.avatar_url} hasStory={user.stories != undefined && user.stories?.length > 0} className="flex-none" />
-                <div className="flex-auto flex flex-col justify-center">
-                    <p>{user.username}</p>
+                <AvatarContainer avatar_url={post.user.avatar_url} hasStory={post.user.stories != undefined && post.user.stories?.length > 0} className="flex-none" />
+                <div className="flex-auto flex flex-row items-center gap-3">
+                    <p className="text-sm">{post.user.username}</p>
+                    <div className="flex flex-row items-center gap-1 text-sm">
+                        <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
+                        <p className="text-muted-foreground">{convertDate(post.created_at)}</p>
+                    </div>
                 </div>
-                <Button variant="link" size={"icon"}>
-                    <EllipsisIcon />
-                </Button>
+                <PostMenuSelection post={post} triggerClassName="px-2" />
             </div>
 
             <PostSwiper postImages={post.images} />
@@ -52,14 +38,7 @@ const PostItem: React.FC<PostItemProps> = ({ user, post }) => {
                     <Button variant={"link"} size="icon">
                         <HeartIcon />
                     </Button>
-                    <Dialog>
-                        <DialogTrigger>
-                            <MessageCircleIcon />
-                        </DialogTrigger>
-                        <DialogContent className="p-2 w-3/4" disableCloseBtn>
-                            <FloatPostItem user={user} post={post} />
-                        </DialogContent>
-                    </Dialog>
+                    <FloatPostItem post={post} trigger={<MessageCircleIcon />} />
                     <Button variant={"link"} size="icon">
                         <SendIcon />
                     </Button>
@@ -83,7 +62,7 @@ const PostItem: React.FC<PostItemProps> = ({ user, post }) => {
                         </span>
                         and 15,375 others</div>
                 </div>
-                <span className="line-clamp-2"><span className="font-bold">{user.username}</span> My monday moments! If you are a developer, please help me answer this survey!</span>
+                <span className="line-clamp-2"><span className="font-bold">{post.user.username}</span> My monday moments! If you are a developer, please help me answer this survey!</span>
                 <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all 38 comments</span>
                 <div className="flex flex-col" onClick={() => { }}>
                     <div className="flex flex-row gap-1">
@@ -96,19 +75,14 @@ const PostItem: React.FC<PostItemProps> = ({ user, post }) => {
                     </div>
                 </div>
                 <div className="flex w-full items-center space-x-2 pt-4">
-                    <Dialog>
-                        <DialogTrigger className="w-full">
-                            <Input type="text" placeholder="Add comment" className="w-full" />
-                        </DialogTrigger>
-                        <DialogContent className="p-2 w-3/4" disableCloseBtn>
-                            <FloatPostItem user={user} post={post} />
-                        </DialogContent>
-                    </Dialog>
+                    <FloatPostItem post={post} trigger={<Input type="text" placeholder="Add comment" className="w-full" />} triggerClassName="w-full" />
                 </div>
             </div>
 
         </Card >
     );
 }
+
+
 
 export default PostItem;

@@ -1,3 +1,4 @@
+import { Comment } from "./Comment";
 import { User } from "./User";
 
 export type Post = {
@@ -5,4 +6,7 @@ export type Post = {
     user: User;
     description: string;
     images: string[];
+    comments: Comment[];
+    created_at: string;
+    updated_at: string;
 }
