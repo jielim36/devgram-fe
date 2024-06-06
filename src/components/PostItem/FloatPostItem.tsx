@@ -30,7 +30,7 @@ const FloatPostItem: React.FC<FloatPostProps & FloatPostItemProps> = ({ post, tr
             <DialogTrigger className={triggerClassName}>
                 {trigger}
             </DialogTrigger>
-            <DialogContent className="p-2 w-[95vw] lg:w-[85vw]" disableCloseBtn>
+            <DialogContent className="p-2 w-[90vw] lg:w-[85vw] max-h-[95vh]" disableCloseBtn>
                 <FloatPost post={post} />
             </DialogContent>
         </Dialog>
@@ -77,14 +77,13 @@ const FloatPost: React.FC<FloatPostProps> = ({ post }) => {
     }
 
     return (
-        <div className="flex flex-col lg:flex-row h-[85vh] gap-2 overflow-auto lg:overflow-hidden" >
-            <div className={`grow h-[95vw] w-full max-h-[50vh] lg:max-h-[85vh] rounded-md`}>
-                <PostSwiper postImages={post.images} className={`lg:h-[85vh] lg:w-[85vh] max-h-[50vh] lg:max-h-[85vh] w-full overflow-hidden rounded-md h-[95vw]`} swiperClassName="" />
+        <div className="flex flex-col lg:flex-row h-[95vh] xl:h-[85vh] lg:h-[70vh] gap-2 overflow-auto lg:overflow-hidden" >
+            <div className={`grow h-full w-full max-h-[90vw] xl:max-h-[85vh] lg:max-h-[70vh] rounded-md lg:h-[70vh]`}>
+                <PostSwiper postImages={post.images} className={`h-[90vw] xl:h-[85vh] lg:h-[70vh] lg:w-[70vh] xl:w-[85vh] max-h-[50vh] xl:max-h-[85vh] lg:max-h-[70vh] w-full overflow-hidden rounded-md`} swiperClassName="" />
             </div>
 
-
             {/* Information */}
-            <div className="pt-2 lg:pt-0 px-0 pb-3 flex flex-col justify-between h-full lg:overflow-auto">
+            <div className="pt-2 xl:pt-0 px-0 pb-3 flex flex-col justify-between h-full lg:overflow-auto">
                 <div className="flex flex-row justify-between items-center px-2">
                     <div className="flex flex-row items-center gap-2">
                         <AvatarContainer avatar_url={post?.user.avatar_url} hasStory={post?.user.stories != undefined && post?.user.stories?.length > 0} className="flex-none" />
