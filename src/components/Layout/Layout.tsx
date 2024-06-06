@@ -11,11 +11,9 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
-import ThemeToggleButton from "../ThemeToggleButton/ThemeToggleButton";
 import {
     Avatar,
     AvatarFallback,
-    AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -151,7 +149,7 @@ const Layout = () => {
         <div className="min-h-screen h-full w-full flex flex-col">
 
             {/* Top Navigation */}
-            <Card className="fixed w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
+            <Card className="w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
                 <AppTitle className="flex-none text-white" defaultColor={theme === 'light'} isBold={true} />
                 <div className="relative w-96">
                     <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -168,9 +166,9 @@ const Layout = () => {
                 </div>
             </Card>
 
-            <div className="relative w-screen h-screen flex flex-row">
+            <div className="w-screen h-screen flex flex-row">
                 {/* Side Navigation */}
-                <Card className="fixed w-64 h-full rounded-none py-4 top-16">
+                <Card className="w-64 h-full rounded-none py-4">
                     <ul className="flex flex-col gap-3">
                         {LeftSideNavigationItems.map((item) => (
                             <li key={item.title}>
@@ -202,7 +200,7 @@ const Layout = () => {
                 </Card>
 
                 {/* Content */}
-                <div className="relative pt-16 w-full h-full overflow-y-auto">
+                <div className="relative w-full h-full overflow-y-auto py-8">
                     <Outlet />
                 </div>
             </div>
