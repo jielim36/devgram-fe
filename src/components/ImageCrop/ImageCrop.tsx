@@ -13,18 +13,24 @@ import getCroppedImg, { generateDownload, generatePreviewImage } from "@/utils/c
 import CroppedImagePreview from "./CroppedImagePreview";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import axiosClient from "@/utils/axiosClient";
+import { useGetMe } from "@/hooks/useUsers";
+import { useAddPost } from "@/hooks/usePosts";
+import { User } from "@/types";
 
 type ImageCropContainerProps = {
     trigger: React.ReactNode;
+    user: User;
 }
 
 type ImageCrop = {
+    user: User;
     // image: string;
 }
 
 type SliderProps = React.ComponentProps<typeof Slider>;
 
-const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger }) => {
+const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger, user }) => {
 
     return (
         <Dialog >
@@ -32,13 +38,13 @@ const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger }) => {
                 {trigger}
             </DialogTrigger>
             <DialogContent disableCloseBtn className="p-2">
-                <ImageCrop />
+                <ImageCrop user={user} />
             </DialogContent>
         </Dialog>
     );
 }
 
-const ImageCrop: React.FC<ImageCrop> = () => {
+const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
 
     // const imageSrc = "https://i.pinimg.com/564x/06/04/23/060423aa8608e12c76c5f653cf6bc1fc.jpg"
     const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -48,6 +54,11 @@ const ImageCrop: React.FC<ImageCrop> = () => {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
     const [isOpenPreview, setIsOpenPreview] = useState(false);
+    const addPostMutation = useAddPost({
+        onSuccess: (data) => {
+            console.log(data);
+        }
+    });
 
     const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
         setCroppedAreaPixels(croppedAreaPixels)
@@ -74,9 +85,31 @@ const ImageCrop: React.FC<ImageCrop> = () => {
         }
     }
 
-    const onDownload = () => {
+
+    const handleAddPost = async () => {
         if (imageSrc && croppedAreaPixels) {
-            generateDownload(imageSrc, croppedAreaPixels, rotation);
+            const blob = await getCroppedImg(imageSrc, croppedAreaPixels, rotation);
+            if (!blob) return;
+            // const { data } = useGetMe();
+            const userId = user.id;
+            const description: string = "This is a test description";
+            const imgBlobArray: Blob[] = [blob, blob, blob];
+
+            if (!userId) return;
+            addPostMutation.mutate({ userId, description, imgBlobArray });
+
+            // const formData = new FormData();
+            // formData.append("file", blob, "image.jpeg");
+            // try {
+            //     const response = await axiosClient.post('http://localhost:8080/storage/uploadFile', formData, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data',
+            //         },
+            //     });
+            //     console.log(response.data);
+            // } catch (error) {
+            //     console.error(error);
+            // }
         }
     }
 
@@ -154,8 +187,9 @@ const ImageCrop: React.FC<ImageCrop> = () => {
                         </div>
                     </div>
                     <div className="flex flex-row gap-2">
+                        <Button onClick={() => { setImageSrc(null) }}>Cancel</Button>
                         <Button onClick={croppedImagePreview}>Preview</Button>
-                        <Button onClick={onDownload}>Confirm</Button>
+                        <Button onClick={handleAddPost}>Confirm</Button>
                     </div>
 
                     <Dialog open={isOpenPreview}>
@@ -170,6 +204,7 @@ const ImageCrop: React.FC<ImageCrop> = () => {
             </div>
         </div >
     );
+
 }
 
 export function ZoomSlider({ className, ...props }: SliderProps) {

@@ -161,7 +161,7 @@ const Layout = () => {
                         <Button className="bg-gradient">
                             <PlusIcon color="white" />
                         </Button>
-                    } />
+                    } user={user}/>
                     <NavigationMenuComponent user={user} />
                     <div className="">
                         <ProfileMenu user={user} />
