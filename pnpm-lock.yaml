@@ -62,6 +62,9 @@ dependencies:
   embla-carousel-react:
     specifier: ^8.1.3
     version: registry.npmjs.org/embla-carousel-react@8.1.3(react@18.3.1)
+  framer-motion:
+    specifier: ^11.2.10
+    version: registry.npmjs.org/framer-motion@11.2.10(react-dom@18.3.1)(react@18.3.1)
   lucide-react:
     specifier: ^0.381.0
     version: registry.npmjs.org/lucide-react@0.381.0(react@18.3.1)
@@ -3109,6 +3112,28 @@ packages:
     name: fraction.js
     version: 4.3.7
     dev: true
+
+  registry.npmjs.org/framer-motion@11.2.10(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-/gr3PLZUVFCc86a9MqCUboVrALscrdluzTb3yew+2/qKBU8CX6nzs918/SRBRCqaPbx0TZP10CB6yFgK2C5cYQ==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/framer-motion/-/framer-motion-11.2.10.tgz}
+    id: registry.npmjs.org/framer-motion/11.2.10
+    name: framer-motion
+    version: 11.2.10
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      react: registry.npmjs.org/react@18.3.1
+      react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
+      tslib: registry.npmjs.org/tslib@2.6.2
+    dev: false
 
   registry.npmjs.org/fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz}
