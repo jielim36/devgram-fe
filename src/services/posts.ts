@@ -1,6 +1,6 @@
 import { User } from "@/types/User";
 import axiosClient from "@/utils/axiosClient";
-import { ResponseBody } from "@/types";
+import { Post, ResponseBody } from "@/types";
 
 export const addPost = async (userId: number, description: string, imgBlobArray: Blob[]): Promise<ResponseBody<boolean>> => {
     const formData = new FormData();
@@ -18,4 +18,9 @@ export const addPost = async (userId: number, description: string, imgBlobArray:
 
     return response.data;
 
+}
+
+export const getPopularPosts = async (): Promise<ResponseBody<Post[]>> => {
+    const response = await axiosClient.get(`http://localhost:8080/post/popular`);
+    return response.data;
 }

@@ -8,9 +8,9 @@ import FloatPostItem from "./FloatPostItem";
 import PostSwiper from "../Swiper/PostSwiper";
 import PostMenuSelection from "./PostMenuSelection";
 import convertDate from "@/utils/convertDateFormat";
+import LikeMessageGenerate from "./LikeMessageGenerate";
 
 type PostItemProps = {
-    user: User;
     post: Post;
 }
 
@@ -30,7 +30,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
                 <PostMenuSelection post={post} triggerClassName="px-2" />
             </div>
 
-            <PostSwiper postImages={post.images} />
+            <PostSwiper postImages={post.images_url} />
 
             {/* Interaction List */}
             <div className="flex flex-row justify-between">
@@ -50,29 +50,18 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
             {/* Information */}
             <div className="px-3 pb-3 flex flex-col">
-                <div className="flex flex-row">
-                    <div className="flex flex-row">
-                        <UserRoundIcon className="bg-slate-200 rounded-full text-slate-500" />
-                        <UserRoundIcon className="bg-stone-300 rounded-full text-stone-600 -translate-x-1/3" />
-                    </div>
-                    <div>
-                        Liked by
-                        <span className="font-bold">
-                            {" "}jetsonn_ {" "}
-                        </span>
-                        and 15,375 others</div>
-                </div>
-                <span className="line-clamp-2"><span className="font-bold">{post.user.username}</span> My monday moments! If you are a developer, please help me answer this survey!</span>
-                <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all 38 comments</span>
-                <div className="flex flex-col" onClick={() => { }}>
-                    <div className="flex flex-row gap-1">
-                        <p className="font-bold">joshuaw_yaku</p>
-                        <p className="line-clamp-1">哈哈哈哈哈</p>
-                    </div>
-                    <div className="flex flex-row gap-1">
-                        <p className="font-bold">jetsonn_</p>
-                        <p className="line-clamp-1">wtf is this? fsdsf sdfdsfsd fdsfsdfsd dsfdsfds dsfdsfsdf dsfdsfdsfsd dsfsdfds dsfsdfdsf dsfdsfsdf dfsdfsdfds dfsdfsd dsfsdfs</p>
-                    </div>
+                {post?.likes && post.likes.length > 0 && <LikeMessageGenerate likes={post.likes} />}
+                <span className="line-clamp-2"><span className="font-bold">{post.user.username}</span> {post.description}</span>
+                <FloatPostItem post={post} triggerClassName="w-fit mt-1" trigger={
+                    <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all {post?.comments.length > 0 ? post.comments.length : ""} comments</span>
+                } />
+                <div className="flex flex-col">
+                    {post?.comments && post.comments.length > 0 && post.comments.slice(0, 2).map((comment, index) => (
+                        <div key={index} className="flex flex-row gap-1">
+                            <p className="font-bold">{comment.user.username}</p>
+                            <p className="line-clamp-1">{comment.content}</p>
+                        </div>
+                    ))}
                 </div>
                 <div className="flex w-full items-center space-x-2 pt-4">
                     <FloatPostItem post={post} trigger={<Input type="text" placeholder="Add comment" className="w-full" />} triggerClassName="w-full" />

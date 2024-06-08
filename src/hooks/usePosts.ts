@@ -1,5 +1,5 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost } from "@/services";
+import { addPost, getPopularPosts } from "@/services";
 import { ResponseBody } from "@/types";
 import {
     useQuery,
@@ -19,3 +19,12 @@ export const useAddPost = ({ onSuccess, onError }: ResponseHandlerType<boolean>)
             onError: onError
         });
 };
+
+export const useGetPopularPosts = () => {
+    return useQuery({
+        queryKey: POST_QUERY_KEY,
+        queryFn: async () => {
+            return await getPopularPosts();
+        }
+    });
+}
