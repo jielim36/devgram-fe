@@ -158,10 +158,8 @@ const Layout = () => {
                 </div>
                 <div className="flex gap-4 items-center">
                     <ImageCropContainer trigger={
-                        <Button className="bg-gradient">
-                            <PlusIcon color="white" />
-                        </Button>
-                    } user={user}/>
+                        <PlusIcon color="white" />
+                    } user={user} />
                     <NavigationMenuComponent user={user} />
                     <div className="">
                         <ProfileMenu user={user} />
@@ -174,7 +172,7 @@ const Layout = () => {
                 <Card className="w-16 lg:w-64 h-full rounded-none py-4 hidden xs:block">
                     <ul className="flex flex-col gap-3 items-center lg:items-start">
                         {LeftSideNavigationItems.map((item) => (
-                            <li key={item.title}>
+                            <li key={item.title} className="w-full">
                                 <Link to={item.href} className={`flex flex-row items-center gap-4 p-4 rounded-md hover:bg-accent hover:text-accent-foreground ${location.pathname === item.href ? "font-bold" : ""}`}>
                                     {item.icon}
                                     <span className="hidden lg:block">{item.title}</span>
