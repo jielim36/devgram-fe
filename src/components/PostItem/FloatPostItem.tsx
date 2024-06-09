@@ -15,6 +15,7 @@ import PostMenuSelection from "./PostMenuSelection";
 import convertDate, { convertDateWithShort } from "@/utils/convertDateFormat";
 import { useEffect, useRef, useState } from "react";
 import LikeMessageGenerate from "./LikeMessageGenerate";
+import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
 
 type FloatPostProps = {
     post: Post;
@@ -39,6 +40,15 @@ const FloatPostItem: React.FC<FloatPostProps & FloatPostItemProps> = ({ post, tr
 }
 
 const FloatPost: React.FC<FloatPostProps> = ({ post }) => {
+
+    const [commentContent, setCommentContent] = useState<string>("");
+    const commentInputRef = useRef<HTMLTextAreaElement>(null);
+
+    const focusCommentInput = () => {
+        if (commentInputRef.current) {
+            commentInputRef.current.focus();
+        }
+    }
 
     const generateChildComments = (comment: Comment, index: number) => {
         return (
@@ -155,6 +165,8 @@ const FloatPost: React.FC<FloatPostProps> = ({ post }) => {
                     </div>
                 </div>
 
+                <Separator className="my-1" />
+
                 <div className="">
                     {/* Interaction List */}
                     <div className="flex flex-row justify-between">
@@ -162,7 +174,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ post }) => {
                             <Button variant={"link"} size="icon">
                                 <HeartIcon />
                             </Button>
-                            <Button variant={"link"} size="icon">
+                            <Button variant={"link"} size="icon" onClick={focusCommentInput}>
                                 <MessageCircleIcon />
                             </Button>
                             <Button variant={"link"} size="icon">
@@ -174,22 +186,22 @@ const FloatPost: React.FC<FloatPostProps> = ({ post }) => {
                         </Button>
                     </div>
 
-                    {/* <div className="flex flex-row mt-2 text-sm px-2">
-                        <div className="flex flex-row">
-                            <UserRoundIcon className="bg-slate-200 rounded-full text-slate-500" />
-                            <UserRoundIcon className="bg-stone-300 rounded-full text-stone-600 -translate-x-1/3" />
-                        </div>
-                        <div>
-                            Liked by <span className="font-bold">jetsonn_</span> and 15,375 others
-                        </div>
-                    </div> */}
                     {post.likes && post.likes.length > 0 && <LikeMessageGenerate likes={post.likes} />}
                     <div className="flex flex-row items-center gap-1 text-sm px-2">
                         <p className="text-muted-foreground">{convertDate(post.created_at)}</p>
                     </div>
-                    <div className="flex w-full items-center space-x-2 pt-4">
-                        <SmilePlusIcon className="mx-1" />
-                        <Input type="text" placeholder="Add comment" autoFocus className="flex-1" />
+                    <div className="flex w-full space-x-2 pt-4">
+                        {/* <SmilePlusIcon className="mx-1" />
+                        <Input type="text" placeholder="Add comment" autoFocus className="flex-1" /> */}
+                        <InputWithEmoji
+                            textAreaRef={commentInputRef}
+                            content={commentContent}
+                            setContent={setCommentContent}
+                            placeholder="Add a comment..."
+                            containerClassName="flex-1"
+                            textAreaClassName="resize-none h-4"
+                            isShowLabel={false}
+                        />
                         <Button variant="default" size="icon" className="">
                             <SendHorizonalIcon />
                         </Button>
