@@ -12,18 +12,24 @@ import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 type InputWithEmojiProps = {
     content: string;
     setContent: (content: string) => void;
-    label: string;
+    label?: string;
     containerClassName?: string;
+    isShowLabel?: boolean;
+    placeholder?: string;
+    textAreaClassName?: string;
+    textAreaRef?: React.RefObject<HTMLTextAreaElement>;
 }
 
 const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
     content,
     setContent,
     label,
-    containerClassName = "flex flex-col gap-2"
+    containerClassName = "flex flex-col gap-2",
+    isShowLabel = true,
+    placeholder,
+    textAreaClassName = "max-h-[70vh] overflow-auto",
+    textAreaRef = useRef<HTMLTextAreaElement>(null)
 }) => {
-
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const onEmojiClick = (emojiObject: EmojiClickData, _event: MouseEvent) => {
         if (textAreaRef.current) {
@@ -51,7 +57,9 @@ const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
 
     return (
         <div className={containerClassName}>
-            <Label htmlFor="inputWithEmoji">{label}</Label>
+            {isShowLabel &&
+                <Label htmlFor="inputWithEmoji">{label}</Label>
+            }
             <div className="flex flex-row gap-2 items-start">
                 <DropdownMenu>
                     <DropdownMenuTrigger>
@@ -64,8 +72,8 @@ const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
                 <Textarea id="inputWithEmoji"
                     ref={textAreaRef}
                     value={content}
-                    placeholder={`Type your ${label.toLowerCase()}`}
-                    className="max-h-[70vh] overflow-auto"
+                    placeholder={placeholder ? placeholder : label ? `Type your ${label?.toLowerCase()}` : ""}
+                    className={textAreaClassName}
                     onChange={handleChange}
                 />
             </div>
