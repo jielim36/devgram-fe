@@ -16,6 +16,7 @@ import convertDate, { convertDateWithShort } from "@/utils/convertDateFormat";
 import { useEffect, useRef, useState } from "react";
 import LikeMessageGenerate from "./LikeMessageGenerate";
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
+import { useAddComment } from "@/hooks/useComments";
 
 type FloatPostProps = {
     post: Post;
@@ -43,11 +44,28 @@ const FloatPost: React.FC<FloatPostProps> = ({ post }) => {
 
     const [commentContent, setCommentContent] = useState<string>("");
     const commentInputRef = useRef<HTMLTextAreaElement>(null);
+    const addCommentMutation = useAddComment({
+        onSuccess: () => {
+            setCommentContent("");
+            //TODO: remind user
+        }
+    });
 
     const focusCommentInput = () => {
         if (commentInputRef.current) {
             commentInputRef.current.focus();
         }
+    }
+
+    const handleAddComment = () => {
+        if (commentContent.trim() === "") return;
+        //TODO: remind user
+
+        addCommentMutation.mutate({
+            postId: post.id,
+            parentId: 0,
+            content: commentContent
+        });
     }
 
     const generateChildComments = (comment: Comment, index: number) => {
@@ -202,7 +220,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ post }) => {
                             textAreaClassName="resize-none h-4"
                             isShowLabel={false}
                         />
-                        <Button variant="default" size="icon" className="">
+                        <Button variant="default" size="icon" className="" onClick={handleAddComment}>
                             <SendHorizonalIcon />
                         </Button>
                     </div>
