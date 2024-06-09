@@ -19,11 +19,20 @@ import { useAddPost } from "@/hooks/usePosts";
 import { User } from "@/types";
 import { on } from "events";
 import { useTheme } from "@/utils/ThemeProvider";
-import { CircleXIcon, PlusIcon, XIcon } from "lucide-react";
+import { ArrowRightLeftIcon, CircleXIcon, PlusIcon, SmilePlusIcon, XIcon } from "lucide-react";
 import { Reorder } from "framer-motion"
 import { motion } from "framer-motion"
 import { Badge } from "../ui/badge";
 import { set } from "react-hook-form";
+import { Textarea } from "../ui/textarea";
+import EmojiPicker from 'emoji-picker-react';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
+
 
 type ImageCropContainerProps = {
     trigger: React.ReactNode;
@@ -66,15 +75,16 @@ const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
 
     const [currentEditingIndex, setCurrentEditingIndex] = useState(0);
     const [imgList, setImgList] = useState<ImgType[]>([]);
+    const [postDescription, setPostDescription] = useState<string>("");
 
     const { theme } = useTheme();
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
     const [isOpenPreview, setIsOpenPreview] = useState(false);
+    const [isShowDescriptionInput, setIsShowDescriptionInput] = useState(false);
     const addPostMutation = useAddPost({
         onSuccess: (data) => {
             if (!data.data) return;
-
-            console.log("Success");
+            // TODO: show success message
             // navigate to home page
             window.location.href = import.meta.env.VITE_WEBSITE_URL + "/";
         }
@@ -122,12 +132,16 @@ const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
             if (!imgBlobArray || !imgBlobArray[0]) return;
             // const { data } = useGetMe();
             const userId = user.id;
-            const description: string = "This is a test description";
+            const description = postDescription || "";
 
             if (!userId) return;
             addPostMutation.mutate({ userId, description, imgBlobArray });
 
         }
+    }
+
+    const handleConfirmPost = () => {
+        setIsShowDescriptionInput(true);
     }
 
     const onSetCrop = (crop: Point) => {
@@ -184,10 +198,6 @@ const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
                 .catch(error => console.error("Error reading files:", error));
         }
     };
-
-    useEffect(() => {
-        console.log("imageSrc", imgList);
-    }, [imgList])
 
     const onSwithImage = (index: number) => {
         setCurrentEditingIndex(index);
@@ -266,9 +276,29 @@ const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
         );
     }
 
+    if (isShowDescriptionInput) {
+        return (
+            <div className="flex flex-col gap-6 p-4 w-[90vw] sm:w-[600px] max-h-[95vh] overflow-hidden">
+                <InputWithEmoji
+                    content={postDescription}
+                    setContent={setPostDescription}
+                    label="Description"
+                    containerClassName="p-1 flex flex-col gap-3"
+                />
+                <div className="grid grid-cols-2 gap-10 px-6">
+                    <Button onClick={() => setIsShowDescriptionInput(false)}>Cancel</Button>
+                    <Button onClick={handleAddPost}>Add Post</Button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="w-[90vw] h-[90vh] lg:w-[70vw] relative">
-            <p className="text-xs px-4 py-[2px] text-muted-foreground">Drag to change order</p>
+            <p className="text-xs px-4 py-[1px] text-muted-foreground flex items-center gap-1">
+                <ArrowRightLeftIcon width={12} className="translate-y-[1px]" />
+                Drag to change order
+            </p>
             <div className="h-[8%] flex flex-row items-center px-2">
                 <div className="h-full flex flex-row items-center grow">
                     <Reorder.Group
@@ -327,7 +357,7 @@ const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
                         </Reorder.Item>
                     </Reorder.Group>
                 </div>
-                <Button className="ml-2" onClick={handleAddPost}>Confirm</Button>
+                <Button className="ml-2" onClick={handleConfirmPost}>Confirm</Button>
             </div>
 
             <div className="relative h-[80%] sm:h-[80%] rounded-md overflow-hidden">
