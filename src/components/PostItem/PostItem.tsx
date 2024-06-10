@@ -9,12 +9,54 @@ import PostSwiper from "../Swiper/PostSwiper";
 import PostMenuSelection from "./PostMenuSelection";
 import convertDate from "@/utils/convertDateFormat";
 import LikeMessageGenerate from "./LikeMessageGenerate";
+import { useAddLike, useUnlike } from "@/hooks";
+import { useAuth } from "@/utils/AuthProvider";
+import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 
 type PostItemProps = {
     post: Post;
 }
 
 const PostItem: React.FC<PostItemProps> = ({ post }) => {
+
+    const { user } = useAuth();
+    const [isLiked, setIsLiked] = useState<boolean>(false);
+
+    const addLikeMutation = useAddLike({
+        onSuccess: () => {
+            setIsLiked(true);
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+    const removeLikeMutation = useUnlike({
+        onSuccess: () => {
+            setIsLiked(false);
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+
+    useEffect(() => {
+        if (post?.likes && post.likes.length > 0) {
+            setIsLiked(post.likes.some(like => like.user.id === user?.id));
+        }
+    }, [])
+
+    const handleLikePost = () => {
+        if (addLikeMutation.isPending || removeLikeMutation.isPending) return;
+
+        if (!isLiked) {
+            addLikeMutation.mutate(post.id);
+        } else {
+            removeLikeMutation.mutate(post.id);
+        }
+    }
 
     return (
         <Card className="flex flex-col">
@@ -35,8 +77,11 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
             {/* Interaction List */}
             <div className="flex flex-row justify-between">
                 <div className="flex flex-row gap-2">
-                    <Button variant={"link"} size="icon">
-                        <HeartIcon />
+                    <Button
+                        variant={"link"}
+                        size="icon"
+                        onClick={handleLikePost}>
+                        <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
                     </Button>
                     <FloatPostItem post={post} trigger={<MessageCircleIcon />} />
                     <Button variant={"link"} size="icon">
@@ -71,7 +116,5 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         </Card >
     );
 }
-
-
 
 export default PostItem;

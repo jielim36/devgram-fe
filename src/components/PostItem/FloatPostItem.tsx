@@ -16,7 +16,7 @@ import convertDate, { convertDateWithShort } from "@/utils/convertDateFormat";
 import { useEffect, useRef, useState } from "react";
 import LikeMessageGenerate from "./LikeMessageGenerate";
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
-import { useAddComment } from "@/hooks/useComments";
+import { useAddComment } from "@/hooks";
 
 type FloatPostProps = {
     post: Post;
