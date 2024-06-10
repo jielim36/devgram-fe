@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { useGetMe, useGetPopularPosts } from "@/hooks";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/utils/AuthProvider";
 
 const posts: Post[] = [
     {
@@ -187,19 +188,7 @@ const posts: Post[] = [
 
 const Home = () => {
 
-    const [user, setUser] = useState<User | null>(null);
-    const { data: userData } = useGetMe();
     const { data: postData } = useGetPopularPosts();
-
-    useEffect(() => {
-        if (userData) {
-            setUser(userData.data);
-        }
-    }, [userData])
-
-    useEffect(() => {
-        console.log(postData);
-    }, [postData])
 
     return (
         <>

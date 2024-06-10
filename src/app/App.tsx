@@ -12,25 +12,29 @@ import Popular from '@/pages/Popular/Popular';
 import Reels from '@/pages/Reels/Reels';
 import Following from '@/pages/Following/Following';
 import Profile from '@/pages/Profile/Profile';
+import { AuthProvider } from '@/utils/AuthProvider';
 
 function App() {
 
   const queryClient = new QueryClient()
 
   return (
+
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path='/popular' element={<Popular />} />
-              <Route path='/reels' element={<Reels />} />
-              <Route path='/following' element={<Following />} />
-              <Route path='/profile' element={<Profile />} />
-            </Route>
-            <Route path='/login' element={<Login />} />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path='/popular' element={<Popular />} />
+                <Route path='/reels' element={<Reels />} />
+                <Route path='/following' element={<Following />} />
+                <Route path='/profile' element={<Profile />} />
+              </Route>
+              <Route path='/login' element={<Login />} />
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>
     </QueryClientProvider>

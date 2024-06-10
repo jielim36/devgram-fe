@@ -44,6 +44,7 @@ import { Separator } from "../ui/separator";
 import "@/style/color.css";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
 import ImageCropContainer from "../ImageCrop/ImageCrop";
+import { useAuth } from "@/utils/AuthProvider";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -83,9 +84,7 @@ const Layout = () => {
 
     const location = useLocation();
     const { theme } = useTheme();
-    const [user, setUser] = useState<User | null>(null);
-
-    const { data, isError } = useGetMe();
+    const { user } = useAuth();
 
     const stories = [
         {
@@ -133,16 +132,6 @@ const Layout = () => {
             ],
         },
     ]
-
-    useEffect(() => {
-        if (data) {
-            setUser(data.data);
-        }
-    }, [data]);
-
-    if (isError) {
-        window.location.href = '/login';
-    }
 
     if (!user) return "NO USER";
 
