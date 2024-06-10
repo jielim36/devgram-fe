@@ -10,7 +10,7 @@ export const addPost = async (userId: number, description: string, imgBlobArray:
         formData.append("files", imgBlobArray[i], `post${i}.jpeg`);
     }
 
-    const response = await axiosClient.post(`http://localhost:8080/post/${userId}`, formData, {
+    const response = await axiosClient.post(`/post/${userId}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -21,6 +21,6 @@ export const addPost = async (userId: number, description: string, imgBlobArray:
 }
 
 export const getPopularPosts = async (): Promise<ResponseBody<Post[]>> => {
-    const response = await axiosClient.get(`http://localhost:8080/post/popular`);
+    const response = await axiosClient.get(`/post/popular`);
     return response.data;
 }
