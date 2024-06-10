@@ -133,7 +133,9 @@ const Layout = () => {
         },
     ]
 
-    if (!user) return "NO USER";
+    if (!user) {
+        return "INVALID AUTHENTICATION";
+    }
 
     return (
         <div className="min-h-screen h-full w-full flex flex-col">

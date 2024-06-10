@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     useEffect(() => {
         setIsAuthRequired(!noAuthPaths.includes(location.pathname));
+
     }, [location])
 
     useEffect(() => {
@@ -40,6 +41,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setUser(userData.data);
         }
     }, [userData]);
+
+    useEffect(() => {
+        if (!user && isAuthRequired) {
+            window.location.href = '/login';
+        }
+    }, [user, location]);
+
+    if (isError) {
+        window.location.href = '/login';
+    }
 
     const value = {
         user,
