@@ -1,8 +1,8 @@
-import { Post, User } from "@/types";
+import { Post } from "@/types";
 import { Card } from "../ui/card";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
 import { Button } from "../ui/button";
-import { BookmarkIcon, EllipsisIcon, HeartIcon, MenuIcon, MessageCircleIcon, SendIcon, UserRoundIcon } from "lucide-react";
+import { HeartIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import FloatPostItem from "./FloatPostItem";
 import PostSwiper from "../Swiper/PostSwiper";
@@ -12,7 +12,7 @@ import LikeMessageGenerate from "./LikeMessageGenerate";
 import { useLikePost, useUnlikePost } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
 import { useEffect, useState } from "react";
-import { set } from "react-hook-form";
+import Icon from "../Icon/Icon";
 
 type PostItemProps = {
     post: Post;
@@ -83,13 +83,13 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
                         onClick={handleLikePost}>
                         <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
                     </Button>
-                    <FloatPostItem postId={post.id} trigger={<MessageCircleIcon />} />
+                    <FloatPostItem postId={post.id} trigger={<Icon name="message-circle" />} />
                     <Button variant={"link"} size="icon">
-                        <SendIcon />
+                        <Icon name="send" />
                     </Button>
                 </div>
                 <Button variant={"link"} size="icon">
-                    <BookmarkIcon />
+                    <Icon name="bookmark" />
                 </Button>
             </div>
 

@@ -1,4 +1,3 @@
-import { MoonIcon, SunIcon } from "lucide-react"
 import {
     Tabs,
     TabsList,
@@ -6,6 +5,7 @@ import {
 } from "@/components/ui/tabs"
 import { useTheme } from "@/utils/ThemeProvider"
 import { Card } from "../ui/card"
+import Icon from "../Icon/Icon"
 
 function ThemeToggleButton({ className }: { className?: string }) {
     const { setTheme, theme } = useTheme()
@@ -18,21 +18,21 @@ function ThemeToggleButton({ className }: { className?: string }) {
                     ${theme === 'light' ? 'translate-x-0' : 'translate-x-full'} rounded-full
                     `}
                 >
-                    {theme === 'light' ? <SunIcon /> : <MoonIcon />}
+                    {theme === 'light' ? <Icon name="sun" /> : <Icon name="moon" />}
                 </Card>
                 <TabsTrigger
                     value="light"
                     onClick={() => setTheme('light')}
                     className="rounded-full"
                 >
-                    <SunIcon />
+                    <Icon name="sun" />
                 </TabsTrigger>
                 <TabsTrigger
                     value="dark"
                     onClick={() => setTheme('dark')}
                     className="rounded-full"
                 >
-                    <MoonIcon />
+                    <Icon name="moon" />
                 </TabsTrigger>
             </TabsList>
         </Tabs>

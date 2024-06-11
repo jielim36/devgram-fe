@@ -1,8 +1,7 @@
 import { Comment, Post, User } from "@/types";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
 import { Button } from "../ui/button";
-import { BookmarkIcon, EllipsisIcon, HeartIcon, MessageCircleIcon, SendHorizonalIcon, SendIcon, SmilePlusIcon, UserRoundIcon } from "lucide-react";
-import { Input } from "../ui/input";
+import { HeartIcon } from "lucide-react";
 import PostSwiper from "../Swiper/PostSwiper";
 import "@/style/color.css"
 import { Separator } from "../ui/separator";
@@ -17,9 +16,8 @@ import { useEffect, useRef, useState } from "react";
 import LikeMessageGenerate from "./LikeMessageGenerate";
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
 import { useAddComment, useLikePost, useGetPostByPostId, useUnlikePost, useLikeComment, useUnlikeComment } from "@/hooks";
-import { getPostByPostId } from "@/services";
 import { useAuth } from "@/utils/AuthProvider";
-import { set } from "react-hook-form";
+import Icon from "../Icon/Icon";
 
 type FloatPostProps = {
     // post: Post;
@@ -327,14 +325,14 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                 <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
                             </Button>
                             <Button variant={"link"} size="icon" onClick={focusCommentInput}>
-                                <MessageCircleIcon />
+                                <Icon name="message-circle" />
                             </Button>
                             <Button variant={"link"} size="icon">
-                                <SendIcon />
+                                <Icon name="send" />
                             </Button>
                         </div>
                         <Button variant={"link"} size="icon">
-                            <BookmarkIcon />
+                            <Icon name="bookmark" />
                         </Button>
                     </div>
 
@@ -355,7 +353,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                             isShowLabel={false}
                         />
                         <Button variant="default" size="icon" className="" onClick={handleAddComment}>
-                            <SendHorizonalIcon />
+                            <Icon name="send-horizontal" />
                         </Button>
                     </div>
                 </div>

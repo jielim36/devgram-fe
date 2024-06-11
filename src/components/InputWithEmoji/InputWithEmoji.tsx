@@ -1,13 +1,10 @@
-import { PopoverTrigger } from "@radix-ui/react-popover";
 import { Label } from "../ui/label";
-import { Popover, PopoverContent } from "../ui/popover";
-import { SmilePlusIcon } from "lucide-react";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Textarea } from "../ui/textarea";
 import { ChangeEvent, useRef } from "react";
-import { MouseDownEvent } from "emoji-picker-react/dist/config/config";
 import { DropdownMenu, DropdownMenuContent } from "../ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import Icon from "../Icon/Icon";
 
 type InputWithEmojiProps = {
     content: string;
@@ -63,7 +60,7 @@ const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
             <div className="flex flex-row gap-2 items-start">
                 <DropdownMenu>
                     <DropdownMenuTrigger>
-                        <SmilePlusIcon />
+                        <Icon name="smile-plus" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent >
                         <EmojiPicker onEmojiClick={onEmojiClick} />

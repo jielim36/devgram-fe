@@ -4,34 +4,20 @@ import {
     DialogHeader,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Cropper, { Area, Point } from "react-easy-crop";
 import { Slider } from "../ui/slider";
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button";
-import getCroppedImg, { generateDownload, generatePreviewImage } from "@/utils/cropImage";
-import CroppedImagePreview from "./CroppedImagePreview";
+import getCroppedImg from "@/utils/cropImage";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import axiosClient from "@/utils/axiosClient";
-import { useGetMe } from "@/hooks/useUsers";
 import { useAddPost } from "@/hooks/usePosts";
-import { User } from "@/types";
-import { on } from "events";
 import { useTheme } from "@/utils/ThemeProvider";
-import { ArrowRightLeftIcon, CircleXIcon, PlusIcon, SmilePlusIcon, XIcon } from "lucide-react";
 import { Reorder } from "framer-motion"
 import { motion } from "framer-motion"
-import { Badge } from "../ui/badge";
-import { set } from "react-hook-form";
-import { Textarea } from "../ui/textarea";
-import EmojiPicker from 'emoji-picker-react';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
+import Icon from "../Icon/Icon";
 
 
 type ImageCropContainerProps = {
@@ -294,7 +280,7 @@ const ImageCrop: React.FC<ImageCrop> = () => {
     return (
         <div className="w-[90vw] h-[90vh] lg:w-[70vw] relative">
             <p className="text-xs px-4 py-[1px] text-muted-foreground flex items-center gap-1">
-                <ArrowRightLeftIcon width={12} className="translate-y-[1px]" />
+                <Icon name="arrow-right-left" className="translate-y-[1px]" width={12} />
                 Drag to change order
             </p>
             <div className="h-[8%] flex flex-row items-center px-2">
@@ -331,7 +317,7 @@ const ImageCrop: React.FC<ImageCrop> = () => {
                                     className="absolute top-0 right-0 rounded-full text-white h-4 w-4 bg-red-500 justify-center items-center -translate-y-1 translate-x-1 hidden group-hover:flex cursor-pointer"
                                     onClick={() => { handleDeleteImg(img?.id) }}
                                 >
-                                    <XIcon width={10} />
+                                    <Icon name="x" className="text-white" width={10} />
                                 </motion.div>
                             </Reorder.Item>
                         ))}
@@ -350,7 +336,7 @@ const ImageCrop: React.FC<ImageCrop> = () => {
                             exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
                         >
                             <Button className="ml-1 px-2 h-[90%] aspect-square flex items-center justify-center" onClick={onAddNewImage} disabled={imgList?.length >= 9}>
-                                <PlusIcon />
+                                <Icon name="plus" />
                             </Button>
                         </Reorder.Item>
                     </Reorder.Group>

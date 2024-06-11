@@ -44,7 +44,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     useEffect(() => {
         if (!user && isAuthRequired) {
-            window.location.href = '/login';
+            console.log("Redirecting to login");
+
+            // window.location.href = '/login';
         }
     }, [user, location]);
 

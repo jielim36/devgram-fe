@@ -1,6 +1,6 @@
-import { UserRoundIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import "@/style/color.css"
+import Icon from "../Icon/Icon";
 
 type AvatarContainerProps = {
     avatar_url?: string;
@@ -16,7 +16,7 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({ avatar_url, hasStory,
                 <Avatar className={`w-9 h-9 ${avatarClassName}`}>
                     <AvatarImage src={avatar_url} />
                     <AvatarFallback>
-                        <UserRoundIcon className="text-slate-500" />
+                        <Icon name="user-round" className="text-slate-500" />
                     </AvatarFallback>
                 </Avatar>
             </div>

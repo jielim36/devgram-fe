@@ -2,14 +2,10 @@ import { Post } from "@/types";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { EllipsisIcon } from "lucide-react";
 import { Separator } from "../ui/separator";
-import { useState } from "react";
+import Icon from "../Icon/Icon";
 
 type PostMenuSelectionProps = {
     post: Post;
@@ -22,7 +18,7 @@ const PostMenuSelection: React.FC<PostMenuSelectionProps> = ({ post, triggerClas
     return (
         <Dialog >
             <DialogTrigger className={triggerClassName} >
-                <EllipsisIcon />
+                <Icon name="ellipsis" />
             </DialogTrigger>
             <DialogContent className={`w-9/12 sm:w-[300px] ${containerClassName}`}>
                 <div className="w-full">

@@ -32,7 +32,6 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ClapperboardIcon, HomeIcon, InboxIcon, LogOutIcon, PlusIcon, SearchIcon, SendIcon, TrendingUpIcon, UserCheckIcon, UserRoundIcon, UsersRoundIcon } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { useTheme } from "@/utils/ThemeProvider";
 import { Label } from "../ui/label";
@@ -46,6 +45,7 @@ import AvatarContainer from "../AvatarContainer/AvatarContainer";
 import ImageCropContainer from "../ImageCrop/ImageCrop";
 import { useAuth } from "@/utils/AuthProvider";
 import { useLogout } from "@/hooks/useAuth";
+import Icon from "../Icon/Icon";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -56,27 +56,27 @@ type LeftSideNavigationItem = {
 const LeftSideNavigationItems: LeftSideNavigationItem[] = [
     {
         title: "Home",
-        icon: <HomeIcon />,
+        icon: <Icon name="home" />,
         href: "/",
     },
     {
         title: "Popular",
-        icon: <TrendingUpIcon />,
+        icon: <Icon name="trending-up" />,
         href: "/popular",
     },
     {
         title: "Reels",
-        icon: <ClapperboardIcon />,
+        icon: <Icon name="clapperboard" />,
         href: "/reels",
     },
     {
         title: "Following",
-        icon: <UsersRoundIcon />,
+        icon: <Icon name="users-round" />,
         href: "/following",
     },
     {
         title: "Profile",
-        icon: <UserRoundIcon />,
+        icon: <Icon name="user-round" />,
         href: "/profile",
     }
 ]
@@ -145,12 +145,12 @@ const Layout = () => {
             <Card className="w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
                 <AppTitle className="flex-none text-white hidden md:block" defaultColor={theme === 'light'} isBold={true} />
                 <div className="relative w-96">
-                    <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
+                    <Icon name="search" className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search" className="pl-8" />
                 </div>
                 <div className="flex gap-4 items-center">
                     <ImageCropContainer trigger={
-                        <PlusIcon color="white" />
+                        <Icon name="plus" color="white" />
                     } />
                     <NavigationMenuComponent user={user} />
                     <div className="">
@@ -194,9 +194,11 @@ const Layout = () => {
 
 
                 {/* Content */}
-                <div className="relative w-full h-full overflow-y-auto py-8">
-                    <Outlet />
-                </div>
+                <React.Suspense fallback="Loading...">
+                    <div className="relative w-full h-full overflow-y-auto py-8">
+                        <Outlet />
+                    </div>
+                </React.Suspense>
 
                 {/* Mobile bottom navigate */}
                 <Card className="h-16 xs:hidden relative bottom-16">
@@ -261,7 +263,7 @@ export function NavigationMenuComponent({ user }: { user: User }) {
                 <NavigationMenuItem>
                     <DotContainer children={
                         <NavigationMenuTrigger>
-                            <SendIcon />
+                            <Icon name="send" />
                         </NavigationMenuTrigger>
                     }
                     />
@@ -306,7 +308,7 @@ export function NavigationMenuComponent({ user }: { user: User }) {
                 <NavigationMenuItem>
                     <DotContainer children={
                         <NavigationMenuTrigger>
-                            <InboxIcon />
+                            <Icon name="inbox" />
                         </NavigationMenuTrigger>
                     }
                     />
@@ -395,7 +397,7 @@ const ProfileMenu = ({ user }: { user: User }) => {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="flex flex-row gap-2" onClick={handleLogout}>
-                    <LogOutIcon />
+                    <Icon name="log-out" />
                     <span>Logout</span>
                 </DropdownMenuItem>
             </DropdownMenuContent >

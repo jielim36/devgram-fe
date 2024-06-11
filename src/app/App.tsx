@@ -1,18 +1,30 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from '../pages/Home/Home';
-import Login from '../pages/Login/Login';
-import { ThemeProvider } from '@/utils/ThemeProvider';
-import Layout from '@/components/Layout/Layout';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import Popular from '@/pages/Popular/Popular';
-import Reels from '@/pages/Reels/Reels';
-import Following from '@/pages/Following/Following';
-import Profile from '@/pages/Profile/Profile';
+import { ThemeProvider } from '@/utils/ThemeProvider';
 import { AuthProvider } from '@/utils/AuthProvider';
+// import Home from '../pages/Home/Home';
+// import Login from '../pages/Login/Login';
+// import Layout from '@/components/Layout/Layout';
+// import Popular from '@/pages/Popular/Popular';
+// import Reels from '@/pages/Reels/Reels';
+// import Following from '@/pages/Following/Following';
+// import Profile from '@/pages/Profile/Profile';
+// import Error404NotFound from '@/pages/InvalidPages/Error404NotFound';
+
+const Layout = React.lazy(() => import('@/components/Layout/Layout'));
+const Home = React.lazy(() => import('../pages/Home/Home'));
+const Popular = React.lazy(() => import('@/pages/Popular/Popular'));
+const Reels = React.lazy(() => import('@/pages/Reels/Reels'));
+const Following = React.lazy(() => import('@/pages/Following/Following'));
+const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
+const Login = React.lazy(() => import('../pages/Login/Login'));
+const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
+
 
 function App() {
 
@@ -32,7 +44,9 @@ function App() {
                 <Route path='/following' element={<Following />} />
                 <Route path='/profile' element={<Profile />} />
               </Route>
+              <Route path='*' element={<Navigate to="/404" />} />
               <Route path='/login' element={<Login />} />
+              <Route path='/404' element={<Error404NotFound />} />
             </Routes>
           </AuthProvider>
         </BrowserRouter>
