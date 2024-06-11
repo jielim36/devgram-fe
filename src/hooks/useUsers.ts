@@ -13,6 +13,6 @@ export const useUsers = () => useQuery({
 
 export const useGetMe = ({ enabled = true }: { enabled?: boolean } = {}) => useQuery({
     queryKey: USER_QUERY_KEY,
-    queryFn: async () => getMe(),
+    queryFn: async () => await getMe(),
     enabled: enabled,
 });

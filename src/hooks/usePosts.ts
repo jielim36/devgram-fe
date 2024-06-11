@@ -1,10 +1,11 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost, getPopularPosts } from "@/services";
-import { ResponseBody } from "@/types";
+import { addPost, getPopularPosts, getPostByPostId } from "@/services";
+import { Post, ResponseBody } from "@/types";
 import {
     useQuery,
     useMutation,
     useQueryClient,
+    QueryFunctionContext,
 } from '@tanstack/react-query'
 import { ResponseHandlerType } from ".";
 
@@ -28,3 +29,13 @@ export const useGetPopularPosts = () => {
         }
     });
 }
+
+const fetchPostById = async (context: QueryFunctionContext<string[]>): Promise<ResponseBody<Post>> => {
+    const [_, postId] = context.queryKey;
+    return await getPostByPostId(Number(postId));
+};
+
+export const useGetPostByPostId = (postId: number) => useQuery({
+    queryKey: POST_QUERY_KEY.concat(postId.toString()),
+    queryFn: fetchPostById
+});

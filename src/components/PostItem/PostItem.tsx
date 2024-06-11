@@ -83,7 +83,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
                         onClick={handleLikePost}>
                         <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
                     </Button>
-                    <FloatPostItem post={post} trigger={<MessageCircleIcon />} />
+                    <FloatPostItem postId={post.id} trigger={<MessageCircleIcon />} />
                     <Button variant={"link"} size="icon">
                         <SendIcon />
                     </Button>
@@ -97,7 +97,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
             <div className="px-3 pb-3 flex flex-col">
                 {post?.likes && post.likes.length > 0 && <LikeMessageGenerate likes={post.likes} />}
                 <span className="line-clamp-2"><span className="font-bold">{post.user.username}</span> {post.description}</span>
-                <FloatPostItem post={post} triggerClassName="w-fit mt-1" trigger={
+                <FloatPostItem postId={post.id} triggerClassName="w-fit mt-1" trigger={
                     <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all {post?.comments.length > 0 ? post.comments.length : ""} comments</span>
                 } />
                 <div className="flex flex-col">
@@ -109,7 +109,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
                     ))}
                 </div>
                 <div className="flex w-full items-center space-x-2 pt-4">
-                    <FloatPostItem post={post} trigger={<Input type="text" placeholder="Add comment" className="w-full" />} triggerClassName="w-full" />
+                    <FloatPostItem postId={post.id} trigger={<Input type="text" placeholder="Add comment" className="w-full" />} triggerClassName="w-full" />
                 </div>
             </div>
 
