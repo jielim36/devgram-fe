@@ -7,6 +7,7 @@ export type Comment = {
     content: string;
     children?: Comment[];
     likes?: number;
+    is_liked?: boolean;
     created_at: string;
     updated_at: string;
 }

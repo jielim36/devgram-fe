@@ -9,7 +9,7 @@ import PostSwiper from "../Swiper/PostSwiper";
 import PostMenuSelection from "./PostMenuSelection";
 import convertDate from "@/utils/convertDateFormat";
 import LikeMessageGenerate from "./LikeMessageGenerate";
-import { useAddLike, useUnlike } from "@/hooks";
+import { useLikePost, useUnlikePost } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
 import { useEffect, useState } from "react";
 import { set } from "react-hook-form";
@@ -23,7 +23,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
     const { user } = useAuth();
     const [isLiked, setIsLiked] = useState<boolean>(false);
 
-    const addLikeMutation = useAddLike({
+    const addLikeMutation = useLikePost({
         onSuccess: () => {
             setIsLiked(true);
         },
@@ -32,7 +32,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         }
     });
 
-    const removeLikeMutation = useUnlike({
+    const removeLikeMutation = useUnlikePost({
         onSuccess: () => {
             setIsLiked(false);
         },

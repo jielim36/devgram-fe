@@ -16,7 +16,7 @@ import convertDate, { convertDateWithShort } from "@/utils/convertDateFormat";
 import { useEffect, useRef, useState } from "react";
 import LikeMessageGenerate from "./LikeMessageGenerate";
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
-import { useAddComment, useAddLike, useGetPostByPostId, useUnlike } from "@/hooks";
+import { useAddComment, useLikePost, useGetPostByPostId, useUnlikePost, useLikeComment, useUnlikeComment } from "@/hooks";
 import { getPostByPostId } from "@/services";
 import { useAuth } from "@/utils/AuthProvider";
 import { set } from "react-hook-form";
@@ -48,6 +48,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
 
     const [post, setPost] = useState<Post>();
     const [isLiked, setIsLiked] = useState<boolean>(false);
+    const [currentLikeCommentId, setCurrentLikeCommentId] = useState<number | null>(null);
     const { user } = useAuth();
     const [commentContent, setCommentContent] = useState<string>("");
     const commentInputRef = useRef<HTMLTextAreaElement>(null);
@@ -58,7 +59,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
             //TODO: remind user success
         }
     });
-    const likePostMutation = useAddLike({
+    const likePostMutation = useLikePost({
         onSuccess: () => {
             setIsLiked(true);
         },
@@ -66,12 +67,71 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
             console.log(error);
         }
     })
-    const unlikePostMutation = useUnlike({
+    const unlikePostMutation = useUnlikePost({
         onSuccess: () => {
             setIsLiked(false);
         },
         onError: (error) => {
             console.log(error);
+        }
+    });
+    const likeCommentMutation = useLikeComment({
+        onSuccess: (data) => {
+            if (data.data && currentLikeCommentId) {
+                setPost((prev) => {
+                    if (prev) {
+                        return {
+                            ...prev,
+                            comments: prev.comments.map(comment => {
+                                if (comment.id === currentLikeCommentId) {
+                                    return {
+                                        ...comment,
+                                        is_liked: true,
+                                    }
+                                }
+                                return comment;
+                            })
+                        }
+                    }
+                    return prev;
+                });
+            }
+
+            setCurrentLikeCommentId(null);
+        },
+        onError: (error) => {
+            console.log(error);
+            setCurrentLikeCommentId(null);
+        }
+    });
+
+    const unlikeCommentMutation = useUnlikeComment({
+        onSuccess: (data) => {
+            if (data.data && currentLikeCommentId) {
+                setPost((prev) => {
+                    if (prev) {
+                        return {
+                            ...prev,
+                            comments: prev.comments.map(comment => {
+                                if (comment.id === currentLikeCommentId) {
+                                    return {
+                                        ...comment,
+                                        is_liked: false,
+                                    }
+                                }
+                                return comment;
+                            })
+                        }
+                    }
+                    return prev;
+                });
+            }
+
+            setCurrentLikeCommentId(null);
+        },
+        onError: (error) => {
+            console.log(error);
+            setCurrentLikeCommentId(null);
         }
     });
 
@@ -115,6 +175,21 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
         } else {
             unlikePostMutation.mutate(post.id);
         }
+    }
+
+    const handleLikeComment = (commentId: number) => {
+        if (likeCommentMutation.isPending) return;
+        if (!post) return;
+
+        setCurrentLikeCommentId(commentId);
+
+        if (post.comments.find(comment => comment.id === commentId)?.is_liked) {
+            unlikeCommentMutation.mutate(commentId);
+
+        } else {
+            likeCommentMutation.mutate(commentId);
+        }
+
     }
 
     if (!post) {
@@ -225,13 +300,17 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-center">
-                                            <HeartIcon width={18} />
+                                            <HeartIcon
+                                                fill={comment.is_liked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"}
+                                                className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
+                                                onClick={() => handleLikeComment(comment.id)}
+                                            />
                                             <p className="text-xs">{comment?.likes || ""}</p>
                                         </div>
                                     </div>
 
                                     {/* Child comments */}
-                                    {generateChildComments(comment, index)}
+                                    {/* {generateChildComments(comment, index)} */}
                                 </div>
                             </div>
                         ))}
