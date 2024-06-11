@@ -12,8 +12,8 @@ export const useAddPost = ({ onSuccess, onError }: ResponseHandlerType<boolean>)
     return useMutation(
         {
             // mutationKey: POST_QUERY_KEY,
-            mutationFn: async (data: { userId: number, description: string, imgBlobArray: Blob[] }) => {
-                return addPost(data.userId, data.description, data.imgBlobArray);
+            mutationFn: async (data: { description: string, imgBlobArray: Blob[] }) => {
+                return addPost(data.description, data.imgBlobArray);
             },
             onSuccess: onSuccess,
             onError: onError

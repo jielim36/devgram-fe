@@ -2,7 +2,7 @@ import { User } from "@/types/User";
 import axiosClient from "@/utils/axiosClient";
 import { Post, ResponseBody } from "@/types";
 
-export const addPost = async (userId: number, description: string, imgBlobArray: Blob[]): Promise<ResponseBody<boolean>> => {
+export const addPost = async (description: string, imgBlobArray: Blob[]): Promise<ResponseBody<boolean>> => {
     const formData = new FormData();
     formData.append("description", description);
 
@@ -10,7 +10,7 @@ export const addPost = async (userId: number, description: string, imgBlobArray:
         formData.append("files", imgBlobArray[i], `post${i}.jpeg`);
     }
 
-    const response = await axiosClient.post(`/post/${userId}`, formData, {
+    const response = await axiosClient.post(`/post`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },

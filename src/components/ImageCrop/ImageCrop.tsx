@@ -36,17 +36,17 @@ import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
 
 type ImageCropContainerProps = {
     trigger: React.ReactNode;
-    user: User;
+    // user: User;
 }
 
 type ImageCrop = {
-    user: User;
+    // user: User;
     // image: string;
 }
 
 type SliderProps = React.ComponentProps<typeof Slider>;
 
-const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger, user }) => {
+const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger }) => {
 
     return (
         <Dialog >
@@ -56,7 +56,7 @@ const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger, user }
                 </div>
             </DialogTrigger>
             <DialogContent disableCloseBtn className="p-1">
-                <ImageCrop user={user} />
+                <ImageCrop />
             </DialogContent>
         </Dialog>
     );
@@ -71,7 +71,7 @@ type ImgType = {
     croppedAreaPixels: Area;
 }
 
-const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
+const ImageCrop: React.FC<ImageCrop> = () => {
 
     const [currentEditingIndex, setCurrentEditingIndex] = useState(0);
     const [imgList, setImgList] = useState<ImgType[]>([]);
@@ -131,11 +131,9 @@ const ImageCrop: React.FC<ImageCrop> = ({ user }) => {
             }
             if (!imgBlobArray || !imgBlobArray[0]) return;
             // const { data } = useGetMe();
-            const userId = user.id;
             const description = postDescription || "";
 
-            if (!userId) return;
-            addPostMutation.mutate({ userId, description, imgBlobArray });
+            addPostMutation.mutate({ description, imgBlobArray });
 
         }
     }

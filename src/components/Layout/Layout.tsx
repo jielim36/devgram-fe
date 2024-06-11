@@ -150,7 +150,7 @@ const Layout = () => {
                 <div className="flex gap-4 items-center">
                     <ImageCropContainer trigger={
                         <PlusIcon color="white" />
-                    } user={user} />
+                    } />
                     <NavigationMenuComponent user={user} />
                     <div className="">
                         <ProfileMenu user={user} />
