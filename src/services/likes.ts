@@ -7,6 +7,6 @@ export const addLikeByPostId = async (postId: number): Promise<ResponseBody<bool
 }
 
 export const removeLikeByPostId = async (postId: number): Promise<ResponseBody<boolean>> => {
-    const response = await axiosClient.delete(`/post/${postId}/likes`);
+    const response = await axiosClient.put(`/post/${postId}/likes`);
     return response.data;
 }
