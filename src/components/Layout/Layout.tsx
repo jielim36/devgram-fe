@@ -15,7 +15,6 @@ import {
     Avatar,
     AvatarFallback,
 } from "@/components/ui/avatar"
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import AppTitle from "../appTitle/AppTitle";
 import {
@@ -35,10 +34,8 @@ import {
 import { Switch } from "../ui/switch";
 import { useTheme } from "@/utils/ThemeProvider";
 import { Label } from "../ui/label";
-import { useEffect, useState } from "react";
 import DotContainer from "../Dot/Dot";
 import { User } from "@/types";
-import { useGetMe } from "@/hooks/useUsers";
 import { Separator } from "../ui/separator";
 import "@/style/color.css";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
@@ -46,6 +43,7 @@ import ImageCropContainer from "../ImageCrop/ImageCrop";
 import { useAuth } from "@/utils/AuthProvider";
 import { useLogout } from "@/hooks/useAuth";
 import Icon from "../Icon/Icon";
+import PostSkeleton from "../Suspense/PostSkeleton";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -194,7 +192,7 @@ const Layout = () => {
 
 
                 {/* Content */}
-                <React.Suspense fallback="Loading...">
+                <React.Suspense fallback={<PostSkeleton />}>
                     <div className="relative w-full h-full overflow-y-auto py-8">
                         <Outlet />
                     </div>
