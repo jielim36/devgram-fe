@@ -32,7 +32,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ClapperboardIcon, HomeIcon, InboxIcon, PlusIcon, SearchIcon, SendIcon, TrendingUpIcon, UserCheckIcon, UserRoundIcon, UsersRoundIcon } from "lucide-react";
+import { ClapperboardIcon, HomeIcon, InboxIcon, LogOutIcon, PlusIcon, SearchIcon, SendIcon, TrendingUpIcon, UserCheckIcon, UserRoundIcon, UsersRoundIcon } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { useTheme } from "@/utils/ThemeProvider";
 import { Label } from "../ui/label";
@@ -45,6 +45,7 @@ import "@/style/color.css";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
 import ImageCropContainer from "../ImageCrop/ImageCrop";
 import { useAuth } from "@/utils/AuthProvider";
+import { useLogout } from "@/hooks/useAuth";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -357,9 +358,22 @@ ListItem.displayName = "ListItem"
 const ProfileMenu = ({ user }: { user: User }) => {
 
     const { theme, setTheme } = useTheme();
+    const logoutMutation = useLogout({
+        onSuccess: () => {
+            window.location.href = '/login';
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
 
     const handleChangeTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
+    }
+
+    const handleLogout = () => {
+        logoutMutation.mutate();
     }
 
     return (
@@ -379,6 +393,11 @@ const ProfileMenu = ({ user }: { user: User }) => {
                     <Label htmlFor="theme-switcher">Dark mode</Label>
                     <Switch id="theme-switcher" checked={theme === 'dark'} onClick={handleChangeTheme} />
                 </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="flex flex-row gap-2" onClick={handleLogout}>
+                    <LogOutIcon />
+                    <span>Logout</span>
+                </DropdownMenuItem>
             </DropdownMenuContent >
         </DropdownMenu >
     );
