@@ -44,6 +44,7 @@ import { useAuth } from "@/utils/AuthProvider";
 import { useLogout } from "@/hooks/useAuth";
 import Icon from "../Icon/Icon";
 import PostSkeleton from "../Suspense/PostSkeleton";
+import UnauthorizedPage from "@/pages/InvalidPages/UnauthorizedPage";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -133,7 +134,7 @@ const Layout = () => {
     ]
 
     if (!user) {
-        return "INVALID AUTHENTICATION";
+        return <UnauthorizedPage />
     }
 
     return (
