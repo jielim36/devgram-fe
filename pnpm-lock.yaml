@@ -47,6 +47,9 @@ dependencies:
   '@radix-ui/react-tabs':
     specifier: ^1.0.4
     version: registry.npmjs.org/@radix-ui/react-tabs@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-tooltip':
+    specifier: ^1.0.7
+    version: registry.npmjs.org/@radix-ui/react-tooltip@1.0.7(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@tanstack/react-query':
     specifier: ^5.40.0
     version: registry.npmjs.org/@tanstack/react-query@5.40.0(react@18.3.1)
@@ -1691,6 +1694,41 @@ packages:
       '@radix-ui/react-primitive': registry.npmjs.org/@radix-ui/react-primitive@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/react-roving-focus': registry.npmjs.org/@radix-ui/react-roving-focus@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/react-use-controllable-state': registry.npmjs.org/@radix-ui/react-use-controllable-state@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@types/react': registry.npmjs.org/@types/react@18.3.3
+      '@types/react-dom': registry.npmjs.org/@types/react-dom@18.3.0
+      react: registry.npmjs.org/react@18.3.1
+      react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
+    dev: false
+
+  registry.npmjs.org/@radix-ui/react-tooltip@1.0.7(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-lPh5iKNFVQ/jav/j6ZrWq3blfDJ0OH9R6FlNUHPMqdLuQ9vwDgFsRxvl8b7Asuy5c8xmoojHUxKHQSOAvMHxyw==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@radix-ui/react-tooltip/-/react-tooltip-1.0.7.tgz}
+    id: registry.npmjs.org/@radix-ui/react-tooltip/1.0.7
+    name: '@radix-ui/react-tooltip'
+    version: 1.0.7
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.24.6
+      '@radix-ui/primitive': registry.npmjs.org/@radix-ui/primitive@1.0.1
+      '@radix-ui/react-compose-refs': registry.npmjs.org/@radix-ui/react-compose-refs@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-context': registry.npmjs.org/@radix-ui/react-context@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-dismissable-layer': registry.npmjs.org/@radix-ui/react-dismissable-layer@1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-id': registry.npmjs.org/@radix-ui/react-id@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-popper': registry.npmjs.org/@radix-ui/react-popper@1.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-portal': registry.npmjs.org/@radix-ui/react-portal@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-presence': registry.npmjs.org/@radix-ui/react-presence@1.0.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-primitive': registry.npmjs.org/@radix-ui/react-primitive@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-slot': registry.npmjs.org/@radix-ui/react-slot@1.0.2(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-use-controllable-state': registry.npmjs.org/@radix-ui/react-use-controllable-state@1.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-visually-hidden': registry.npmjs.org/@radix-ui/react-visually-hidden@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
       '@types/react': registry.npmjs.org/@types/react@18.3.3
       '@types/react-dom': registry.npmjs.org/@types/react-dom@18.3.0
       react: registry.npmjs.org/react@18.3.1

@@ -52,39 +52,39 @@ type LeftSideNavigationItem = {
     href: string;
 }
 
-const LeftSideNavigationItems: LeftSideNavigationItem[] = [
-    {
-        title: "Home",
-        icon: <Icon name="home" />,
-        href: "/",
-    },
-    {
-        title: "Popular",
-        icon: <Icon name="trending-up" />,
-        href: "/popular",
-    },
-    {
-        title: "Reels",
-        icon: <Icon name="clapperboard" />,
-        href: "/reels",
-    },
-    {
-        title: "Following",
-        icon: <Icon name="users-round" />,
-        href: "/following",
-    },
-    {
-        title: "Profile",
-        icon: <Icon name="user-round" />,
-        href: "/profile",
-    }
-]
 
 const Layout = () => {
 
     const location = useLocation();
     const { theme } = useTheme();
     const { user } = useAuth();
+    const LeftSideNavigationItems: LeftSideNavigationItem[] = [
+        {
+            title: "Home",
+            icon: <Icon name="home" />,
+            href: "/",
+        },
+        {
+            title: "Popular",
+            icon: <Icon name="trending-up" />,
+            href: "/popular",
+        },
+        {
+            title: "Reels",
+            icon: <Icon name="clapperboard" />,
+            href: "/reels",
+        },
+        {
+            title: "Following",
+            icon: <Icon name="users-round" />,
+            href: "/following",
+        },
+        {
+            title: "Profile",
+            icon: <Icon name="user-round" />,
+            href: `/profile/${user?.id}`,
+        }
+    ]
 
     const stories = [
         {
@@ -141,7 +141,7 @@ const Layout = () => {
         <div className="min-h-screen h-full w-full flex flex-col">
 
             {/* Top Navigation */}
-            <Card className="w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
+            <Card className="absolute w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
                 <AppTitle className="flex-none text-white hidden md:block" defaultColor={theme === 'light'} isBold={true} />
                 <div className="relative w-96">
                     <Icon name="search" className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -158,7 +158,7 @@ const Layout = () => {
                 </div>
             </Card>
 
-            <div className="w-screen h-screen flex flex-col xs:flex-row">
+            <div className="w-screen h-screen flex flex-col xs:flex-row pt-16">
                 {/* Side Navigation */}
                 <Card className="w-16 lg:w-64 h-full rounded-none py-4 hidden xs:block">
                     <ul className="flex flex-col gap-3 items-center lg:items-start">
@@ -181,7 +181,7 @@ const Layout = () => {
                                         <li key={story.id}>
                                             <div className="flex flex-row items-center gap-3 py-1 rounded-md hover:bg-accent hover:text-accent-foreground">
                                                 <AvatarContainer avatar_url={story.avatar} hasStory={story.stories.length > 0} />
-                                                {/* <span>{story.name}</span> */}
+                                                <span>{story.name}</span>
                                             </div>
                                         </li>
                                     ))}

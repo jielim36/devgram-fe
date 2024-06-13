@@ -7,7 +7,8 @@ body {
 
 /* 针对 WebKit 浏览器 (如 Chrome, Safari) */
 ::-webkit-scrollbar {
-  width: 6px; /* 滚动条的宽度 */
+  width: 4px; /* 滚动条的宽度 */
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {

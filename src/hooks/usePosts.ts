@@ -1,5 +1,5 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost, getPopularPosts, getPostByPostId } from "@/services";
+import { addPost, getPopularPosts, getPostByPostId, getPostsByUserId } from "@/services";
 import { Post, ResponseBody } from "@/types";
 import {
     useQuery,
@@ -30,12 +30,22 @@ export const useGetPopularPosts = () => {
     });
 }
 
-const fetchPostById = async (context: QueryFunctionContext<string[]>): Promise<ResponseBody<Post>> => {
+const fetchPostByPostId = async (context: QueryFunctionContext<string[]>): Promise<ResponseBody<Post>> => {
     const [_, postId] = context.queryKey;
     return await getPostByPostId(Number(postId));
 };
 
 export const useGetPostByPostId = (postId: number) => useQuery({
     queryKey: POST_QUERY_KEY.concat(postId.toString()),
-    queryFn: fetchPostById
+    queryFn: fetchPostByPostId
+});
+
+const fetchPostsByUserId = async (context: QueryFunctionContext<string[]>): Promise<ResponseBody<Post[]>> => {
+    const [_, userId] = context.queryKey;
+    return await getPostsByUserId(Number(userId));
+}
+
+export const useGetPostsByUserId = (userId: number) => useQuery({
+    queryKey: POST_QUERY_KEY.concat(userId.toString()),
+    queryFn: fetchPostsByUserId
 });

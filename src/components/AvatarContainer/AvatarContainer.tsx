@@ -7,12 +7,17 @@ type AvatarContainerProps = {
     hasStory: boolean;
     className?: string;
     avatarClassName?: string;
+    boldBorder?: boolean;
 }
 
-const AvatarContainer: React.FC<AvatarContainerProps> = ({ avatar_url, hasStory, className, avatarClassName }) => {
+const AvatarContainer: React.FC<AvatarContainerProps> = ({ avatar_url, hasStory, className, avatarClassName, boldBorder = false }) => {
+
+    const padding = boldBorder ? "p-[4px]" : "p-[2px]";
+    const childPadding = boldBorder ? "p-[2px]" : "p-[1px]";
+
     return (
-        <div className={`${hasStory ? "bg-gradient-2" : ""} p-[2px] rounded-full cursor-pointer ${className}`}>
-            <div className="rounded-full p-[1px] card-color">
+        <div className={`${hasStory ? "bg-gradient-2" : ""} ${padding} rounded-full cursor-pointer ${className}`}>
+            <div className={`rounded-full ${childPadding} card-color`}>
                 <Avatar className={`w-9 h-9 ${avatarClassName}`}>
                     <AvatarImage src={avatar_url} />
                     <AvatarFallback>

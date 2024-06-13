@@ -42,7 +42,7 @@ function App() {
                 <Route path='/popular' element={<Popular />} />
                 <Route path='/reels' element={<Reels />} />
                 <Route path='/following' element={<Following />} />
-                <Route path='/profile' element={<Profile />} />
+                <Route path='/profile/:userId' element={<Profile />} />
               </Route>
               <Route path='*' element={<Navigate to="/404" />} />
               <Route path='/login' element={<Login />} />
