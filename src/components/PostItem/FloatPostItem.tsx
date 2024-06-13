@@ -200,6 +200,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                 <div key={index} className="flex flex-row">
                     <div>
                         <AvatarContainer
+                            userId={comment?.user?.id}
                             avatar_url={comment?.user?.avatar_url}
                             hasStory={comment?.user?.stories != undefined && comment?.user?.stories?.length > 0}
                         />
@@ -243,7 +244,12 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
             <div className="pt-2 xl:pt-0 px-0 pb-3 flex flex-col justify-between h-full lg:overflow-auto w-full">
                 <div className="flex flex-row justify-between items-center px-2">
                     <div className="flex flex-row items-center gap-2">
-                        <AvatarContainer avatar_url={post?.user?.avatar_url} hasStory={post?.user?.stories != undefined && post?.user?.stories?.length > 0} className="flex-none" />
+                        <AvatarContainer
+                            userId={post?.user?.id}
+                            avatar_url={post?.user?.avatar_url}
+                            hasStory={post?.user?.stories != undefined && post?.user?.stories?.length > 0}
+                            className="flex-none"
+                        />
                         <p className="font-bold">{post?.user?.username}</p>
                     </div>
                     <PostMenuSelection post={post} />
@@ -255,6 +261,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                         <div className="flex flex-row">
                             <div>
                                 <AvatarContainer
+                                    userId={post?.user?.id}
                                     avatar_url={post?.user?.avatar_url}
                                     hasStory={post?.user?.stories != undefined && post?.user.stories?.length > 0}
                                 />
@@ -275,6 +282,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                             <div key={index} className="flex flex-row">
                                 <div>
                                     <AvatarContainer
+                                        userId={comment?.user?.id}
                                         avatar_url={comment?.user?.avatar_url}
                                         hasStory={comment?.user?.stories != undefined && comment?.user?.stories?.length > 0}
                                     />
@@ -341,8 +349,6 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                         <p className="text-muted-foreground">{convertDate(post?.created_at)}</p>
                     </div>
                     <div className="flex w-full space-x-2 pt-4">
-                        {/* <SmilePlusIcon className="mx-1" />
-                        <Input type="text" placeholder="Add comment" autoFocus className="flex-1" /> */}
                         <InputWithEmoji
                             textAreaRef={commentInputRef}
                             content={commentContent}

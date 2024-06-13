@@ -61,7 +61,12 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
     return (
         <Card className="flex flex-col">
             <div className="flex flex-row gap-2 py-1 px-2 justify-center items-center">
-                <AvatarContainer avatar_url={post.user.avatar_url} hasStory={post.user.stories != undefined && post.user.stories?.length > 0} className="flex-none" />
+                <AvatarContainer
+                    userId={post.user.id}
+                    avatar_url={post.user.avatar_url}
+                    hasStory={post.user.stories != undefined && post.user.stories?.length > 0}
+                    className="flex-none"
+                />
                 <div className="flex-auto flex flex-row items-center gap-3">
                     <p className="text-sm">{post.user.username}</p>
                     <div className="flex flex-row items-center gap-1 text-sm">

@@ -17,7 +17,6 @@ export const addPost = async (description: string, imgBlobArray: Blob[]): Promis
     });
 
     return response.data;
-
 }
 
 export const getPopularPosts = async (): Promise<ResponseBody<Post[]>> => {

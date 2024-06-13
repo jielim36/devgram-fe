@@ -45,6 +45,7 @@ const Profile = () => {
                 {/* Avatar */}
                 <div className="col-span-2 flex justify-center items-center">
                     <AvatarContainer
+                        userId={user?.id}
                         avatar_url={user?.avatar_url}
                         hasStory={user?.stories != undefined && user?.stories?.length > 0 || true}
                         className="h-40 aspect-square"
