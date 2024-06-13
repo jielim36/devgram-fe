@@ -15,6 +15,7 @@ type InputWithEmojiProps = {
     placeholder?: string;
     textAreaClassName?: string;
     textAreaRef?: React.RefObject<HTMLTextAreaElement>;
+    autoFocus?: boolean;
 }
 
 const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
@@ -25,7 +26,8 @@ const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
     isShowLabel = true,
     placeholder,
     textAreaClassName = "max-h-[70vh] overflow-auto",
-    textAreaRef = useRef<HTMLTextAreaElement>(null)
+    textAreaRef = useRef<HTMLTextAreaElement>(null),
+    autoFocus = false
 }) => {
 
     const onEmojiClick = (emojiObject: EmojiClickData, _event: MouseEvent) => {
@@ -72,6 +74,7 @@ const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
                     placeholder={placeholder ? placeholder : label ? `Type your ${label?.toLowerCase()}` : ""}
                     className={textAreaClassName}
                     onChange={handleChange}
+                    autoFocus={autoFocus}
                 />
             </div>
         </div>

@@ -351,6 +351,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                             containerClassName="flex-1"
                             textAreaClassName="resize-none h-4"
                             isShowLabel={false}
+                            autoFocus
                         />
                         <Button variant="default" size="icon" className="" onClick={handleAddComment}>
                             <Icon name="send-horizontal" />
