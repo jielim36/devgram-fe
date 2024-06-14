@@ -5,6 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@dnd-kit/core':
+    specifier: ^6.1.0
+    version: registry.npmjs.org/@dnd-kit/core@6.1.0(react-dom@18.3.1)(react@18.3.1)
+  '@dnd-kit/modifiers':
+    specifier: ^7.0.0
+    version: registry.npmjs.org/@dnd-kit/modifiers@7.0.0(@dnd-kit/core@6.1.0)(react@18.3.1)
+  '@dnd-kit/sortable':
+    specifier: ^8.0.0
+    version: registry.npmjs.org/@dnd-kit/sortable@8.0.0(@dnd-kit/core@6.1.0)(react@18.3.1)
+  '@dnd-kit/utilities':
+    specifier: ^3.2.2
+    version: registry.npmjs.org/@dnd-kit/utilities@3.2.2(react@18.3.1)
   '@hookform/resolvers':
     specifier: ^3.4.2
     version: registry.npmjs.org/@hookform/resolvers@3.4.2(react-hook-form@7.51.5)
@@ -71,9 +83,6 @@ dependencies:
   emoji-picker-react:
     specifier: ^4.9.4
     version: registry.npmjs.org/emoji-picker-react@4.9.4(react@18.3.1)
-  framer-motion:
-    specifier: ^11.2.10
-    version: registry.npmjs.org/framer-motion@11.2.10(react-dom@18.3.1)(react@18.3.1)
   lucide-react:
     specifier: ^0.381.0
     version: registry.npmjs.org/lucide-react@0.381.0(react@18.3.1)
@@ -443,6 +452,76 @@ packages:
       '@babel/helper-validator-identifier': registry.npmjs.org/@babel/helper-validator-identifier@7.24.6
       to-fast-properties: registry.npmjs.org/to-fast-properties@2.0.0
     dev: true
+
+  registry.npmjs.org/@dnd-kit/accessibility@3.1.0(react@18.3.1):
+    resolution: {integrity: sha512-ea7IkhKvlJUv9iSHJOnxinBcoOI3ppGnnL+VDJ75O45Nss6HtZd8IdN8touXPDtASfeI2T2LImb8VOZcL47wjQ==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@dnd-kit/accessibility/-/accessibility-3.1.0.tgz}
+    id: registry.npmjs.org/@dnd-kit/accessibility/3.1.0
+    name: '@dnd-kit/accessibility'
+    version: 3.1.0
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: registry.npmjs.org/react@18.3.1
+      tslib: registry.npmjs.org/tslib@2.6.2
+    dev: false
+
+  registry.npmjs.org/@dnd-kit/core@6.1.0(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-J3cQBClB4TVxwGo3KEjssGEXNJqGVWx17aRTZ1ob0FliR5IjYgTxl5YJbKTzA6IzrtelotH19v6y7uoIRUZPSg==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@dnd-kit/core/-/core-6.1.0.tgz}
+    id: registry.npmjs.org/@dnd-kit/core/6.1.0
+    name: '@dnd-kit/core'
+    version: 6.1.0
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@dnd-kit/accessibility': registry.npmjs.org/@dnd-kit/accessibility@3.1.0(react@18.3.1)
+      '@dnd-kit/utilities': registry.npmjs.org/@dnd-kit/utilities@3.2.2(react@18.3.1)
+      react: registry.npmjs.org/react@18.3.1
+      react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
+      tslib: registry.npmjs.org/tslib@2.6.2
+    dev: false
+
+  registry.npmjs.org/@dnd-kit/modifiers@7.0.0(@dnd-kit/core@6.1.0)(react@18.3.1):
+    resolution: {integrity: sha512-BG/ETy3eBjFap7+zIti53f0PCLGDzNXyTmn6fSdrudORf+OH04MxrW4p5+mPu4mgMk9kM41iYONjc3DOUWTcfg==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@dnd-kit/modifiers/-/modifiers-7.0.0.tgz}
+    id: registry.npmjs.org/@dnd-kit/modifiers/7.0.0
+    name: '@dnd-kit/modifiers'
+    version: 7.0.0
+    peerDependencies:
+      '@dnd-kit/core': ^6.1.0
+      react: '>=16.8.0'
+    dependencies:
+      '@dnd-kit/core': registry.npmjs.org/@dnd-kit/core@6.1.0(react-dom@18.3.1)(react@18.3.1)
+      '@dnd-kit/utilities': registry.npmjs.org/@dnd-kit/utilities@3.2.2(react@18.3.1)
+      react: registry.npmjs.org/react@18.3.1
+      tslib: registry.npmjs.org/tslib@2.6.2
+    dev: false
+
+  registry.npmjs.org/@dnd-kit/sortable@8.0.0(@dnd-kit/core@6.1.0)(react@18.3.1):
+    resolution: {integrity: sha512-U3jk5ebVXe1Lr7c2wU7SBZjcWdQP+j7peHJfCspnA81enlu88Mgd7CC8Q+pub9ubP7eKVETzJW+IBAhsqbSu/g==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@dnd-kit/sortable/-/sortable-8.0.0.tgz}
+    id: registry.npmjs.org/@dnd-kit/sortable/8.0.0
+    name: '@dnd-kit/sortable'
+    version: 8.0.0
+    peerDependencies:
+      '@dnd-kit/core': ^6.1.0
+      react: '>=16.8.0'
+    dependencies:
+      '@dnd-kit/core': registry.npmjs.org/@dnd-kit/core@6.1.0(react-dom@18.3.1)(react@18.3.1)
+      '@dnd-kit/utilities': registry.npmjs.org/@dnd-kit/utilities@3.2.2(react@18.3.1)
+      react: registry.npmjs.org/react@18.3.1
+      tslib: registry.npmjs.org/tslib@2.6.2
+    dev: false
+
+  registry.npmjs.org/@dnd-kit/utilities@3.2.2(react@18.3.1):
+    resolution: {integrity: sha512-+MKAJEOfaBe5SmV6t34p80MMKhjvUz0vRrvVJbPT0WElzaOJ/1xs+D+KDv+tD/NE5ujfrChEcshd4fLn0wpiqg==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@dnd-kit/utilities/-/utilities-3.2.2.tgz}
+    id: registry.npmjs.org/@dnd-kit/utilities/3.2.2
+    name: '@dnd-kit/utilities'
+    version: 3.2.2
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: registry.npmjs.org/react@18.3.1
+      tslib: registry.npmjs.org/tslib@2.6.2
+    dev: false
 
   registry.npmjs.org/@esbuild/aix-ppc64@0.20.2:
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.20.2.tgz}
@@ -3213,28 +3292,6 @@ packages:
     name: fraction.js
     version: 4.3.7
     dev: true
-
-  registry.npmjs.org/framer-motion@11.2.10(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-/gr3PLZUVFCc86a9MqCUboVrALscrdluzTb3yew+2/qKBU8CX6nzs918/SRBRCqaPbx0TZP10CB6yFgK2C5cYQ==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/framer-motion/-/framer-motion-11.2.10.tgz}
-    id: registry.npmjs.org/framer-motion/11.2.10
-    name: framer-motion
-    version: 11.2.10
-    peerDependencies:
-      '@emotion/is-prop-valid': '*'
-      react: ^18.0.0
-      react-dom: ^18.0.0
-    peerDependenciesMeta:
-      '@emotion/is-prop-valid':
-        optional: true
-      react:
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      react: registry.npmjs.org/react@18.3.1
-      react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
-      tslib: registry.npmjs.org/tslib@2.6.2
-    dev: false
 
   registry.npmjs.org/fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz}

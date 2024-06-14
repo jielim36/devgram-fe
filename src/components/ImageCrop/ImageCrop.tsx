@@ -4,7 +4,7 @@ import {
     DialogHeader,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cropper, { Area, Point } from "react-easy-crop";
 import { Slider } from "../ui/slider";
 import { cn } from "@/lib/utils"
@@ -14,10 +14,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useAddPost } from "@/hooks/usePosts";
 import { useTheme } from "@/utils/ThemeProvider";
-import { Reorder } from "framer-motion"
-import { motion } from "framer-motion"
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
 import Icon from "../Icon/Icon";
+import SortableImageList from "./SortableImageList";
 
 
 type ImageCropContainerProps = {
@@ -48,7 +47,7 @@ const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger }) => {
     );
 }
 
-type ImgType = {
+export type ImgType = {
     id: number;
     src: string;
     crop: Point;
@@ -84,34 +83,22 @@ const ImageCrop: React.FC<ImageCrop> = () => {
         })
     }
 
-    // const croppedImagePreview = async () => {
-
-    //     if (!croppedAreaPixels || !imageSrc || !croppedAreaPixels) {
-    //         return
-    //     }
-
-    //     try {
-    //         const croppedImage = await generatePreviewImage(
-    //             imageSrc[currentEditingIndex],
-    //             croppedAreaPixels[currentEditingIndex],
-    //             rotation[currentEditingIndex]
-    //         )
-    //         // console.log('donee', { croppedImage })
-    //         if (!croppedImage) return;
-    //         setCroppedImage(croppedImage);
-    //         setIsOpenPreview(true);
-    //     } catch (e) {
-    //         console.error(e)
-    //     }
-    // }
-
-
     const handleAddPost = async () => {
         if (imgList?.length > 0) {
             const imgBlobArray: Blob[] = [];
 
             for (let i = 0; i < imgList?.length; i++) {
-                const blob = await getCroppedImg(imgList[i].src, imgList[i].croppedAreaPixels, imgList[i].rotation);
+
+                const src = imgList[i].src;
+                if (!src) {
+                    console.log(imgList);
+                    return;
+                }
+                const croppedAreaPixels = imgList[i].croppedAreaPixels;
+
+                const rotation = imgList[i].rotation || 0;
+
+                const blob = await getCroppedImg(src, croppedAreaPixels, rotation);
                 if (!blob) return;
                 imgBlobArray.push(blob);
             }
@@ -171,7 +158,7 @@ const ImageCrop: React.FC<ImageCrop> = () => {
             Promise.all(readers)
                 .then(results => {
                     setImgList(results.map((src, index) => ({
-                        id: index,
+                        id: index + 1,
                         src: src,
                         crop: { x: 0, y: 0 },
                         zoom: 1,
@@ -235,7 +222,7 @@ const ImageCrop: React.FC<ImageCrop> = () => {
                 Promise.all(readers)
                     .then(results => {
                         setImgList((prev) => [...prev, ...results.map((src, index) => ({
-                            id: prev.length + index,
+                            id: prev.length + index + 1,
                             src: src,
                             crop: { x: 0, y: 0 },
                             zoom: 1,
@@ -284,62 +271,18 @@ const ImageCrop: React.FC<ImageCrop> = () => {
                 Drag to change order
             </p>
             <div className="h-[8%] flex flex-row items-center px-2">
-                <div className="h-full flex flex-row items-center grow">
-                    <Reorder.Group
-                        axis="x"
-                        values={imgList}
-                        onReorder={setImgList}
-                        className="h-full w-fit flex flex-row gap-3 p-1"
-                    >
-                        {imgList?.map((img, index) => (
-                            <Reorder.Item
-                                key={img?.id}
-                                value={img}
-                                className="relative h-full group"
-                                onPointerUp={() => onSwithImage(index)}
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{
-                                    opacity: 1,
-                                    backgroundColor: index === currentEditingIndex ? "#f3f3f3" : "#fff",
-                                    y: 0,
-                                    transition: { duration: 0.15 }
-                                }}
-                                whileDrag={{ backgroundColor: "#e3e3e3" }}
-                                exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
-                            >
-                                <motion.div className={`h-full aspect-square flex justify-center col-span-1 cursor-pointer rounded-md overflow-hidden p-1 card-color
-                                    ${index === currentEditingIndex ? `duration-300 scale-110 border-2 border-slate-900 ${theme === "light" ? "border-slate-900" : "border-white"}` : ""}`}
-                                >
-                                    <motion.img src={img?.src} alt="image" className="w-auto h-full object-cover select-none" draggable="false" />
-                                </motion.div>
-                                <motion.div className="absolute top-0 left-0 rounded-full border-2 text-xs font-bold h-[18px] w-[18px] bg-slate-400 flex justify-center items-center -translate-y-1 -translate-x-1">{index + 1}</motion.div>
-                                <motion.div
-                                    className="absolute top-0 right-0 rounded-full text-white h-4 w-4 bg-red-500 justify-center items-center -translate-y-1 translate-x-1 hidden group-hover:flex cursor-pointer"
-                                    onClick={() => { handleDeleteImg(img?.id) }}
-                                >
-                                    <Icon name="x" className="text-white" width={10} />
-                                </motion.div>
-                            </Reorder.Item>
-                        ))}
-                        {/* Add button as Reorder Item for animation when delete a image */}
-                        <Reorder.Item
-                            key={"unique"}
-                            value={null}
-                            className="relative h-full group"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{
-                                opacity: 1,
-                                y: 0,
-                                transition: { duration: 0.15 }
-                            }}
-                            whileDrag={{ backgroundColor: "#e3e3e3" }}
-                            exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
-                        >
-                            <Button className="ml-1 px-2 h-[90%] aspect-square flex items-center justify-center" onClick={onAddNewImage} disabled={imgList?.length >= 9}>
-                                <Icon name="plus" />
-                            </Button>
-                        </Reorder.Item>
-                    </Reorder.Group>
+                <div className="flex flex-row gap-4 grow h-full items-center">
+                    <div className="max-h-full flex justify-center items-center">
+                        <SortableImageList
+                            imgList={imgList}
+                            setImgList={setImgList}
+                            currentEditingIndex={currentEditingIndex}
+                            setCurrentEditingIndex={setCurrentEditingIndex}
+                        />
+                    </div>
+                    <Button className="h-[50px]" onClick={onAddNewImage} disabled={imgList?.length >= 9}>
+                        <Icon name="plus" />
+                    </Button>
                 </div>
                 <Button className="ml-2" onClick={handleConfirmPost}>Confirm</Button>
             </div>
@@ -347,9 +290,9 @@ const ImageCrop: React.FC<ImageCrop> = () => {
             <div className="relative h-[80%] sm:h-[80%] rounded-md overflow-hidden">
                 <Cropper
                     image={imgList[currentEditingIndex]?.src}
-                    crop={imgList[currentEditingIndex]?.crop}
-                    zoom={imgList[currentEditingIndex]?.zoom}
-                    rotation={imgList[currentEditingIndex]?.rotation}
+                    crop={imgList[currentEditingIndex]?.crop || { x: 0, y: 0 }}
+                    zoom={imgList[currentEditingIndex]?.zoom || 1}
+                    rotation={imgList[currentEditingIndex]?.rotation || 0}
                     aspect={1 / 1}
                     onCropChange={onSetCrop}
                     onZoomChange={onSetZoom}
