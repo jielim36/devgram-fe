@@ -75,6 +75,12 @@ export default async function getCroppedImg(
     }
 
     // Set the size of the cropped canvas
+    if (pixelCrop.width === 0 && pixelCrop.height === 0) {
+        const defaultCropSize = Math.min(image.width, image.height)
+        pixelCrop.width = defaultCropSize
+        pixelCrop.height = defaultCropSize
+    }
+
     croppedCanvas.width = pixelCrop.width
     croppedCanvas.height = pixelCrop.height
 
