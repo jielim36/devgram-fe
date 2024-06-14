@@ -1,10 +1,9 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost, getPopularPosts, getPostByPostId, getPostsByUserId } from "@/services";
+import { addPost, deletePost, getPopularPosts, getPostByPostId, getPostsByUserId } from "@/services";
 import { Post, ResponseBody } from "@/types";
 import {
     useQuery,
     useMutation,
-    useQueryClient,
     QueryFunctionContext,
 } from '@tanstack/react-query'
 import { ResponseHandlerType } from ".";
@@ -20,6 +19,18 @@ export const useAddPost = ({ onSuccess, onError }: ResponseHandlerType<boolean>)
             onError: onError
         });
 };
+
+export const useDeletePost = ({ onSuccess, onError }: ResponseHandlerType<boolean>) => {
+    return useMutation(
+        {
+            mutationFn: async (postId: number) => {
+                return deletePost(postId);
+            },
+            onSuccess: onSuccess,
+            onError: onError
+        });
+
+}
 
 export const useGetPopularPosts = () => {
     return useQuery({

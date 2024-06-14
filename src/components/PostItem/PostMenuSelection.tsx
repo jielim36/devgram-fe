@@ -6,14 +6,29 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "../ui/separator";
 import Icon from "../Icon/Icon";
+import { useDeletePost } from "@/hooks";
 
 type PostMenuSelectionProps = {
+    userId?: number;
     post: Post;
     triggerClassName?: string;
     containerClassName?: string;
 }
 
-const PostMenuSelection: React.FC<PostMenuSelectionProps> = ({ post, triggerClassName, containerClassName }) => {
+const PostMenuSelection: React.FC<PostMenuSelectionProps> = ({ userId, post, triggerClassName, containerClassName }) => {
+
+    const deletePostMutation = useDeletePost({
+        onSuccess: () => {
+            //TODO: Add toast notification
+        },
+        onError: (err) => {
+            console.log(err);
+        }
+    });
+
+    const handleDeletePost = () => {
+        deletePostMutation.mutate(post.id);
+    }
 
     return (
         <Dialog >
@@ -30,6 +45,15 @@ const PostMenuSelection: React.FC<PostMenuSelectionProps> = ({ post, triggerClas
                         <li>Copy Link</li>
                         <Separator />
                         <li>Account Description</li>
+                        {userId === post.user.id && (
+                            <>
+                                <Separator />
+                                <li>Edit Post</li>
+                                <Separator />
+                                <li className="text-red-500" onClick={handleDeletePost}>Delete Post</li>
+                            </>
+
+                        )}
                     </ul>
                 </div>
             </DialogContent>

@@ -74,7 +74,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
                         <p className="text-muted-foreground">{convertDate(post.created_at)}</p>
                     </div>
                 </div>
-                <PostMenuSelection post={post} triggerClassName="px-2" />
+                <PostMenuSelection post={post} userId={user?.id} triggerClassName="px-2" />
             </div>
 
             <PostSwiper postImages={post.images_url} />
