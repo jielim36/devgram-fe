@@ -13,7 +13,7 @@ export const useAddPost = ({ onSuccess, onError }: ResponseHandlerType<boolean>)
         {
             // mutationKey: POST_QUERY_KEY,
             mutationFn: async (data: { description: string, imgBlobArray: Blob[] }) => {
-                return addPost(data.description, data.imgBlobArray);
+                return await addPost(data.description, data.imgBlobArray);
             },
             onSuccess: onSuccess,
             onError: onError
@@ -24,12 +24,11 @@ export const useDeletePost = ({ onSuccess, onError }: ResponseHandlerType<boolea
     return useMutation(
         {
             mutationFn: async (postId: number) => {
-                return deletePost(postId);
+                return await deletePost(postId);
             },
             onSuccess: onSuccess,
             onError: onError
         });
-
 }
 
 export const useGetPopularPosts = () => {
@@ -37,7 +36,7 @@ export const useGetPopularPosts = () => {
         queryKey: POST_QUERY_KEY,
         queryFn: async () => {
             return await getPopularPosts();
-        }
+        },
     });
 }
 
