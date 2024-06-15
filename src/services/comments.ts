@@ -11,3 +11,9 @@ export const addComment = async (postId: number, parentId: number, content: stri
 
     return response.data;
 }
+
+export const deleteComment = async (commentId: number): Promise<ResponseBody<boolean>> => {
+    const response = await axiosClient.delete(`/comment/${commentId}`);
+
+    return response.data;
+}

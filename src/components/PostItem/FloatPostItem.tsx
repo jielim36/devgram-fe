@@ -15,7 +15,7 @@ import convertDate, { convertDateWithShort } from "@/utils/convertDateFormat";
 import { useEffect, useRef, useState } from "react";
 import LikeMessageGenerate from "./LikeMessageGenerate";
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
-import { useAddComment, useLikePost, useGetPostByPostId, useUnlikePost, useLikeComment, useUnlikeComment } from "@/hooks";
+import { useAddComment, useLikePost, useGetPostByPostId, useUnlikePost, useLikeComment, useUnlikeComment, useDeleteComment } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
 import Icon from "../Icon/Icon";
 import toast from "react-hot-toast";
@@ -135,6 +135,12 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
         }
     });
 
+    const deleteCommentMuatation = useDeleteComment({
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: POST_QUERY_KEY });
+        }
+    });
+
     useEffect(() => {
         if (postData) {
             setPost(postData.data);
@@ -168,6 +174,17 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                 loading: "Adding comment",
                 success: "Comment added",
                 error: "Error adding comment"
+            }
+        );
+    }
+
+    const handleDeleteComment = (commentId: number) => {
+        if (!post) return;
+        toast.promise(deleteCommentMuatation.mutateAsync(commentId),
+            {
+                loading: "Deleting comment",
+                success: "Comment deleted",
+                error: "Error deleting comment"
             }
         );
     }
@@ -316,6 +333,9 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                             <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
                                                 <p className="hover:underline">Reply</p>
                                                 <p className="hover:underline">View comments</p>
+                                                {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
+                                                    <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
+                                                }
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-center">
