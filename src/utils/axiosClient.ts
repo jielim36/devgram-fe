@@ -1,4 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { error } from 'console';
+import toast from 'react-hot-toast';
 
 const baseURL = import.meta.env.VITE_SERVER_URL;
 const websiteURL = import.meta.env.VITE_WEBSITE_URL;
@@ -30,6 +32,10 @@ const axiosClient: AxiosInstance = axios.create({
 //     }
 // );
 
+const notify = (message: string) => {
+    toast.error(message);
+}
+
 axiosClient.interceptors.response.use(
     (response: AxiosResponse): AxiosResponse => {
         return response;
@@ -38,7 +44,10 @@ axiosClient.interceptors.response.use(
         // 对响应错误做些什么
         if (error.response && error.response.status === 401) {
             // 处理未授权错误，例如重定向到登录页
+            notify('Unauthorized');
             window.location.href = websiteURL + '/login';
+        } else {
+            notify(error.message);
         }
         return Promise.reject(error);
     }

@@ -18,6 +18,7 @@ import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
 import { useAddComment, useLikePost, useGetPostByPostId, useUnlikePost, useLikeComment, useUnlikeComment } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
 import Icon from "../Icon/Icon";
+import toast from "react-hot-toast";
 
 type FloatPostProps = {
     // post: Post;
@@ -54,7 +55,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
     const addCommentMutation = useAddComment({
         onSuccess: () => {
             setCommentContent("");
-            //TODO: remind user success
+            
         }
     });
     const likePostMutation = useLikePost({
@@ -152,11 +153,22 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
         if (commentContent.trim() === "" || !post) return;
         //TODO: remind user
 
-        addCommentMutation.mutate({
-            postId: post?.id,
+        // addCommentMutation.mutate({
+        //     postId: post?.id,
+        //     parentId: 0,
+        //     content: commentContent
+        // });
+        toast.promise(addCommentMutation.mutateAsync({
+            postId: post.id,
             parentId: 0,
             content: commentContent
-        });
+        }),
+            {
+                loading: "Adding comment",
+                success: "Comment added",
+                error: "Error adding comment"
+            }
+        );
     }
 
     useEffect(() => {

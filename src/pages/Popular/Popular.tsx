@@ -1,4 +1,11 @@
+import { useGetMe } from "@/hooks";
+import { useEffect, useState } from "react";
+import { getMe } from "@/services";
+import { CustomQueryToast, PromiseToast } from "@/components/Toast/CustomToast";
+import toast from "react-hot-toast";
+
 const Popular = () => {
+
     return (
         <div>
             Popular
@@ -6,4 +13,4 @@ const Popular = () => {
     );
 }
 
-export default Popular; 
+export default Popular;

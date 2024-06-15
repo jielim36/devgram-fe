@@ -7,6 +7,8 @@ import {
 import { Separator } from "../ui/separator";
 import Icon from "../Icon/Icon";
 import { useDeletePost } from "@/hooks";
+import { CustomQueryToast, PromiseToast } from "../Toast/CustomToast";
+import toast from "react-hot-toast";
 
 type PostMenuSelectionProps = {
     userId?: number;
@@ -19,7 +21,7 @@ const PostMenuSelection: React.FC<PostMenuSelectionProps> = ({ userId, post, tri
 
     const deletePostMutation = useDeletePost({
         onSuccess: () => {
-            //TODO: Add toast notification
+            window.location.reload();
         },
         onError: (err) => {
             console.log(err);
@@ -27,7 +29,11 @@ const PostMenuSelection: React.FC<PostMenuSelectionProps> = ({ userId, post, tri
     });
 
     const handleDeletePost = () => {
-        deletePostMutation.mutate(post.id);
+        toast.promise(deletePostMutation.mutateAsync(post.id), {
+            loading: "Deleting post",
+            success: "Post deleted",
+            error: "Error deleting post"
+        });
     }
 
     return (

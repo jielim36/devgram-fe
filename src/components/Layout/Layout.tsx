@@ -45,6 +45,7 @@ import { useLogout } from "@/hooks/useAuth";
 import Icon from "../Icon/Icon";
 import PostSkeleton from "../Suspense/PostSkeleton";
 import UnauthorizedPage from "@/pages/InvalidPages/UnauthorizedPage";
+import toast from "react-hot-toast";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -374,7 +375,11 @@ const ProfileMenu = ({ user }: { user: User }) => {
     }
 
     const handleLogout = () => {
-        logoutMutation.mutate();
+        toast.promise(logoutMutation.mutateAsync(), {
+            loading: "Logging out",
+            success: "Logged out",
+            error: "Error logging out"
+        });
     }
 
     return (

@@ -17,6 +17,7 @@ import { useTheme } from "@/utils/ThemeProvider";
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
 import Icon from "../Icon/Icon";
 import SortableImageList from "./SortableImageList";
+import toast from "react-hot-toast";
 
 
 type ImageCropContainerProps = {
@@ -106,7 +107,11 @@ const ImageCrop: React.FC<ImageCrop> = () => {
             // const { data } = useGetMe();
             const description = postDescription || "";
 
-            addPostMutation.mutate({ description, imgBlobArray });
+            toast.promise(addPostMutation.mutateAsync({ description, imgBlobArray }), {
+                loading: "Adding post",
+                success: "Post added",
+                error: "Error adding post"
+            });
 
         }
     }
