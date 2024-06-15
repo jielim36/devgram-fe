@@ -26,15 +26,16 @@ const Login = React.lazy(() => import('../pages/Login/Login'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
 import CustomToaster from '@/components/Toast/CustomToast';
 
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
 function App() {
 
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  })
   const { theme } = useTheme();
 
   return (

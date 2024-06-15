@@ -19,6 +19,8 @@ import { useAddComment, useLikePost, useGetPostByPostId, useUnlikePost, useLikeC
 import { useAuth } from "@/utils/AuthProvider";
 import Icon from "../Icon/Icon";
 import toast from "react-hot-toast";
+import { queryClient } from "@/app/App";
+import { POST_QUERY_KEY } from "@/constants";
 
 type FloatPostProps = {
     // post: Post;
@@ -55,7 +57,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
     const addCommentMutation = useAddComment({
         onSuccess: () => {
             setCommentContent("");
-            
+            queryClient.invalidateQueries({ queryKey: POST_QUERY_KEY });
         }
     });
     const likePostMutation = useLikePost({
@@ -95,7 +97,6 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                     return prev;
                 });
             }
-
             setCurrentLikeCommentId(null);
         },
         onError: (error) => {
