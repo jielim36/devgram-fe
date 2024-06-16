@@ -24,6 +24,11 @@ export const deletePost = async (postId: number): Promise<ResponseBody<boolean>>
     return response.data;
 }
 
+export const updatePostDescription = async (postId: number, description: string): Promise<ResponseBody<boolean>> => {
+    const response = await axiosClient.put(`/post/${postId}`, { description });
+    return response.data;
+}
+
 export const getPopularPosts = async (): Promise<ResponseBody<Post[]>> => {
     const response = await axiosClient.get(`/post/popular`);
     return response.data;

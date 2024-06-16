@@ -1,5 +1,5 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost, deletePost, getPopularPosts, getPostByPostId, getPostsByUserId } from "@/services";
+import { addPost, deletePost, getPopularPosts, getPostByPostId, getPostsByUserId, updatePostDescription } from "@/services";
 import { Post, ResponseBody } from "@/types";
 import {
     useQuery,
@@ -25,6 +25,17 @@ export const useDeletePost = ({ onSuccess, onError }: ResponseHandlerType<boolea
         {
             mutationFn: async (postId: number) => {
                 return await deletePost(postId);
+            },
+            onSuccess: onSuccess,
+            onError: onError
+        });
+}
+
+export const useUpdatePostDescription = ({ onSuccess, onError }: ResponseHandlerType<boolean>) => {
+    return useMutation(
+        {
+            mutationFn: async (data: { postId: number, description: string }) => {
+                return await updatePostDescription(data.postId, data.description);
             },
             onSuccess: onSuccess,
             onError: onError

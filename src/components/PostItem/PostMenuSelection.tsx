@@ -9,6 +9,7 @@ import Icon from "../Icon/Icon";
 import { useDeletePost } from "@/hooks";
 import { CustomQueryToast, PromiseToast } from "../Toast/CustomToast";
 import toast from "react-hot-toast";
+import EditDescriptionDialog from "./EditDescriptionDialog";
 
 type PostMenuSelectionProps = {
     userId?: number;
@@ -54,7 +55,9 @@ const PostMenuSelection: React.FC<PostMenuSelectionProps> = ({ userId, post, tri
                         {userId === post.user.id && (
                             <>
                                 <Separator />
-                                <li>Edit Post</li>
+                                <li>
+                                    <EditDescriptionDialog post={post} />
+                                </li>
                                 <Separator />
                                 <li className="text-red-500" onClick={handleDeletePost}>Delete Post</li>
                             </>
