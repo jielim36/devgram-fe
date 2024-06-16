@@ -37,7 +37,13 @@ const notify = (message: string) => {
 }
 
 axiosClient.interceptors.response.use(
-    (response: AxiosResponse): AxiosResponse => {
+    (response: AxiosResponse): AxiosResponse | any => {
+
+        if (response.data.code !== "200") {
+            const error = new Error(response.data.message || 'Error');
+            return Promise.reject(error);
+        }
+
         return response;
     },
     (error: AxiosError): Promise<AxiosError> => {
@@ -47,7 +53,7 @@ axiosClient.interceptors.response.use(
             notify('Unauthorized');
             window.location.href = websiteURL + '/login';
         } else {
-            notify(error.message);
+            // notify(error.message);
         }
         return Promise.reject(error);
     }
