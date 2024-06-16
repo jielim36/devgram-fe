@@ -57,9 +57,9 @@ const InputWithEmoji: React.FC<InputWithEmojiProps> = ({
     return (
         <div className={containerClassName}>
             {isShowLabel &&
-                <Label htmlFor="inputWithEmoji">{label}</Label>
+                <Label htmlFor="inputWithEmoji" className="">{label}</Label>
             }
-            <div className="flex flex-row gap-2 items-start">
+            <div className="flex flex-row gap-2 items-start mt-1">
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         <Icon name="smile-plus" />
