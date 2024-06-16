@@ -21,6 +21,7 @@ import Icon from "../Icon/Icon";
 import toast from "react-hot-toast";
 import { queryClient } from "@/app/App";
 import { POST_QUERY_KEY } from "@/constants";
+import DeleteCommentDialog from "./DeleteCommentDialog";
 
 type FloatPostProps = {
     // post: Post;
@@ -135,12 +136,6 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
         }
     });
 
-    const deleteCommentMuatation = useDeleteComment({
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: POST_QUERY_KEY });
-        }
-    });
-
     useEffect(() => {
         if (postData) {
             setPost(postData.data);
@@ -174,17 +169,6 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                 loading: "Adding comment",
                 success: "Comment added",
                 error: "Error adding comment"
-            }
-        );
-    }
-
-    const handleDeleteComment = (commentId: number) => {
-        if (!post) return;
-        toast.promise(deleteCommentMuatation.mutateAsync(commentId),
-            {
-                loading: "Deleting comment",
-                success: "Comment deleted",
-                error: "Error deleting comment"
             }
         );
     }
@@ -334,7 +318,8 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                                 <p className="hover:underline">Reply</p>
                                                 <p className="hover:underline">View comments</p>
                                                 {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
-                                                    <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
+                                                    // <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
+                                                    <DeleteCommentDialog commentId={comment.id} />
                                                 }
                                             </div>
                                         </div>
