@@ -10,6 +10,7 @@ export type User = {
     password?: string;
     stories?: Story[];
     is_active: boolean;
+    is_following?: boolean;
     created_at: string;
     updated_at: string;
 };

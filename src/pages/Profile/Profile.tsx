@@ -10,9 +10,10 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { useGetPostsByUserId, useGetUserByUserId } from "@/hooks";
+import { useAddFollow, useGetPostsByUserId, useGetUserByUserId, useIsFollowing, useUnFollow } from "@/hooks";
 import { Post, User } from "@/types";
 import PostCard from "./PostCard";
+import toast from "react-hot-toast";
 
 const Profile = () => {
 
@@ -20,16 +21,44 @@ const Profile = () => {
     const { userId } = useParams();
     const { user: me } = useAuth();
     const [isOwner, setIsOwner] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
     const [user, setUser] = useState<User>();
-    const { data: userData } = useGetUserByUserId(Number(userId));
-    const { data: postData } = useGetPostsByUserId(Number(userId));
     const [posts, setPosts] = useState<Post[]>();
+
+    const { data: postData } = useGetPostsByUserId(Number(userId));
+
+    const { data: userData } = useGetUserByUserId(Number(userId));
+
+    const { data: isFollowingData } = useIsFollowing({
+        follower_id: me!.id,
+        following_id: Number(userId),
+        enabled: !isOwner && me?.id != undefined
+    });
+
+    const addFollowMutation = useAddFollow({
+        onSuccess: () => {
+            setIsFollowing(true);
+        }
+    });
+
+    const unFollowMutation = useUnFollow({
+        onSuccess: () => {
+            setIsFollowing(false);
+        }
+    });
+
 
     useEffect(() => {
         if (me && me.id === Number(userId)) {
             setIsOwner(true);
         }
     }, [userId, user]);
+
+    useEffect(() => {
+        if (isFollowingData != undefined && isFollowingData?.data) {
+            setIsFollowing(isFollowingData.data);
+        }
+    }, [isFollowingData]);
 
     useEffect(() => {
         if (postData != undefined && postData?.data) {
@@ -42,6 +71,25 @@ const Profile = () => {
             setUser(userData.data)
         }
     }, [userData]);
+
+    const handleFollow = () => {
+        if (isOwner) return;
+        if (addFollowMutation.isPending || unFollowMutation.isPending) return;
+
+        if (isFollowing) {
+            toast.promise(unFollowMutation.mutateAsync({ follower_id: me!.id, following_id: Number(userId) }), {
+                loading: "Unfollowing...",
+                success: "Unfollowed",
+                error: "Failed to unfollow"
+            });
+        } else {
+            toast.promise(addFollowMutation.mutateAsync({ follower_id: me!.id, following_id: Number(userId) }), {
+                loading: "Following...",
+                success: "Followed",
+                error: "Failed to follow"
+            });
+        }
+    }
 
 
     return (
@@ -77,7 +125,7 @@ const Profile = () => {
                                 <Icon name="settings" />
                             </Button>
                         }
-                        {!isOwner && <Button className="flex-none">Follow</Button>}
+                        {!isOwner && <Button className="flex-none" onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</Button>}
                         {!isOwner && <Button className="flex-none">Message</Button>}
                         {!isOwner &&
                             <Button variant="ghost" className="flex-none">
