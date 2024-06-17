@@ -1,7 +1,7 @@
 import { ResponseBody } from "@/types";
 import { QueryFunctionContext, useMutation, useQuery } from "@tanstack/react-query"
 import { ResponseHandlerType } from ".";
-import { follow, followerCount, followingCount, isFollowing, unFollow } from "@/services";
+import { follow, followerCount, followingCount, getFollowingList, isFollowing, unFollow } from "@/services";
 import { FOLLOW_QUERY_KEY } from "@/constants";
 
 const fetchIsFollowing = async (context: QueryFunctionContext<string[]>): Promise<ResponseBody<boolean>> => {
@@ -39,7 +39,7 @@ export const useUnFollow = ({ onSuccess, onError }: ResponseHandlerType<boolean>
 
 export const useGetFollowingCount = ({ following_id }: { following_id: number }) => {
     return useQuery({
-        queryKey: FOLLOW_QUERY_KEY.concat(following_id.toString(), "following"),
+        queryKey: FOLLOW_QUERY_KEY.concat(following_id.toString(), "followingCount"),
         queryFn: async (context: QueryFunctionContext<string[]>) => {
             const [_, following_id] = context.queryKey;
             return await followingCount(Number(following_id));
@@ -49,10 +49,21 @@ export const useGetFollowingCount = ({ following_id }: { following_id: number })
 
 export const useGetFollowerCount = ({ follower_id }: { follower_id: number }) => {
     return useQuery({
-        queryKey: FOLLOW_QUERY_KEY.concat(follower_id.toString(), "follower"),
+        queryKey: FOLLOW_QUERY_KEY.concat(follower_id.toString(), "followerCount"),
         queryFn: async (context: QueryFunctionContext<string[]>) => {
             const [_, follower_id] = context.queryKey;
             return await followerCount(Number(follower_id));
         }
+    });
+}
+
+export const useGetFollowingList = ({ following_id, pages, enabled }: { following_id: number, pages: number, enabled: boolean }) => {
+    return useQuery({
+        queryKey: FOLLOW_QUERY_KEY.concat(following_id.toString(), pages.toString(), "followingList"),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, following_id, pages] = context.queryKey;
+            return await getFollowingList(Number(following_id), Number(pages));
+        },
+        enabled: enabled
     });
 }

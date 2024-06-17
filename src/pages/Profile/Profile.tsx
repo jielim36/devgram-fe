@@ -14,6 +14,7 @@ import { useAddFollow, useGetFollowerCount, useGetFollowingCount, useGetPostsByU
 import { FollowList, Post, User } from "@/types";
 import PostCard from "./PostCard";
 import toast from "react-hot-toast";
+import FollowingListingDialog from "./FollowingListingDialog";
 
 const Profile = () => {
 
@@ -153,21 +154,22 @@ const Profile = () => {
                     <div className="flex flex-row gap-8 w-full">
                         <span>
                             <strong>
-                                9,999
+                                {posts?.length || 0}
                             </strong>
                             {" "}
                             Post
                         </span>
+                        <FollowingListingDialog userId={Number(userId)} trigger={
+                            <span className="hover:underline cursor-pointer w-fit">
+                                <strong>
+                                    {followCount?.followingCount || 0}
+                                </strong>
+                                {" "}
+                                Following
+                            </span>
+                        } />
 
-                        <span>
-                            <strong>
-                                {followCount?.followingCount || 0}
-                            </strong>
-                            {" "}
-                            Following
-                        </span>
-
-                        <span>
+                        <span className="hover:underline cursor-pointer">
                             <strong>
                                 {followCount?.followerCount || 0}
                             </strong>
@@ -225,7 +227,7 @@ const Profile = () => {
                 </TabsContent>
                 <TabsContent value="reels">Still under developing...</TabsContent>
             </Tabs>
-        </div>
+        </div >
     );
 }
 
