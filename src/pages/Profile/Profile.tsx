@@ -10,21 +10,23 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { useGetPostsByUserId } from "@/hooks";
-import { Post } from "@/types";
+import { useGetPostsByUserId, useGetUserByUserId } from "@/hooks";
+import { Post, User } from "@/types";
 import PostCard from "./PostCard";
 
 const Profile = () => {
 
     // path = profile/username , check the username from the path
     const { userId } = useParams();
-    const { user } = useAuth();
+    const { user: me } = useAuth();
     const [isOwner, setIsOwner] = useState(false);
+    const [user, setUser] = useState<User>();
+    const { data: userData } = useGetUserByUserId(Number(userId));
     const { data: postData } = useGetPostsByUserId(Number(userId));
     const [posts, setPosts] = useState<Post[]>();
 
     useEffect(() => {
-        if (user && user.id === Number(userId)) {
+        if (me && me.id === Number(userId)) {
             setIsOwner(true);
         }
     }, [userId, user]);
@@ -34,6 +36,12 @@ const Profile = () => {
             setPosts(postData.data)
         }
     }, [postData])
+
+    useEffect(() => {
+        if (userData != undefined && userData?.data) {
+            setUser(userData.data)
+        }
+    }, [userData]);
 
 
     return (

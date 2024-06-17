@@ -11,3 +11,8 @@ export const getMe = async (): Promise<ResponseBody<User>> => {
     const response = await axiosClient.get("/user/me");
     return response.data;
 };
+
+export const getUserByUserId = async (userId: number): Promise<ResponseBody<User>> => {
+    const response = await axiosClient.get(`/user/${userId}`);
+    return response.data;
+};
