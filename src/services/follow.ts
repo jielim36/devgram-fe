@@ -21,7 +21,7 @@ export const getFollowingList = async (following_id: number, pages: number): Pro
     // const formData = new FormData();
     // formData.append("following_id", following_id.toString());
     // formData.append("pages", pages.toString());
-    const response = await axiosClient.get(`/follow/following`, { params: { following_id, pages } });
+    const response = await axiosClient.get(`/follow/${following_id}/following`, { params: { pages } });
     return response.data;
 };
 
@@ -29,13 +29,18 @@ export const getFollowerList = async (follower_id: number, pages: number): Promi
     // const formData = new FormData();
     // formData.append("follower_id", follower_id.toString());
     // formData.append("pages", pages.toString());
-    const response = await axiosClient.get(`/follow/follower`, { params: { follower_id, pages } });
+    const response = await axiosClient.get(`/follow/${follower_id}/follower`, { params: { pages } });
     return response.data;
 };
 
 export const followingCount = async (following_id: number): Promise<ResponseBody<number>> => {
     // const formData = new FormData();
     // formData.append("following_id", following_id.toString());
-    const response = await axiosClient.get(`/follow/following/count`, { params: { following_id } });
+    const response = await axiosClient.get(`/follow/${following_id}/following/count`);
+    return response.data;
+}
+
+export const followerCount = async (follower_id: number): Promise<ResponseBody<number>> => {
+    const response = await axiosClient.get(`/follow/${follower_id}/follower/count`);
     return response.data;
 }

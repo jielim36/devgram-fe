@@ -10,8 +10,8 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { useAddFollow, useGetPostsByUserId, useGetUserByUserId, useIsFollowing, useUnFollow } from "@/hooks";
-import { Post, User } from "@/types";
+import { useAddFollow, useGetFollowerCount, useGetFollowingCount, useGetPostsByUserId, useGetUserByUserId, useIsFollowing, useUnFollow } from "@/hooks";
+import { FollowList, Post, User } from "@/types";
 import PostCard from "./PostCard";
 import toast from "react-hot-toast";
 
@@ -24,10 +24,15 @@ const Profile = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [user, setUser] = useState<User>();
     const [posts, setPosts] = useState<Post[]>();
+    const [followCount, setFollowCount] = useState<FollowList>({
+        followerCount: 0,
+        followingCount: 0
+    });
 
     const { data: postData } = useGetPostsByUserId(Number(userId));
-
     const { data: userData } = useGetUserByUserId(Number(userId));
+    const { data: followingCountData } = useGetFollowingCount({ following_id: Number(userId) });
+    const { data: followerCountData } = useGetFollowerCount({ follower_id: Number(userId) });
 
     const { data: isFollowingData } = useIsFollowing({
         follower_id: me!.id,
@@ -71,6 +76,16 @@ const Profile = () => {
             setUser(userData.data)
         }
     }, [userData]);
+
+    useEffect(() => {
+        if (followingCountData != undefined && followingCountData?.data) {
+            setFollowCount(prev => ({ ...prev, followingCount: followingCountData.data }));
+        }
+
+        if (followerCountData != undefined && followerCountData?.data) {
+            setFollowCount(prev => ({ ...prev, followerCount: followerCountData.data }));
+        }
+    }, [followingCountData, followerCountData]);
 
     const handleFollow = () => {
         if (isOwner) return;
@@ -146,7 +161,7 @@ const Profile = () => {
 
                         <span>
                             <strong>
-                                9,999
+                                {followCount?.followingCount || 0}
                             </strong>
                             {" "}
                             Following
@@ -154,7 +169,7 @@ const Profile = () => {
 
                         <span>
                             <strong>
-                                9,999
+                                {followCount?.followerCount || 0}
                             </strong>
                             {" "}
                             Follower

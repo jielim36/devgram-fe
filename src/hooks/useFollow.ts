@@ -1,7 +1,7 @@
 import { ResponseBody } from "@/types";
 import { QueryFunctionContext, useMutation, useQuery } from "@tanstack/react-query"
 import { ResponseHandlerType } from ".";
-import { follow, isFollowing, unFollow } from "@/services";
+import { follow, followerCount, followingCount, isFollowing, unFollow } from "@/services";
 import { FOLLOW_QUERY_KEY } from "@/constants";
 
 const fetchIsFollowing = async (context: QueryFunctionContext<string[]>): Promise<ResponseBody<boolean>> => {
@@ -34,5 +34,25 @@ export const useUnFollow = ({ onSuccess, onError }: ResponseHandlerType<boolean>
         },
         onSuccess: onSuccess,
         onError: onError
+    });
+}
+
+export const useGetFollowingCount = ({ following_id }: { following_id: number }) => {
+    return useQuery({
+        queryKey: FOLLOW_QUERY_KEY.concat(following_id.toString(), "following"),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, following_id] = context.queryKey;
+            return await followingCount(Number(following_id));
+        }
+    });
+}
+
+export const useGetFollowerCount = ({ follower_id }: { follower_id: number }) => {
+    return useQuery({
+        queryKey: FOLLOW_QUERY_KEY.concat(follower_id.toString(), "follower"),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, follower_id] = context.queryKey;
+            return await followerCount(Number(follower_id));
+        }
     });
 }
