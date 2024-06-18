@@ -1,5 +1,6 @@
 import { queryClient } from "@/app/App";
 import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
+import Icon from "@/components/Icon/Icon";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -15,6 +16,7 @@ import { FOLLOW_QUERY_KEY } from "@/constants";
 import { useAddFollow, useGetFollowerList, useGetFollowingList, useUnFollow } from "@/hooks";
 import { User } from "@/types";
 import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 import toast from "react-hot-toast";
 
 type FollowingListingProps = {
@@ -33,17 +35,22 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
 
     const [currentPage, setCurrentPage] = useState(0);
     const [isOpenDialog, setIsOpenDialog] = useState(false);
+    const [isNoRecordFound, setIsNoRecordFound] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [followList, setFollowingList] = useState<User[]>([]);
-    const { data: followerListData } = useGetFollowerList({
+    const followerListResult = useGetFollowerList({
         follower_id: userId,
         pages: currentPage,
         enabled: isOpenDialog && mode === "follower"
     });
-    const { data: followingListData } = useGetFollowingList({
+    const followingListResult = useGetFollowingList({
         following_id: userId,
         pages: currentPage,
         enabled: isOpenDialog && mode === "following"
     });
+
+    const { data: followerListData } = followerListResult;
+    const { data: followingListData } = followingListResult;
 
     useEffect(() => {
         if (mode === "following" && followingListData?.data != undefined) {
@@ -52,6 +59,20 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
             setFollowingList(followerListData?.data);
         }
     }, [followingListData, followerListData]);
+
+    useEffect(() => {
+        setIsNoRecordFound(
+            (mode == "following" && followingListResult?.isSuccess && followingListData?.data?.length === 0)
+            ||
+            (mode === "follower" && followerListResult?.isSuccess && followerListData?.data?.length === 0)
+        );
+
+        setIsLoading(
+            (mode == "following" && followingListResult?.isLoading)
+            ||
+            (mode === "follower" && followerListResult?.isLoading)
+        );
+    }, [followerListResult, followingListResult]);
 
     return (
         <Dialog open={isOpenDialog} onOpenChange={setIsOpenDialog}>
@@ -65,7 +86,7 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
                     <DialogTitle>Following List</DialogTitle>
                 </DialogHeader>
                 <Separator />
-                {(!followList || followList?.length === 0) && (followerListData?.data || followingListData?.data)
+                {isNoRecordFound
                     && <p className="text-center">No {mode === "follower" ? "follower" : "following"} found</p>
                 }
                 <div className="flex flex-col gap-2 py-1 w-full">
@@ -76,6 +97,13 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
                         />
                     ))}
                 </div>
+
+                {/* Loading Spinner */}
+                {isLoading && (
+                    <div className="flex justify-center">
+                        <Icon name="loader-circle" className="animate-spin text-muted-foreground" />
+                    </div>
+                )}
             </DialogContent>
         </Dialog>
     );
@@ -123,9 +151,8 @@ const UserCard = ({ user, me }: { user: User, me: User, }) => {
                 className="flex-none w-fit"
             />
             <div className="grid grid-cols-4 gap-2 items-center">
-
                 <p className="col-span-3 font-semibold text-left flex flex-row gap-1 truncate">
-                    {user.username} dfsdafdsfdfsdf dfsdfsdfsdfsdf sdfsdfsdfsdfsd sdfsdfsdfs
+                    {user.username}
                     {me?.id === user.id && <span className="text-muted-foreground">(You)</span>}
                 </p>
                 {me?.id !== user.id &&
