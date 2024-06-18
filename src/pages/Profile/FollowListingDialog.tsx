@@ -89,7 +89,7 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
                 {isNoRecordFound
                     && <p className="text-center">No {mode === "follower" ? "follower" : "following"} found</p>
                 }
-                <div className="flex flex-col gap-2 py-1 w-full">
+                <div className="flex flex-col gap-2 py-1 w-full overflow-y-auto max-h-[400px]">
                     {followList != undefined && followList.map((user) => (
                         <UserCard
                             key={user.id}
@@ -150,7 +150,7 @@ const UserCard = ({ user, me }: { user: User, me: User, }) => {
                 hasStory={user?.stories != undefined && user?.stories?.length > 0}
                 className="flex-none w-fit"
             />
-            <div className="grid grid-cols-4 gap-2 items-center">
+            <div className="grid grid-cols-4 gap-2 items-center w-full">
                 <p className="col-span-3 font-semibold text-left flex flex-row gap-1 truncate">
                     {user.username}
                     {me?.id === user.id && <span className="text-muted-foreground">(You)</span>}
