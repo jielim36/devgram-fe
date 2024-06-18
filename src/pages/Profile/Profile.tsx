@@ -173,33 +173,42 @@ const Profile = () => {
                             {" "}
                             Post
                         </span>
-                        <FollowListingDialog
-                            me={me!}
-                            userId={Number(userId)}
-                            mode="following"
-                            trigger={
-                                <span className="hover:underline cursor-pointer w-fit">
-                                    <strong>
-                                        {followingCountData?.data || 0}
-                                    </strong>
-                                    {" "}
-                                    Following
-                                </span>
-                            }
-                        />
-                        <FollowListingDialog
-                            me={me!}
-                            userId={Number(userId)}
-                            mode="follower"
-                            trigger={
-                                <span className="hover:underline cursor-pointer">
-                                    <strong>
-                                        {followerCountData?.data || 0}
-                                    </strong>
-                                    {" "}
-                                    Follower
-                                </span>
-                            } />
+                        {followingCountData?.data !== undefined && followerCountData?.data != undefined &&
+                            <FollowListingDialog
+                                me={me!}
+                                userId={Number(userId)}
+                                mode="following"
+                                followingCount={followingCountData.data || 0}
+                                followerCount={followerCountData.data || 0}
+                                trigger={
+                                    <span className="hover:underline cursor-pointer w-fit">
+                                        <strong>
+                                            {followingCountData?.data || 0}
+                                        </strong>
+                                        {" "}
+                                        Following
+                                    </span>
+                                }
+                            />
+                        }
+
+                        {followerCountData?.data !== undefined && followerCountData?.data != undefined &&
+                            <FollowListingDialog
+                                me={me!}
+                                userId={Number(userId)}
+                                mode="follower"
+                                followerCount={followerCountData?.data || 0}
+                                followingCount={followingCountData?.data || 0}
+                                trigger={
+                                    <span className="hover:underline cursor-pointer">
+                                        <strong>
+                                            {followerCountData?.data || 0}
+                                        </strong>
+                                        {" "}
+                                        Follower
+                                    </span>
+                                } />
+                        }
                     </div>
 
                     {/* Bio */}

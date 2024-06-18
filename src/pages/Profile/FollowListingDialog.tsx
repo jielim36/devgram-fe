@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator";
 import { FOLLOW_QUERY_KEY } from "@/constants";
-import { useAddFollow, useGetFollowerList, useGetFollowingList, useUnFollow } from "@/hooks";
+import { useAddFollow, useGetFollowerList, useGetFollowingList, useGetInfiniteFollowerList, useGetInfiniteFollowingList, useUnFollow } from "@/hooks";
 import { User } from "@/types";
 import { useEffect, useState } from "react";
 import { set } from "react-hook-form";
@@ -24,6 +24,8 @@ type FollowingListingProps = {
     userId: number;
     trigger: React.ReactNode;
     mode: "follower" | "following";
+    followerCount: number;
+    followingCount: number;
 };
 
 const FollowListingDialog: React.FC<FollowingListingProps> = ({
@@ -31,40 +33,30 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
     userId,
     trigger,
     mode,
+    followerCount,
+    followingCount
 }) => {
 
-    const [currentPage, setCurrentPage] = useState(0);
     const [isOpenDialog, setIsOpenDialog] = useState(false);
     const [isNoRecordFound, setIsNoRecordFound] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [followList, setFollowingList] = useState<User[]>([]);
-    const followerListResult = useGetFollowerList({
-        follower_id: userId,
-        pages: currentPage,
+
+
+    // Pagination
+    const followingListResult = useGetInfiniteFollowingList({
+        following_id: userId,
         enabled: isOpenDialog && mode === "follower"
     });
-    const followingListResult = useGetFollowingList({
-        following_id: userId,
-        pages: currentPage,
+    const followerListResult = useGetInfiniteFollowerList({
+        follower_id: userId,
         enabled: isOpenDialog && mode === "following"
     });
 
-    const { data: followerListData } = followerListResult;
-    const { data: followingListData } = followingListResult;
-
-    useEffect(() => {
-        if (mode === "following" && followingListData?.data != undefined) {
-            setFollowingList(followingListData?.data);
-        } else if (mode === "follower" && followerListData?.data != undefined) {
-            setFollowingList(followerListData?.data);
-        }
-    }, [followingListData, followerListData]);
-
     useEffect(() => {
         setIsNoRecordFound(
-            (mode == "following" && followingListResult?.isSuccess && followingListData?.data?.length === 0)
+            (mode == "following" && followingListResult?.isSuccess && followingListResult?.data?.pages?.length === 0)
             ||
-            (mode === "follower" && followerListResult?.isSuccess && followerListData?.data?.length === 0)
+            (mode === "follower" && followerListResult?.isSuccess && followerListResult?.data?.pages?.length === 0)
         );
 
         setIsLoading(
@@ -73,6 +65,18 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
             (mode === "follower" && followerListResult?.isLoading)
         );
     }, [followerListResult, followingListResult]);
+
+    const handleLoadMore = () => {
+        const itemsPerPage = 10;
+
+        if (mode === "following" && followingListResult.hasNextPage) {
+            const totalFollowingPages = Math.ceil(followingCount / itemsPerPage);
+            followingListResult.fetchNextPage();
+        } else if (mode === "follower") {
+            const totalFollowerPages = Math.ceil(followerCount / itemsPerPage);
+            followerListResult.fetchNextPage();
+        }
+    }
 
     return (
         <Dialog open={isOpenDialog} onOpenChange={setIsOpenDialog}>
@@ -89,13 +93,39 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
                 {isNoRecordFound
                     && <p className="text-center">No {mode === "follower" ? "follower" : "following"} found</p>
                 }
+
+
                 <div className="flex flex-col gap-2 py-1 w-full overflow-y-auto max-h-[400px] pr-1">
-                    {followList != undefined && followList.map((user) => (
+                    {/* {followList != undefined && followList.map((user) => (
                         <UserCard
                             key={user.id}
                             user={user} me={me!}
                         />
+                    ))} */}
+                    {mode === "follower" && followerListResult.isSuccess && followerListResult.data.pages.map((page, index) => (
+                        <div key={index} className="flex flex-col gap-2">
+                            {page?.data?.map((user) => (
+                                <UserCard
+                                    key={user.id}
+                                    user={user} me={me!}
+                                />
+                            ))}
+                        </div>
                     ))}
+
+                    {mode === "following" && followingListResult.isSuccess && followingListResult.data.pages.map((page, index) => (
+                        <div key={index} className="flex flex-col gap-2">
+                            {page?.data?.map((user) => (
+                                <UserCard
+                                    key={user.id}
+                                    user={user} me={me!}
+                                />
+                            ))}
+                        </div>
+                    ))}
+                    <button onClick={() => { handleLoadMore() }}>
+                        Load More
+                    </button>
                 </div>
 
                 {/* Loading Spinner */}

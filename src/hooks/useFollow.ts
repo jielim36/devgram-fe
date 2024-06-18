@@ -1,5 +1,5 @@
 import { ResponseBody } from "@/types";
-import { QueryFunctionContext, useMutation, useQuery } from "@tanstack/react-query"
+import { QueryFunctionContext, useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
 import { ResponseHandlerType } from ".";
 import { follow, followerCount, followingCount, getFollowerList, getFollowingList, isFollowing, unFollow } from "@/services";
 import { FOLLOW_QUERY_KEY } from "@/constants";
@@ -75,6 +75,44 @@ export const useGetFollowerList = ({ follower_id, pages, enabled }: { follower_i
             const [_, follower_id, pages] = context.queryKey;
             return await getFollowerList(Number(follower_id), Number(pages));
         },
+        enabled: enabled
+    });
+}
+
+export const useGetInfiniteFollowingList = ({ following_id, enabled }: { following_id: number, enabled: boolean }) => {
+    return useInfiniteQuery({
+        queryKey: FOLLOW_QUERY_KEY.concat(following_id.toString(), "followingListInfinite"),
+        queryFn: async ({ pageParam = 1, queryKey }) => {
+            const [_, following_id] = queryKey;
+            return await getFollowingList(Number(following_id), Number(pageParam));
+        },
+        getNextPageParam: (lastPage, pages) => {
+            return pages?.length + 1;
+        },
+        initialData: {
+            pages: [],
+            pageParams: [1]
+        },
+        initialPageParam: 1,
+        enabled: enabled
+    });
+}
+
+export const useGetInfiniteFollowerList = ({ follower_id, enabled }: { follower_id: number, enabled: boolean }) => {
+    return useInfiniteQuery({
+        queryKey: FOLLOW_QUERY_KEY.concat(follower_id.toString(), "followerListInfinite"),
+        queryFn: async ({ pageParam = 1, queryKey }) => {
+            const [_, follower_id] = queryKey;
+            return await getFollowerList(Number(follower_id), Number(pageParam));
+        },
+        getNextPageParam: (_, pages) => {
+            return pages?.length + 1;
+        },
+        initialData: {
+            pages: [],
+            pageParams: [1]
+        },
+        initialPageParam: 1,
         enabled: enabled
     });
 }
