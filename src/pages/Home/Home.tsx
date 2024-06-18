@@ -9,7 +9,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="relative w-[340px] sm:w-[530px] left-2/4 -translate-x-2/4 lg:-translate-x-3/4">
+            <div className="relative px-2 xs:px-0 xs:w-[340px] sm:w-[530px] left-2/4 -translate-x-2/4 lg:-translate-x-3/4">
                 {/* Post Listing */}
                 <div className="flex flex-col gap-16">
                     {postData?.data && postData?.data?.length > 0 && postData.data.map((post: Post) => (
