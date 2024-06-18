@@ -25,10 +25,6 @@ const Profile = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [user, setUser] = useState<User>();
     const [posts, setPosts] = useState<Post[]>();
-    const [followCount, setFollowCount] = useState<FollowList>({
-        followerCount: 0,
-        followingCount: 0
-    });
 
     const { data: postData } = useGetPostsByUserId(Number(userId));
     const { data: userData } = useGetUserByUserId(Number(userId));
@@ -77,16 +73,6 @@ const Profile = () => {
             setUser(userData.data)
         }
     }, [userData]);
-
-    useEffect(() => {
-        if (followingCountData != undefined && followingCountData?.data) {
-            setFollowCount(prev => ({ ...prev, followingCount: followingCountData.data }));
-        }
-
-        if (followerCountData != undefined && followerCountData?.data) {
-            setFollowCount(prev => ({ ...prev, followerCount: followerCountData.data }));
-        }
-    }, [followingCountData, followerCountData]);
 
     const handleFollow = () => {
         if (isOwner) return;
