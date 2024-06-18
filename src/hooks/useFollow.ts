@@ -1,7 +1,7 @@
 import { ResponseBody } from "@/types";
 import { QueryFunctionContext, useMutation, useQuery } from "@tanstack/react-query"
 import { ResponseHandlerType } from ".";
-import { follow, followerCount, followingCount, getFollowingList, isFollowing, unFollow } from "@/services";
+import { follow, followerCount, followingCount, getFollowerList, getFollowingList, isFollowing, unFollow } from "@/services";
 import { FOLLOW_QUERY_KEY } from "@/constants";
 
 const fetchIsFollowing = async (context: QueryFunctionContext<string[]>): Promise<ResponseBody<boolean>> => {
@@ -63,6 +63,17 @@ export const useGetFollowingList = ({ following_id, pages, enabled }: { followin
         queryFn: async (context: QueryFunctionContext<string[]>) => {
             const [_, following_id, pages] = context.queryKey;
             return await getFollowingList(Number(following_id), Number(pages));
+        },
+        enabled: enabled
+    });
+}
+
+export const useGetFollowerList = ({ follower_id, pages, enabled }: { follower_id: number, pages: number, enabled: boolean }) => {
+    return useQuery({
+        queryKey: FOLLOW_QUERY_KEY.concat(follower_id.toString(), pages.toString(), "followerList"),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, follower_id, pages] = context.queryKey;
+            return await getFollowerList(Number(follower_id), Number(pages));
         },
         enabled: enabled
     });

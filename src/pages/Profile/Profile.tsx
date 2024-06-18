@@ -14,7 +14,7 @@ import { useAddFollow, useGetFollowerCount, useGetFollowingCount, useGetPostsByU
 import { FollowList, Post, User } from "@/types";
 import PostCard from "./PostCard";
 import toast from "react-hot-toast";
-import FollowingListingDialog from "./FollowingListingDialog";
+import FollowListingDialog from "./FollowListingDialog";
 
 const Profile = () => {
 
@@ -159,23 +159,33 @@ const Profile = () => {
                             {" "}
                             Post
                         </span>
-                        <FollowingListingDialog userId={Number(userId)} trigger={
-                            <span className="hover:underline cursor-pointer w-fit">
-                                <strong>
-                                    {followCount?.followingCount || 0}
-                                </strong>
-                                {" "}
-                                Following
-                            </span>
-                        } />
-
-                        <span className="hover:underline cursor-pointer">
-                            <strong>
-                                {followCount?.followerCount || 0}
-                            </strong>
-                            {" "}
-                            Follower
-                        </span>
+                        <FollowListingDialog
+                            me={me!}
+                            userId={Number(userId)}
+                            mode="following"
+                            trigger={
+                                <span className="hover:underline cursor-pointer w-fit">
+                                    <strong>
+                                        {followingCountData?.data || 0}
+                                    </strong>
+                                    {" "}
+                                    Following
+                                </span>
+                            }
+                        />
+                        <FollowListingDialog
+                            me={me!}
+                            userId={Number(userId)}
+                            mode="follower"
+                            trigger={
+                                <span className="hover:underline cursor-pointer">
+                                    <strong>
+                                        {followerCountData?.data || 0}
+                                    </strong>
+                                    {" "}
+                                    Follower
+                                </span>
+                            } />
                     </div>
 
                     {/* Bio */}
