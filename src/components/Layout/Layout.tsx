@@ -261,7 +261,9 @@ export function NavigationMenuComponent({ user }: { user: User }) {
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <DotContainer children={
-                        <NavigationMenuTrigger>
+                        <NavigationMenuTrigger onClick={() => {
+                            window.location.href = '/chat';
+                        }}>
                             <Icon name="send" />
                         </NavigationMenuTrigger>
                     }
