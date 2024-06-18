@@ -89,7 +89,7 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
                 {isNoRecordFound
                     && <p className="text-center">No {mode === "follower" ? "follower" : "following"} found</p>
                 }
-                <div className="flex flex-col gap-2 py-1 w-full overflow-y-auto max-h-[400px]">
+                <div className="flex flex-col gap-2 py-1 w-full overflow-y-auto max-h-[400px] pr-1">
                     {followList != undefined && followList.map((user) => (
                         <UserCard
                             key={user.id}
