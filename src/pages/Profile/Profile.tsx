@@ -95,28 +95,56 @@ const Profile = () => {
 
 
     return (
-        <div className="w-full h-full px-40">
+        <div className="w-full h-full px-4 sm:px-14 xl:px-40">
 
             {/* User Card */}
-            <div className="grid grid-cols-6 max-h-72 h-full">
+            <div className="
+                flex flex-col gap-4
+                md:grid md:grid-cols-6 md:max-h-72 md:h-full"
+            >
 
                 {/* Avatar */}
-                <div className="col-span-2 flex justify-center items-center">
+                <div className="
+                    flex flex-row gap-3
+                    md:col-span-2 md:flex md:justify-center md:items-center"
+                >
                     <AvatarContainer
                         userId={user?.id}
                         avatar_url={user?.avatar_url}
                         hasStory={user?.stories != undefined && user?.stories?.length > 0 || true}
-                        className="h-40 aspect-square"
+                        className="h-20 md:h-40 aspect-square"
                         avatarClassName="h-full w-full"
                         boldBorder
                     />
+
+                    <div className="block md:hidden">
+                        <p className="text-lg font-semibold pr-4 truncate">
+                            {user?.username}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {isOwner && <Button className="flex-none">Edit Profile</Button>}
+                            {isOwner && <Button >Settings</Button>}
+                            {isOwner &&
+                                <Button variant="ghost" className="flex-none">
+                                    <Icon name="settings" />
+                                </Button>
+                            }
+                            {!isOwner && <Button className="flex-none" onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</Button>}
+                            {!isOwner && <Button className="flex-none">Message</Button>}
+                            {!isOwner &&
+                                <Button variant="ghost" className="flex-none">
+                                    <Icon name="ellipsis" />
+                                </Button>
+                            }
+                        </div>
+                    </div>
                 </div>
 
                 {/* User Info */}
-                <div className="col-span-4 flex flex-col gap-4">
+                <div className="md:col-span-4 flex flex-col gap-4">
 
                     {/* Username and buttons */}
-                    <div className="flex flex-row gap-2 items-center overflow-hidden">
+                    <div className="hidden md:flex flex-row gap-2 items-center overflow-hidden">
                         <p className="text-lg font-semibold pr-4 truncate">
                             {user?.username}
                         </p>
