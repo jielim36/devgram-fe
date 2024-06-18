@@ -142,9 +142,9 @@ const Layout = () => {
         <div className="min-h-screen h-full w-full flex flex-col">
 
             {/* Top Navigation */}
-            <Card className="absolute w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-8">
+            <Card className="absolute w-screen z-10 flex flex-row justify-end xs:justify-between items-center h-16 rounded-none px-2 xs:px-8">
                 <AppTitle className="flex-none text-white hidden md:block" defaultColor={theme === 'light'} isBold={true} />
-                <div className="relative w-96">
+                <div className="hidden xs:block relative w-96">
                     <Icon name="search" className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search" className="pl-8" />
                 </div>
@@ -201,13 +201,12 @@ const Layout = () => {
                 </React.Suspense>
 
                 {/* Mobile bottom navigate */}
-                <Card className="h-16 xs:hidden relative bottom-16">
-                    <ul className="flex flex-row gap-3 justify-between items-center">
+                <Card className="h-16 xs:hidden fixed left-0 bottom-0 w-screen">
+                    <ul className="flex flex-row justify-between items-center">
                         {LeftSideNavigationItems.map((item) => (
                             <li key={item.title}>
                                 <Link to={item.href} className={`flex flex-row items-center gap-4 p-4 rounded-md hover:bg-accent hover:text-accent-foreground ${location.pathname === item.href ? "font-bold" : ""}`}>
                                     {item.icon}
-                                    <span className="hidden lg:block">{item.title}</span>
                                 </Link>
                             </li>
                         ))}
