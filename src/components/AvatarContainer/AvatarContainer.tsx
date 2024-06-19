@@ -9,6 +9,8 @@ type AvatarContainerProps = {
     className?: string;
     avatarClassName?: string;
     boldBorder?: boolean;
+    fallbackStrokeWidth?: number;
+    fallbackClassName?: string;
 }
 
 const AvatarContainer: React.FC<AvatarContainerProps> = ({
@@ -17,7 +19,9 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
     className,
     avatarClassName,
     boldBorder = false,
-    userId
+    userId,
+    fallbackStrokeWidth = 2,
+    fallbackClassName
 }) => {
 
     const padding = boldBorder ? "p-[4px]" : "p-[2px]";
@@ -40,8 +44,8 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
             <div className={`rounded-full ${childPadding} card-color`}>
                 <Avatar className={`w-9 h-9 ${avatarClassName}`}>
                     <AvatarImage src={avatar_url} />
-                    <AvatarFallback>
-                        <Icon name="user-round" className="text-slate-500" />
+                    <AvatarFallback className="">
+                        <Icon name="user-round" className={`text-slate-500 font-light ${fallbackClassName}`} strokeWidth={fallbackStrokeWidth} />
                     </AvatarFallback>
                 </Avatar>
             </div>

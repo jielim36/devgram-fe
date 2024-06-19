@@ -137,6 +137,8 @@ const Profile = () => {
                         className="h-20 md:h-40 aspect-square"
                         avatarClassName="h-full w-full"
                         boldBorder
+                        fallbackStrokeWidth={0.7}
+                        fallbackClassName="w-full h-full"
                     />
 
                     <div className="block md:hidden">
