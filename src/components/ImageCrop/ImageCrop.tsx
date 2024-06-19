@@ -92,7 +92,6 @@ const ImageCrop: React.FC<ImageCrop> = () => {
 
                 const src = imgList[i].src;
                 if (!src) {
-                    console.log(imgList);
                     return;
                 }
                 const croppedAreaPixels = imgList[i].croppedAreaPixels;

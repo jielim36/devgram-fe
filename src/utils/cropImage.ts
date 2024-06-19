@@ -138,7 +138,6 @@ export const generateDownload = async (croppedImage: string, crop: Area, rotatio
 
     const blob: Blob | null = await getCroppedImg(croppedImage, crop, rotation);
 
-    // console.log('previewUrl', previewUrl);
     // Download the image
     if (blob) {
         const anchor = document.createElement('a');

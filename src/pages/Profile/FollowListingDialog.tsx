@@ -83,8 +83,6 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
                 return;
             }
             followingListResult.fetchNextPage();
-            console.log("FETCHING NEXT PAGE");
-
 
         } else if (mode === "follower") {
 
@@ -94,7 +92,6 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
                 return;
             }
             followerListResult.fetchNextPage();
-            console.log("FETCHING NEXT PAGE");
 
         }
     }
