@@ -51,7 +51,9 @@ const PostSwiper: React.FC<SwiperContainerProps> = ({ postImages, className, swi
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <Badge className="absolute top-2 right-2 z-10 select-none">{currentImageIndex + 1}/{postImages?.length}</Badge>
+            {postImages?.length > 1 &&
+                <Badge className="absolute top-2 right-2 z-10 select-none">{currentImageIndex + 1}/{postImages?.length}</Badge>
+            }
         </div>
     );
 };
