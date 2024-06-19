@@ -1,5 +1,5 @@
 import { USER_QUERY_KEY } from '@/constants';
-import { getMe, getUserByUserId, getUsers } from '@/services';
+import { getMe, getUserByUserId, getUserInfoByUserId, getUsers } from '@/services';
 import { ResponseBody, User } from '@/types';
 import {
     useQuery,
@@ -28,5 +28,15 @@ export const useGetUserByUserId = (userId: number) => {
     return useQuery({
         queryKey: USER_QUERY_KEY.concat(userId.toString()),
         queryFn: fetchUserByUserId,
+    });
+}
+
+export const useGetUserInfoByUserId = (userId: number) => {
+    return useQuery({
+        queryKey: USER_QUERY_KEY.concat(userId.toString(), "info"),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, userId] = context.queryKey;
+            return await getUserInfoByUserId(Number(userId));
+        },
     });
 }

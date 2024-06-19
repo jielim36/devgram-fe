@@ -14,3 +14,12 @@ export type User = {
     created_at: string;
     updated_at: string;
 };
+
+export type UserInfo = {
+    id: number;
+    user_id: number;
+    address: string;
+    gender: string;
+    bio: string;
+    birthday: string;
+}

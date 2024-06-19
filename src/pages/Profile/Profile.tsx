@@ -10,7 +10,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { useAddFollow, useGetFollowerCount, useGetFollowingCount, useGetPostsByUserId, useGetUserByUserId, useIsFollowing, useUnFollow } from "@/hooks";
+import { useAddFollow, useGetFollowerCount, useGetFollowingCount, useGetPostsByUserId, useGetUserByUserId, useGetUserInfoByUserId, useIsFollowing, useUnFollow } from "@/hooks";
 import { FollowList, Post, User } from "@/types";
 import PostCard from "./PostCard";
 import toast from "react-hot-toast";
@@ -30,6 +30,7 @@ const Profile = () => {
     const { data: userData } = useGetUserByUserId(Number(userId));
     const { data: followingCountData } = useGetFollowingCount({ following_id: Number(userId) });
     const { data: followerCountData } = useGetFollowerCount({ follower_id: Number(userId) });
+    const { data: userInfoData } = useGetUserInfoByUserId(Number(userId));
 
     const { data: isFollowingData } = useIsFollowing({
         follower_id: me!.id,
@@ -213,7 +214,11 @@ const Profile = () => {
 
                     {/* Bio */}
                     <article className="grow text-ellipsis h-44 overflow-auto">
-                        {content}
+                        {/* {userInfoData?.data?.bio} */}
+                        {userInfoData?.data?.bio.split('\n').map((paragraph: any, index) => (
+                            <p key={index}>{paragraph}</p>
+                        ))}
+                        {!userInfoData?.data?.bio && <p className="text-muted-foreground">No Bio</p>}
                     </article>
                 </div>
             </div>
