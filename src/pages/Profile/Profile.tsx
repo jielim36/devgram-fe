@@ -15,6 +15,9 @@ import { FollowList, Post, User } from "@/types";
 import PostCard from "./PostCard";
 import toast from "react-hot-toast";
 import FollowListingDialog from "./FollowListingDialog";
+import DOMPurify from 'dompurify';
+import { userInfo } from "os";
+
 
 const Profile = () => {
 
@@ -74,6 +77,24 @@ const Profile = () => {
             setUser(userData.data)
         }
     }, [userData]);
+
+    const renderBioWithLinksAndBreaks = (bio: string | undefined) => {
+        // Sanitize the bio using DOMPurify
+        const sanitizedBio = DOMPurify.sanitize(bio || "");
+
+        // Convert URLs into anchor tags
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const linkStyle = "text-blue-500 hover:underline cursor-pointer";
+        const withLinks = sanitizedBio.replace(urlRegex, (url) => {
+            return `<a href="${url}" class="${linkStyle}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+        });
+
+        // Convert newlines to <br>
+        const withLineBreaks = withLinks.replace(/\n/g, '<br>');
+
+        // Return as dangerouslySetInnerHTML safe string
+        return { __html: withLineBreaks };
+    }
 
     const handleFollow = () => {
         if (isOwner) return;
@@ -215,9 +236,10 @@ const Profile = () => {
                     {/* Bio */}
                     <article className="grow text-ellipsis h-44 overflow-auto">
                         {/* {userInfoData?.data?.bio} */}
-                        {userInfoData?.data?.bio.split('\n').map((paragraph: any, index) => (
+                        {/* {userInfoData?.data?.bio.split('\n').map((paragraph: any, index) => (
                             <p key={index}>{paragraph}</p>
-                        ))}
+                        ))} */}
+                        <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(userInfoData?.data?.bio)} />
                         {!userInfoData?.data?.bio && <p className="text-muted-foreground">No Bio</p>}
                     </article>
                 </div>
