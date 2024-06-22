@@ -34,6 +34,17 @@ export const queryClient = new QueryClient({
   },
 })
 
+export const routes = {
+  home: "/",
+  popular: "/popular",
+  reels: "/reels",
+  following: "/following",
+  profile: "/profile/:userId",
+  login: "/login",
+  register: "/register",
+  notFound: "/404"
+};
+
 function App() {
 
   const { theme } = useTheme();
@@ -45,16 +56,16 @@ function App() {
           <BrowserRouter>
             <AuthProvider>
               <Routes>
-                <Route path="/" element={<Layout />}>
+                <Route path={routes.home} element={<Layout />}>
                   <Route index element={<Home />} />
-                  <Route path='/popular' element={<Popular />} />
-                  <Route path='/reels' element={<Reels />} />
-                  <Route path='/following' element={<Following />} />
-                  <Route path='/profile/:userId' element={<Profile />} />
+                  <Route path={routes.popular} element={<Popular />} />
+                  <Route path={routes.reels} element={<Reels />} />
+                  <Route path={routes.following} element={<Following />} />
+                  <Route path={routes.profile} element={<Profile />} />
                 </Route>
-                <Route path='*' element={<Navigate to="/404" />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/404' element={<Error404NotFound />} />
+                <Route path="*" element={<Navigate to={routes.notFound} />} />
+                <Route path={routes.login} element={<Login />} />
+                <Route path={routes.notFound} element={<Error404NotFound />} />
               </Routes>
             </AuthProvider>
           </BrowserRouter>
@@ -62,7 +73,7 @@ function App() {
       </QueryClientProvider>
       <CustomToaster theme={theme} />
     </>
-  )
+  );
 }
 
 export default App

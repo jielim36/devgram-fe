@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/types";
 import { useGetMe } from "@/hooks";
 import { useLocation } from "react-router-dom";
+import { routes } from "@/app/App";
 
 type AuthProviderProps = {
     children: React.ReactNode;
@@ -19,8 +20,7 @@ const initialState: AuthProviderState = {
 
 export const AuthContext = createContext<AuthProviderState>(initialState);
 
-const noAuthPaths = ['/login', '/register', '/404'];
-
+const noAuthPaths = [routes.login, routes.register, routes.notFound];
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
