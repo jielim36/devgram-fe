@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import FollowListingDialog from "./FollowListingDialog";
 import DOMPurify from 'dompurify';
 import { userInfo } from "os";
+import { EditProfileDrawer, EditProfileDialog } from "./EditProfile";
 
 
 const Profile = () => {
@@ -141,12 +142,19 @@ const Profile = () => {
                         fallbackClassName="w-full h-full"
                     />
 
+                    {/* User Info for Mobile */}
                     <div className="block md:hidden">
                         <p className="text-lg font-semibold pr-4 truncate">
                             {user?.username}
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            {isOwner && <Button className="flex-none">Edit Profile</Button>}
+                            {isOwner &&
+                                // <Button className="flex-none">Edit Profile</Button>
+                                <EditProfileDrawer
+                                    user={me!}
+                                    userInfo={userInfoData?.data}
+                                />
+                            }
                             {isOwner && <Button >Settings</Button>}
                             {isOwner &&
                                 <Button variant="ghost" className="flex-none">
@@ -164,7 +172,7 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* User Info */}
+                {/* User Info for Computer*/}
                 <div className="md:col-span-4 flex flex-col gap-4">
 
                     {/* Username and buttons */}
@@ -172,7 +180,12 @@ const Profile = () => {
                         <p className="text-lg font-semibold pr-4 truncate">
                             {user?.username}
                         </p>
-                        {isOwner && <Button className="flex-none">Edit Profile</Button>}
+                        {isOwner &&
+                            <EditProfileDialog
+                                user={me!}
+                                userInfo={userInfoData?.data}
+                            />
+                        }
                         {isOwner && <Button >Settings</Button>}
                         {isOwner &&
                             <Button variant="ghost" className="flex-none">
