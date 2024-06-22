@@ -304,36 +304,4 @@ const fakeStories = [
     "",
 ]
 
-const content = <>                        IG: jielim36
-    <br />
-    Software Engineer
-    <br />
-
-    dfd
-
-    <br />
-    df
-    d
-    fd
-
-    <br />
-    fd
-    f
-    <br />
-    df
-    d
-    fd
-    fd
-    <br />
-    f
-    <br />
-    df
-    <br />
-    d
-    <br />
-    fd
-    <br />
-    fd
-</>
-
 export default Profile; 
