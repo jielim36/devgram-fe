@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/types";
 import { useGetMe } from "@/hooks";
 import { useLocation } from "react-router-dom";
-import { routes } from "@/app/App";
+import { routes } from "@/app/Routes";
 
 type AuthProviderProps = {
     children: React.ReactNode;
