@@ -46,6 +46,7 @@ import Icon from "../Icon/Icon";
 import PostSkeleton from "../Suspense/PostSkeleton";
 import UnauthorizedPage from "@/pages/InvalidPages/UnauthorizedPage";
 import toast from "react-hot-toast";
+import SkeletonPage from "../Suspense/SkeletonPage";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -194,7 +195,7 @@ const Layout = () => {
 
 
                 {/* Content */}
-                <React.Suspense fallback={<PostSkeleton />}>
+                <React.Suspense fallback={<SkeletonPage />}>
                     <div className="relative w-full h-full overflow-y-auto py-8">
                         <Outlet />
                     </div>

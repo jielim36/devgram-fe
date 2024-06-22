@@ -25,6 +25,7 @@ const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
 const Login = React.lazy(() => import('../pages/Login/Login'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
 import CustomToaster from '@/components/Toast/CustomToast';
+import { routes } from './Routes';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,17 +34,6 @@ export const queryClient = new QueryClient({
     },
   },
 })
-
-export const routes = {
-  home: "/",
-  popular: "/popular",
-  reels: "/reels",
-  following: "/following",
-  profile: "/profile/:userId",
-  login: "/login",
-  register: "/register",
-  notFound: "/404"
-};
 
 function App() {
 
