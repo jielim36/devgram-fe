@@ -4,6 +4,7 @@ import { useGetMe } from "@/hooks";
 import { useLocation } from "react-router-dom";
 import { routes } from "@/app/Routes";
 import UnauthorizedPage from "@/pages/InvalidPages/UnauthorizedPage";
+import updateGeoLocation from "./getUserGeoLocation";
 
 type AuthProviderProps = {
     children: React.ReactNode;
@@ -34,12 +35,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     useEffect(() => {
         setIsAuthRequired(!noAuthPaths.includes(location.pathname));
-
     }, [location])
 
     useEffect(() => {
         if (userData) {
             setUser(userData.data);
+            updateGeoLocation(userData.data.id);
         }
     }, [userData]);
 
