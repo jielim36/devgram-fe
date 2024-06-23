@@ -23,3 +23,8 @@ export type UserInfo = {
     bio: string;
     birthday: string;
 }
+
+export type UpdateUserInfo = {
+    username?: string;
+    userInfoEntity?: UserInfo;
+}

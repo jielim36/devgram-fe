@@ -113,7 +113,7 @@ export const EditProfileDialog: React.FC<EditProfileProps> = ({
     );
 }
 
-const formSchema = z.object({
+const userInfoFormSchema = z.object({
     username: z.string()
         .min(3, {
             message: "Username must be at least 3 characters.",
@@ -125,7 +125,7 @@ const formSchema = z.object({
         .max(1000, {
             message: "Bio must be at most 1000 characters.",
         }),
-    birthday: z.date().optional(),
+    birthday: z.string().optional(),
     gender: z.enum(["Male", "Female", "Other"]).optional(),
 });
 
@@ -137,19 +137,19 @@ const EditProfileForm: React.FC<EditProfileProps> = ({
     userInfo,
 }) => {
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof userInfoFormSchema>>({
+        resolver: zodResolver(userInfoFormSchema),
         defaultValues: {
             username: user.username || "",
             bio: userInfo?.bio || "",
-            birthday: userInfo?.birthday ? parse(userInfo?.birthday, dateFormat, new Date()) : undefined,
+            birthday: userInfo?.birthday,
             gender: userInfo?.gender || undefined,
         },
     })
 
     const bioValue = form.watch("bio")
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    function onSubmit(values: z.infer<typeof userInfoFormSchema>) {
         console.log(userInfo);
         console.log(values)
     }
@@ -191,7 +191,7 @@ const EditProfileForm: React.FC<EditProfileProps> = ({
                                             )}
                                         >
                                             {field.value ? (
-                                                format(field.value, dateDisplayFormat)
+                                                format(parse(field.value, dateFormat, new Date()), dateDisplayFormat)
                                             ) : (
                                                 <span>Pick a date</span>
                                             )}
@@ -202,8 +202,8 @@ const EditProfileForm: React.FC<EditProfileProps> = ({
                                 <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
                                         mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
+                                        selected={field.value ? parse(field.value, dateFormat, new Date()) : null}
+                                        onSelect={(date: Date) => field.onChange(format(date, dateFormat))}
                                         disabled={(date: Date) =>
                                             date > new Date() || date < new Date("1900-01-01")
                                         }
