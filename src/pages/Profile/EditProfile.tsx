@@ -168,6 +168,11 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
 
     function onSubmit(values: z.infer<typeof userInfoFormSchema>) {
         if (updateUserInfoMutation.isPending) return;
+        const { username, bio, birthday, gender } = values;
+        if (username === user.username && bio === userInfo?.bio && birthday === userInfo?.birthday && gender === userInfo?.gender) {
+            toast.error("No changes detected.")
+            return;
+        }
 
         const updateUserInfoJson: UpdateUserInfo = {
             username: values.username,
