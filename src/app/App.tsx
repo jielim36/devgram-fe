@@ -26,6 +26,7 @@ const Login = React.lazy(() => import('../pages/Login/Login'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
 import CustomToaster from '@/components/Toast/CustomToast';
 import { routes } from './Routes';
+import Icon from '@/components/Icon/Icon';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,12 @@ export const queryClient = new QueryClient({
     },
   },
 })
+
+const Spinner = () => (
+  <div className="h-screen w-screen flex justify-center items-center">
+    <Icon name="loader-circle" className="animate-spin text-muted-foreground h-12 w-12" />
+  </div>
+);
 
 function App() {
 
@@ -45,18 +52,20 @@ function App() {
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <BrowserRouter>
             <AuthProvider>
-              <Routes>
-                <Route path={routes.home} element={<Layout />}>
-                  <Route index element={<Home />} />
-                  <Route path={routes.popular} element={<Popular />} />
-                  <Route path={routes.reels} element={<Reels />} />
-                  <Route path={routes.following} element={<Following />} />
-                  <Route path={routes.profile} element={<Profile />} />
-                </Route>
-                <Route path="*" element={<Navigate to={routes.notFound} />} />
-                <Route path={routes.login} element={<Login />} />
-                <Route path={routes.notFound} element={<Error404NotFound />} />
-              </Routes>
+              <React.Suspense fallback={<Spinner />}>
+                <Routes>
+                  <Route path={routes.home} element={<Layout />}>
+                    <Route index element={<Home />} />
+                    <Route path={routes.popular} element={<Popular />} />
+                    <Route path={routes.reels} element={<Reels />} />
+                    <Route path={routes.following} element={<Following />} />
+                    <Route path={routes.profile} element={<Profile />} />
+                  </Route>
+                  <Route path="*" element={<Navigate to={routes.notFound} />} />
+                  <Route path={routes.login} element={<Login />} />
+                  <Route path={routes.notFound} element={<Error404NotFound />} />
+                </Routes>
+              </React.Suspense>
             </AuthProvider>
           </BrowserRouter>
         </ThemeProvider>
