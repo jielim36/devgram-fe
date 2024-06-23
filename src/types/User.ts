@@ -16,12 +16,12 @@ export type User = {
 };
 
 export type UserInfo = {
-    id: number;
+    id?: number;
     user_id: number;
-    address: string;
-    gender: "Male" | "Female" | "Other";
-    bio: string;
-    birthday: string;
+    address?: string;
+    gender?: "Male" | "Female" | "Other";
+    bio?: string;
+    birthday?: string;
 }
 
 export type UpdateUserInfo = {

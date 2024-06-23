@@ -1,6 +1,7 @@
+import { queryClient } from '@/app/App';
 import { USER_QUERY_KEY } from '@/constants';
-import { getMe, getUserByUserId, getUserInfoByUserId, getUsers } from '@/services';
-import { ResponseBody, User } from '@/types';
+import { getMe, getUserByUserId, getUserInfoByUserId, getUsers, updateUserInfo } from '@/services';
+import { ResponseBody, UpdateUserInfo, User, UserInfo } from '@/types';
 import {
     useQuery,
     useMutation,
@@ -37,6 +38,33 @@ export const useGetUserInfoByUserId = (userId: number) => {
         queryFn: async (context: QueryFunctionContext<string[]>) => {
             const [_, userId] = context.queryKey;
             return await getUserInfoByUserId(Number(userId));
+        },
+    });
+}
+
+export const useUpdateUserInfo = () => {
+    return useMutation({
+        mutationFn: async (data: { updateUserInfo: UpdateUserInfo }) => {
+            return await updateUserInfo(data.updateUserInfo);
+        },
+        onMutate: async (data) => {
+            return data;
+        },
+        onSuccess: async (data, variables, context) => {
+            if (context?.updateUserInfo?.userInfoEntity) {
+                queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY.concat(context?.updateUserInfo?.userInfoEntity.user_id.toString(), "info") });
+                queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY.concat(context?.updateUserInfo?.userInfoEntity.user_id.toString()) });
+
+                queryClient.setQueryData(
+                    USER_QUERY_KEY.concat(context.updateUserInfo.userInfoEntity.user_id.toString(), "info"),
+                    (oldData: UserInfo) => ({
+                        ...oldData,
+                        data: data,
+                    })
+                );
+            }
+        },
+        onError: async (error, variables, context) => {
         },
     });
 }

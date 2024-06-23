@@ -1,4 +1,4 @@
-import { User, UserInfo } from "@/types/User";
+import { UpdateUserInfo, User, UserInfo } from "@/types/User";
 import axiosClient from "@/utils/axiosClient";
 import { ResponseBody } from "@/types";
 
@@ -21,3 +21,8 @@ export const getUserInfoByUserId = async (userId: number): Promise<ResponseBody<
     const response = await axiosClient.get(`/user/${userId}/info`);
     return response.data;
 }
+
+export const updateUserInfo = async (updateUserInfo: UpdateUserInfo): Promise<ResponseBody<UpdateUserInfo>> => {
+    const response = await axiosClient.put(`/user/${updateUserInfo.userInfoEntity?.user_id}/info`, updateUserInfo);
+    return response.data;
+};

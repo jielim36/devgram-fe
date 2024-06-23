@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea";
-import { User, UserInfo } from "@/types";
+import { UpdateUserInfo, User, UserInfo } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -51,6 +51,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { useUpdateUserInfo } from "@/hooks";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 
 
@@ -63,9 +66,12 @@ export const EditProfileDrawer: React.FC<EditProfileProps> = ({
     user,
     userInfo,
 }) => {
+
+    const [open, setOpen] = useState(false);
+
     return (
-        <Drawer>
-            <DrawerTrigger asChild>
+        <Drawer open={open} onOpenChange={setOpen}>
+            <DrawerTrigger asChild onClick={() => setOpen(true)}>
                 <Button>
                     Edit Profile
                 </Button>
@@ -75,10 +81,11 @@ export const EditProfileDrawer: React.FC<EditProfileProps> = ({
                     <DrawerTitle>Edit profile</DrawerTitle>
                     <DrawerClose />
                 </DrawerHeader>
-                <div className="px-4 xs:px-6 max-h-[60vh] overflow-auto">
+                <div className="px-4 xs:px-6 max-h-[75vh] overflow-auto">
                     <EditProfileForm
                         user={user}
                         userInfo={userInfo}
+                        setOpen={setOpen}
                     />
                 </div>
                 <DrawerFooter>
@@ -93,9 +100,12 @@ export const EditProfileDialog: React.FC<EditProfileProps> = ({
     user,
     userInfo,
 }) => {
+
+    const [open, setOpen] = useState(false);
+
     return (
-        <Dialog>
-            <DialogTrigger asChild>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild onClick={() => setOpen(true)}>
                 <Button>Edit Profile</Button>
             </DialogTrigger>
             <DialogContent className="w-[500px] md:w-[700px] space-y-2">
@@ -106,6 +116,7 @@ export const EditProfileDialog: React.FC<EditProfileProps> = ({
                     <EditProfileForm
                         user={user}
                         userInfo={userInfo}
+                        setOpen={setOpen}
                     />
                 </div>
             </DialogContent>
@@ -129,13 +140,19 @@ const userInfoFormSchema = z.object({
     gender: z.enum(["Male", "Female", "Other"]).optional(),
 });
 
-const dateFormat = "yyyy-MM-dd HH:mm:ss"
-const dateDisplayFormat = "yyyy-MM-dd"
+const dateFormat = "yyyy-MM-dd"
 
-const EditProfileForm: React.FC<EditProfileProps> = ({
+type EditProfileFormProps = {
+    setOpen: (open: boolean) => void;
+} & EditProfileProps;
+
+const EditProfileForm: React.FC<EditProfileFormProps> = ({
     user,
     userInfo,
+    setOpen,
 }) => {
+
+    const updateUserInfoMutation = useUpdateUserInfo();
 
     const form = useForm<z.infer<typeof userInfoFormSchema>>({
         resolver: zodResolver(userInfoFormSchema),
@@ -150,8 +167,31 @@ const EditProfileForm: React.FC<EditProfileProps> = ({
     const bioValue = form.watch("bio")
 
     function onSubmit(values: z.infer<typeof userInfoFormSchema>) {
-        console.log(userInfo);
-        console.log(values)
+        if (updateUserInfoMutation.isPending) return;
+
+        const updateUserInfoJson: UpdateUserInfo = {
+            username: values.username,
+            userInfoEntity: {
+                user_id: user.id,
+                bio: values.bio,
+                birthday: values.birthday,
+                gender: values.gender,
+            }
+        }
+        if (userInfo === updateUserInfoJson.userInfoEntity) {
+            toast.error("No changes detected.")
+            return;
+        }
+
+        toast.promise(updateUserInfoMutation.mutateAsync({ updateUserInfo: updateUserInfoJson }, {
+            onSuccess: () => {
+                setOpen(false);
+            }
+        }), {
+            loading: "Updating profile...",
+            success: "Profile updated successfully!",
+            error: "Failed to update profile.",
+        });
     }
 
     return (
@@ -191,7 +231,7 @@ const EditProfileForm: React.FC<EditProfileProps> = ({
                                             )}
                                         >
                                             {field.value ? (
-                                                format(parse(field.value, dateFormat, new Date()), dateDisplayFormat)
+                                                format(parse(field.value, dateFormat, new Date()), dateFormat)
                                             ) : (
                                                 <span>Pick a date</span>
                                             )}
