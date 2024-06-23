@@ -3,6 +3,7 @@ import { User } from "@/types";
 import { useGetMe } from "@/hooks";
 import { useLocation } from "react-router-dom";
 import { routes } from "@/app/Routes";
+import UnauthorizedPage from "@/pages/InvalidPages/UnauthorizedPage";
 
 type AuthProviderProps = {
     children: React.ReactNode;
@@ -51,7 +52,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, [user, location]);
 
     if (isError) {
-        window.location.href = '/login';
+        // window.location.href = '/login';
+        return <UnauthorizedPage />;
     }
 
     const value = {

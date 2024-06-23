@@ -136,7 +136,11 @@ const Layout = () => {
     ]
 
     if (!user) {
-        return <UnauthorizedPage />
+        return (
+            <div className="h-screen w-screen flex justify-center items-center">
+                <Icon name="loader-circle" className="animate-spin text-muted-foreground h-12 w-12" />
+            </div>
+        );
     }
 
     return (
