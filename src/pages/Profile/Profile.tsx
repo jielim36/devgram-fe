@@ -18,6 +18,8 @@ import FollowListingDialog from "./FollowListingDialog";
 import DOMPurify from 'dompurify';
 import { userInfo } from "os";
 import { EditProfileDrawer, EditProfileDialog } from "./EditProfile";
+import { Badge } from "@/components/ui/badge";
+import { calculateAge } from "@/utils/formatDate";
 
 
 const Profile = () => {
@@ -172,10 +174,10 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* User Info for Computer*/}
-                <div className="md:col-span-4 flex flex-col gap-4">
+                {/* User Info*/}
+                <div className="md:col-span-4 flex flex-col gap-4 h-full">
 
-                    {/* Username and buttons */}
+                    {/* Username and buttons for Computer */}
                     <div className="hidden md:flex flex-row gap-2 items-center overflow-hidden">
                         <p className="text-lg font-semibold pr-4 truncate">
                             {user?.username}
@@ -247,13 +249,27 @@ const Profile = () => {
                                 } />
                         }
                     </div>
+                    <div className="flex-none flex flex-wrap gap-3 select-none">
+                        {userInfoData?.data?.gender && (
+                            <Badge variant="secondary">
+                                Gender: {userInfoData?.data?.gender}
+                            </Badge>
+                        )}
+                        {userInfoData?.data?.birthday && (
+                            <Badge variant="secondary">
+                                Age: {calculateAge(userInfoData?.data?.birthday)}
+                            </Badge>
+
+                        )}
+                        {userInfoData?.data?.address && (
+                            <Badge variant="secondary">
+                                Location: {userInfoData?.data?.address}
+                            </Badge>
+                        )}
+                    </div>
 
                     {/* Bio */}
                     <article className="grow text-ellipsis h-44 overflow-auto">
-                        {/* {userInfoData?.data?.bio} */}
-                        {/* {userInfoData?.data?.bio.split('\n').map((paragraph: any, index) => (
-                            <p key={index}>{paragraph}</p>
-                        ))} */}
                         <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(userInfoData?.data?.bio)} />
                         {!userInfoData?.data?.bio && <p className="text-muted-foreground">No Bio</p>}
                     </article>
@@ -261,7 +277,7 @@ const Profile = () => {
             </div>
 
             {/* Stories */}
-            <div className="flex flex-row gap-8 overflow-hidden py-2 px-6">
+            {/* <div className="flex flex-row gap-8 overflow-hidden py-2 px-6">
                 {fakeStories?.map(() => {
                     return (
                         <AvatarContainer
@@ -271,7 +287,7 @@ const Profile = () => {
                         />
                     )
                 })}
-            </div>
+            </div> */}
 
             {/* User posts Listing */}
             <Tabs defaultValue="posts" className="w-full mt-4 pb-8">
