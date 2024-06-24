@@ -1,6 +1,6 @@
 import PostItem from "@/components/PostItem/PostItem";
 import { Post } from "@/types";
-import { useGetPopularPosts, useGetPopularPostsInfinite } from "@/hooks";
+import { useGetPopularPostsInfinite } from "@/hooks";
 import Icon from "@/components/Icon/Icon";
 import { useEffect, useRef, useState } from "react";
 import { useIntersection } from "@mantine/hooks";
@@ -53,7 +53,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="relative px-2 xs:px-0 xs:w-[340px] sm:w-[530px] left-2/4 -translate-x-2/4 lg:-translate-x-3/4">
+            <div className="relative px-2 xs:px-0 xs:w-[340px] sm:w-[530px] left-2/4 -translate-x-2/4 xl:-translate-x-3/4">
                 {/* Post Listing */}
                 <div className="flex flex-col gap-16">
                     {popularPostsList.map((post: Post, index) => (

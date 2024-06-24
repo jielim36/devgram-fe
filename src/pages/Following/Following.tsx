@@ -1,6 +1,6 @@
 import Icon from "@/components/Icon/Icon";
 import PostItem from "@/components/PostItem/PostItem";
-import { useGetFollowingPosts, useGetFollowingPostsInfinite } from "@/hooks";
+import { useGetFollowingPostsInfinite } from "@/hooks";
 import { Post } from "@/types";
 import { useAuth } from "@/utils/AuthProvider";
 import { useIntersection } from "@mantine/hooks";
@@ -55,7 +55,7 @@ const Following = () => {
 
     return (
         <>
-            <div className="relative px-2 xs:px-0 xs:w-[340px] sm:w-[530px] left-2/4 -translate-x-2/4 lg:-translate-x-3/4">
+            <div className="relative px-2 xs:px-0 xs:w-[340px] sm:w-[530px] left-2/4 -translate-x-2/4 xl:-translate-x-3/4">
                 {/* Post Listing */}
                 <div className="flex flex-col gap-16">
                     {followingPostsList.map((post: Post, index: number) => (
