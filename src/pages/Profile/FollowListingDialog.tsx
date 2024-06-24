@@ -74,7 +74,7 @@ const FollowListingDialog: React.FC<FollowingListingProps> = ({
     }, [followerListResult]);
 
     const handleLoadMore = () => {
-        const itemsPerPage = 10;
+        const itemsPerPage = 15;
 
         if (mode === "following") {
             const totalFollowingPages = Math.ceil(followingCount / itemsPerPage);
