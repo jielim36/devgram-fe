@@ -106,7 +106,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
                     <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all {post?.comments.length > 0 ? post.comments.length : ""} comments</span>
                 } />
                 <div className="flex flex-col">
-                    {post?.comments && post.comments.length > 0 && post.comments.slice(0, 2).map((comment, index) => (
+                    {post?.comments && post.comments.length > 0 && post.comments.filter((comment) => comment.parent_id === 0).slice(0, 2).map((comment, index) => (
                         <div key={index} className="flex flex-row gap-1">
                             <p className="font-bold">{comment.user.username}</p>
                             <p className="line-clamp-1">{comment.content}</p>

@@ -33,6 +33,8 @@ type FloatPostItemProps = {
     triggerClassName?: string;
 }
 
+const replyingStyle = "bg-slate-300 border border-slate-300 rounded-md p-2";
+
 const FloatPostItem: React.FC<FloatPostProps & FloatPostItemProps> = ({ postId, trigger, triggerClassName }) => {
     return (
         <Dialog>
@@ -51,6 +53,8 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
     const [post, setPost] = useState<Post>();
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [currentLikeCommentId, setCurrentLikeCommentId] = useState<number | null>(null);
+    const [currentReplyCommentId, setCurrentReplyCommentId] = useState<number>(0);
+    const [expandedComments, setExpandedComments] = useState<{ [key: number]: boolean }>({});
     const { user } = useAuth();
     const [commentContent, setCommentContent] = useState<string>("");
     const commentInputRef = useRef<HTMLTextAreaElement>(null);
@@ -58,6 +62,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
     const addCommentMutation = useAddComment({
         onSuccess: () => {
             setCommentContent("");
+            setCurrentReplyCommentId(0);
             queryClient.invalidateQueries({ queryKey: POST_QUERY_KEY });
         }
     });
@@ -145,6 +150,24 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
         }
     }, [postData]);
 
+    const handleMessageBtn = () => {
+        focusCommentInput();
+        setCurrentReplyCommentId(0);
+    }
+
+    const handleReplyBtn = (commentId: number, receiverName: string) => {
+        focusCommentInput();
+        setCurrentReplyCommentId(commentId);
+        setCommentContent(`@${receiverName} `);
+    }
+
+    const toggleViewComments = (commentId: number) => {
+        setExpandedComments(prevState => ({
+            ...prevState,
+            [commentId]: !prevState[commentId]
+        }));
+    };
+
     const focusCommentInput = () => {
         if (commentInputRef.current) {
             commentInputRef.current.focus();
@@ -153,16 +176,9 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
 
     const handleAddComment = () => {
         if (commentContent.trim() === "" || !post) return;
-        //TODO: remind user
-
-        // addCommentMutation.mutate({
-        //     postId: post?.id,
-        //     parentId: 0,
-        //     content: commentContent
-        // });
         toast.promise(addCommentMutation.mutateAsync({
             postId: post.id,
-            parentId: 0,
+            parentId: currentReplyCommentId,
             content: commentContent
         }),
             {
@@ -205,45 +221,11 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
     }
 
     if (!post) {
-        return "Loading...";
-    }
-
-    const generateChildComments = (comment: Comment, index: number) => {
         return (
-            post?.comments?.map((comment, index) => (
-                <div key={index} className="flex flex-row">
-                    <div>
-                        <AvatarContainer
-                            userId={comment?.user?.id}
-                            avatar_url={comment?.user?.avatar_url}
-                            hasStory={comment?.user?.stories != undefined && comment?.user?.stories?.length > 0}
-                        />
-                    </div>
-                    <div className="grow flex flex-col gap-1">
-                        <div className="flex flex-row">
-                            <div className="grow flex-col px-2">
-                                {/* Comment Information: username and date*/}
-                                <div className="flex flex-row gap-1 items-center">
-                                    <p className="font-bold">{comment?.user?.username}</p>
-                                    <div className="rounded-full w-[5px] h-[5px] bg-slate-300 translate-y-[1px]"></div>
-                                    <p className="text-xs">{convertDateWithShort(comment?.created_at)}</p>
-                                </div>
-
-                                {/* comment content */}
-                                <p className="">{comment?.content}</p>
-                                <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
-                                    <p className="hover:underline">Reply</p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <HeartIcon width={18} />
-                                <p className="text-xs">{comment?.likes || ""}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ))
-        );
+            <div className="h-[50vh] lg:[70vh] xl:h-[85vh] flex justify-center items-center">
+                <Icon name="loader-circle" className="animate-spin w-8 h-8 text-muted-foreground" />
+            </div>
+        )
     }
 
     return (
@@ -292,8 +274,8 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                 <p className="">{post?.description}</p>
                             </div>
                         </div>
-                        {post?.comments && post?.comments?.map((comment, index) => (
-                            <div key={index} className="flex flex-row">
+                        {post?.comments && post?.comments?.length > 0 && buildCommentTree(post?.comments).map((comment, index) => (
+                            <div key={index} className={`flex flex-row ${currentReplyCommentId === comment?.id ? replyingStyle : ""}`}>
                                 <div>
                                     <AvatarContainer
                                         userId={comment?.user?.id}
@@ -315,8 +297,12 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                             {/* comment content */}
                                             <p className="">{comment?.content}</p>
                                             <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
-                                                <p className="hover:underline">Reply</p>
-                                                <p className="hover:underline">View comments</p>
+                                                <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
+                                                {comment.children && comment.children.length > 0 && (
+                                                    <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
+                                                        {expandedComments[comment.id] ? 'Hide comments' : 'View comments'}
+                                                    </p>
+                                                )}
                                                 {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
                                                     // <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
                                                     <DeleteCommentDialog commentId={comment.id} />
@@ -334,7 +320,18 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                     </div>
 
                                     {/* Child comments */}
-                                    {/* {generateChildComments(comment, index)} */}
+                                    {expandedComments[comment.id] && comment.children &&
+                                        generateChildComments({
+                                            comments: comment?.children,
+                                            user: user!,
+                                            index: index,
+                                            handleReplyBtn,
+                                            handleLikeComment,
+                                            expandedComments,
+                                            toggleViewComments,
+                                            post
+                                        })
+                                    }
                                 </div>
                             </div>
                         ))}
@@ -350,7 +347,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                             <Button variant={"link"} size="icon" onClick={handleLikePost}>
                                 <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
                             </Button>
-                            <Button variant={"link"} size="icon" onClick={focusCommentInput}>
+                            <Button variant={"link"} size="icon" onClick={handleMessageBtn}>
                                 <Icon name="message-circle" />
                             </Button>
                             <Button variant={"link"} size="icon">
@@ -384,6 +381,105 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                 </div>
             </div>
         </div>
+    );
+}
+
+function buildCommentTree(comments: Comment[]): Comment[] {
+    const result: Comment[] = [];
+    const map: { [key: number]: Comment[] } = {};
+
+    comments.forEach(comment => {
+        comment.children = [];
+        if (comment.parent_id === 0 || !comment.parent_id) {
+            result.push(comment);
+        } else {
+            if (!map[comment.parent_id!]) {
+                map[comment.parent_id!] = [];
+            }
+            map[comment.parent_id!].push(comment);
+        }
+    });
+
+    function addChildren(parent: Comment) {
+        if (map[parent.id]) {
+            parent.children = map[parent.id];
+            parent.children.forEach(child => addChildren(child));
+        }
+    }
+
+    result.forEach(rootComment => addChildren(rootComment));
+
+    return result;
+}
+
+type ChildCommentProps = {
+    user: User;
+    comments: Comment[];
+    index: number;
+    handleReplyBtn: (commentId: number, receiverName: string) => void;
+    handleLikeComment: (commentId: number) => void;
+    expandedComments: { [key: number]: boolean };
+    toggleViewComments: (commentId: number) => void;
+    post: Post;
+}
+
+const generateChildComments: React.FC<ChildCommentProps> = ({
+    comments,
+    handleReplyBtn,
+    handleLikeComment,
+    expandedComments,
+    user,
+    toggleViewComments,
+    post
+}) => {
+    return (
+        comments?.map((comment: Comment, index: number) => (
+            <div key={comment?.id} className={`flex flex-row`}>
+                <div>
+                    <AvatarContainer
+                        userId={comment?.user?.id}
+                        avatar_url={comment?.user?.avatar_url}
+                        hasStory={comment?.user?.stories != undefined && comment?.user?.stories?.length > 0}
+                    />
+                </div>
+                <div className="flex flex-col gap-1 w-full">
+                    {/* Parent comment */}
+                    <div className="flex flex-row">
+                        <div className="grow flex-col px-2">
+                            {/* Comment Information: username and date*/}
+                            <div className="flex flex-row gap-1 items-center">
+                                <p className="font-bold">{comment?.user?.username}</p>
+                                <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
+                                <p className="text-xs">{convertDateWithShort(comment?.created_at)}</p>
+                            </div>
+
+                            {/* comment content */}
+                            <p className="">{comment?.content}</p>
+                            <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
+                                <p className="hover:underline" onClick={() => handleReplyBtn(comment?.parent_id || 0, comment?.user?.username)}>Reply</p>
+                                {comment.children && comment.children.length > 0 && (
+                                    <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
+                                        {expandedComments[comment.id] ? 'Hide comments' : 'View comments'}
+                                    </p>
+                                )}
+                                {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
+                                    <DeleteCommentDialog commentId={comment.id} />
+                                }
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <HeartIcon
+                                fill={comment.is_liked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"}
+                                className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
+                                onClick={() => handleLikeComment(comment.id)}
+                            />
+                            <p className="text-xs">{comment?.likes || ""}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ))
+
     );
 }
 

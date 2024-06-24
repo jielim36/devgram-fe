@@ -38,7 +38,9 @@ const DeleteCommentDialog = ({ commentId }: { commentId: number }) => {
 
     return (
         <Dialog open={open}>
-            <DialogTrigger onClick={() => setOpen(true)}>Delete</DialogTrigger>
+            <DialogTrigger onClick={() => setOpen(true)} className="hover:underline">
+                Delete
+            </DialogTrigger>
             <DialogContent disableCloseBtn>
                 <DialogHeader>
                     <DialogTitle>Are you absolutely sure to delete this comment?</DialogTitle>
