@@ -34,6 +34,11 @@ export const getPopularPosts = async (): Promise<ResponseBody<Post[]>> => {
     return response.data;
 }
 
+export const getFollowingPosts = async (userId: number): Promise<ResponseBody<Post[]>> => {
+    const response = await axiosClient.get(`/post/user/${userId}/following`);
+    return response.data;
+}
+
 export const getPostByPostId = async (postId: number): Promise<ResponseBody<Post>> => {
     const response = await axiosClient.get(`/post/${postId}`);
     return response.data;

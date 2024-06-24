@@ -1,5 +1,5 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost, deletePost, getPopularPosts, getPostByPostId, getPostsByUserId, updatePostDescription } from "@/services";
+import { addPost, deletePost, getFollowingPosts, getPopularPosts, getPostByPostId, getPostsByUserId, updatePostDescription } from "@/services";
 import { Post, ResponseBody } from "@/types";
 import {
     useQuery,
@@ -48,6 +48,17 @@ export const useGetPopularPosts = () => {
         queryFn: async () => {
             return await getPopularPosts();
         },
+    });
+}
+
+export const useGetFollowingPosts = (userId: number) => {
+    return useQuery({
+        queryKey: POST_QUERY_KEY.concat(userId.toString()),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, userId] = context.queryKey;
+            return await getFollowingPosts(Number(userId));
+        },
+        enabled: !!userId
     });
 }
 

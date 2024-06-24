@@ -1,6 +1,7 @@
 import PostItem from "@/components/PostItem/PostItem";
 import { Post } from "@/types";
 import { useGetPopularPosts } from "@/hooks";
+import Icon from "@/components/Icon/Icon";
 
 
 const Home = () => {
@@ -15,6 +16,10 @@ const Home = () => {
                     {postData?.data && postData?.data?.length > 0 && postData.data.map((post: Post) => (
                         <PostItem key={post.id} post={post} />
                     ))}
+                </div>
+                <div className="h-40 w-full text-muted-foreground flex flex-row justify-center items-center gap-2">
+                    <Icon name="octagon-x" className="" />
+                    <p>No more posts available.</p>
                 </div>
             </div>
         </>
