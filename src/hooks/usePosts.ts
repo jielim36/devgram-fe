@@ -1,10 +1,11 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost, deletePost, getFollowingPosts, getPopularPosts, getPostByPostId, getPostsByUserId, updatePostDescription } from "@/services";
+import { addPost, deletePost, getFollowingPostWithPagination, getFollowingPosts, getPopularPostWithPagination, getPopularPosts, getPostByPostId, getPostsByUserId, updatePostDescription } from "@/services";
 import { Post, ResponseBody } from "@/types";
 import {
     useQuery,
     useMutation,
     QueryFunctionContext,
+    useInfiniteQuery,
 } from '@tanstack/react-query'
 import { ResponseHandlerType } from ".";
 
@@ -59,6 +60,44 @@ export const useGetFollowingPosts = (userId: number) => {
             return await getFollowingPosts(Number(userId));
         },
         enabled: !!userId
+    });
+}
+
+export const useGetPopularPostsInfinite = ({ enabled }: { enabled: boolean }) => {
+    return useInfiniteQuery({
+        queryKey: POST_QUERY_KEY.concat("popular"),
+        queryFn: async ({ pageParam = 1, queryKey }) => {
+            return await getPopularPostWithPagination(pageParam);
+        },
+        getNextPageParam: (lastPage, pages) => {
+            const currentPage = pages?.length + 1;
+            return currentPage;
+        },
+        initialData: {
+            pages: [],
+            pageParams: [1]
+        },
+        initialPageParam: 1,
+        enabled: enabled
+    });
+}
+
+export const useGetFollowingPostsInfinite = ({ userId, enabled }: { userId: number, enabled: boolean }) => {
+    return useInfiniteQuery({
+        queryKey: POST_QUERY_KEY.concat(userId.toString(), "following"),
+        queryFn: async ({ pageParam = 1, queryKey }) => {
+            const [_, userId] = queryKey;
+            return await getFollowingPostWithPagination(Number(userId), pageParam);
+        },
+        getNextPageParam: (lastPage, pages) => {
+            return pages?.length + 1;
+        },
+        initialData: {
+            pages: [],
+            pageParams: [1]
+        },
+        initialPageParam: 1,
+        enabled: enabled
     });
 }
 

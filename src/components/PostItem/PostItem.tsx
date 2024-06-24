@@ -11,14 +11,14 @@ import convertDate from "@/utils/convertDateFormat";
 import LikeMessageGenerate from "./LikeMessageGenerate";
 import { useLikePost, useUnlikePost } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Icon from "../Icon/Icon";
 
 type PostItemProps = {
     post: Post;
 }
 
-const PostItem: React.FC<PostItemProps> = ({ post }) => {
+const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post }, ref) => {
 
     const { user } = useAuth();
     const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -59,7 +59,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
     }
 
     return (
-        <Card className="flex flex-col">
+        <Card ref={ref} className="flex flex-col">
             <div className="flex flex-row gap-2 py-1 px-2 justify-center items-center">
                 <AvatarContainer
                     userId={post.user.id}
@@ -120,6 +120,6 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
         </Card >
     );
-}
+});
 
 export default PostItem;
