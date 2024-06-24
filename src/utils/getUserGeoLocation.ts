@@ -1,7 +1,13 @@
 import { updateUserInfo } from "@/services";
 import { UpdateUserInfo } from "@/types";
 
+const GEO_KEY = 'LastGeoLocationUpdateDate';
+
 function updateGeoLocation(userId: number) {
+
+    // check need to update or not
+    if (!shouldUpdateGeoLocation()) return;
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => success(position, userId), error);
     } else {
@@ -41,5 +47,34 @@ const getCountry = async (lat: any, lon: any, userId: number) => {
         updateUserInfo(userInfo);
     }
 };
+
+function shouldUpdateGeoLocation(): boolean {
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 一天的毫秒数
+
+    // get current timestamp
+    const currentTime = new Date().getTime();
+
+    // get stored timestamp
+    const storedTime = localStorage.getItem(GEO_KEY);
+
+    if (!storedTime) {
+        // if no stored timestamp, add current timestamp to local storage
+        localStorage.setItem(GEO_KEY, currentTime.toString());
+        return true;
+    } else {
+        // convert stored timestamp to number
+        const storedTimeValue = parseInt(storedTime);
+
+        // calculate time difference, if greater than 24 hours, return true
+        const timeDiff = currentTime - storedTimeValue;
+
+        if (timeDiff > twentyFourHours) {
+            localStorage.setItem(GEO_KEY, currentTime.toString());
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
 
 export default updateGeoLocation;
