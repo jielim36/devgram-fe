@@ -388,6 +388,10 @@ const ProfileMenu = ({ user }: { user: User }) => {
         });
     }
 
+    const handleJumpProfile = () => {
+        window.location.href = `/profile/${user.id}`;
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="outline-0">
@@ -396,10 +400,9 @@ const ProfileMenu = ({ user }: { user: User }) => {
             <DropdownMenuContent sideOffset={3} align="end" className=" w-48">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleJumpProfile}>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Devgram Premium</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <div className="p-2 flex flex-row items-center justify-between">
                     <Label htmlFor="theme-switcher">Dark mode</Label>
