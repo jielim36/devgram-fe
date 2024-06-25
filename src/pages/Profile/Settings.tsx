@@ -59,12 +59,11 @@ export const SettingSheet = () => {
                 <SheetHeader>
                     <SheetTitle>Privacy</SheetTitle>
                     <SheetDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
+                        In the privacy settings, you can control the visibility of your profile page to others, enhancing your control over who can view your information and activities.
                     </SheetDescription>
 
                 </SheetHeader>
-                <div className="py-2">
+                <div className="py-4">
                     <PrivacySettings setOpen={setOpen} />
                 </div>
             </SheetContent>
@@ -138,6 +137,20 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
         },
         onError: () => { }
     });
+
+    useEffect(() => {
+        if (isAllowedFollower && isAllowedFollowing) {
+            form.setValue("canSeePostFriend", true);
+        }
+    }, [isAllowedFollower, isAllowedFollowing]);
+
+    useEffect(() => {
+        if (!isAllowedFriend && isAllowedFollower && isAllowedFollowing) {
+            form.setValue("canSeePostFriend", false);
+            form.setValue("canSeePostFollower", false);
+            form.setValue("canSeePostFollowing", false);
+        }
+    }, [isAllowedFriend]);
 
     useEffect(() => {
         if (privacySetting) {
