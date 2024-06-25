@@ -5,6 +5,7 @@ export * from "./useUsers";
 export * from "./useComments";
 export * from "./useLikes";
 export * from "./useFollow";
+export * from "./usePrivacySetting";
 
 export type ResponseHandlerType<T> = {
     onSuccess?: (data: ResponseBody<T>) => void;

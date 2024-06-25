@@ -40,6 +40,10 @@ import {
 } from "@/components/ui/drawer"
 import { Switch } from "@/components/ui/switch"
 import React, { useEffect } from "react";
+import { PrivacySetting, VisibilityDurationType } from "@/types";
+import { useAuth } from "@/utils/AuthProvider";
+import { useGetPrivacySettingByUserId, useUpdatePrivacySettingByUserId } from "@/hooks";
+import toast from "react-hot-toast";
 
 export const SettingSheet = () => {
     const [isOpen, setOpen] = React.useState(false);
@@ -92,6 +96,7 @@ export const SettingDrawer = () => {
     )
 }
 
+type VisibilityDurationStr = "1" | "3" | "7" | "14" | "30" | "90" | "0";
 const VisibilityDayArr = ["1", "3", "7", "14", "30", "90", "0"] as const;
 
 const privacySettingsFormSchema = z.object({
@@ -104,6 +109,7 @@ const privacySettingsFormSchema = z.object({
 });
 
 const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) => {
+    const { user } = useAuth();
     const form = useForm<z.infer<typeof privacySettingsFormSchema>>({
         resolver: zodResolver(privacySettingsFormSchema),
         defaultValues: {
@@ -122,10 +128,30 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
     const postVisibilityDurationFollower = form.watch("postVisibilityDurationFollower");
     const postVisibilityDurationFollowing = form.watch("postVisibilityDurationFollowing");
     const postVisibilityDurationFriend = form.watch("postVisibilityDurationFriend");
+    const { data: privacySetting } = useGetPrivacySettingByUserId({
+        userId: user?.id || 0,
+        enabled: !!user?.id
+    });
+    const updatePrivacySettingMutation = useUpdatePrivacySettingByUserId({
+        onSuccess: () => {
+            setOpen(false);
+        },
+        onError: () => { }
+    });
 
     useEffect(() => {
-
-    }, [isAllowedFollower, isAllowedFollowing, isAllowedFriend, postVisibilityDurationFollower, postVisibilityDurationFollowing, postVisibilityDurationFriend]);
+        if (privacySetting) {
+            const { canSeePostFollower, canSeePostFollowing, canSeePostFriend, postVisibilityDurationFollower, postVisibilityDurationFollowing, postVisibilityDurationFriend } = privacySetting.data;
+            form.reset({
+                canSeePostFollower,
+                canSeePostFollowing,
+                canSeePostFriend,
+                postVisibilityDurationFollower: postVisibilityDurationFollower.toString() as VisibilityDurationStr,
+                postVisibilityDurationFollowing: postVisibilityDurationFollowing.toString() as VisibilityDurationStr,
+                postVisibilityDurationFriend: postVisibilityDurationFriend.toString() as VisibilityDurationStr,
+            });
+        }
+    }, [privacySetting])
 
     const handleReset = () => {
         form.reset({
@@ -139,7 +165,26 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
     }
 
     function onSubmit(values: z.infer<typeof privacySettingsFormSchema>) {
-        console.log(values);
+        if (!user?.id) return;
+        const privacySetting: PrivacySetting = {
+            userId: user?.id,
+            canSeePostFollower: values.canSeePostFollower,
+            canSeePostFollowing: values.canSeePostFollowing,
+            canSeePostFriend: values.canSeePostFriend,
+            postVisibilityDurationFollower: Number(values.postVisibilityDurationFollower) as VisibilityDurationType,
+            postVisibilityDurationFollowing: Number(values.postVisibilityDurationFollowing) as VisibilityDurationType,
+            postVisibilityDurationFriend: Number(values.postVisibilityDurationFriend) as VisibilityDurationType,
+        }
+
+        toast.promise(updatePrivacySettingMutation.mutateAsync({ userId: user.id, privacySetting }), {
+            loading: "Saving...",
+            success: "Privacy settings updated!",
+            error: "Failed to update privacy settings",
+        });
+    }
+
+    if (!privacySetting?.data) {
+        return <Icon name="loader-circle" className="animate-spin h-6 w-6 mx-auto" />
     }
 
     return (
