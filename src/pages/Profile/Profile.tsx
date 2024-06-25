@@ -11,7 +11,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import { useAddFollow, useGetFollowerCount, useGetFollowingCount, useGetPostsByUserId, useGetUserByUserId, useGetUserInfoByUserId, useIsFollowing, useUnFollow } from "@/hooks";
-import { FollowList, Post, User } from "@/types";
+import { FollowList, Post, ResponseBody, User } from "@/types";
 import PostCard from "./PostCard";
 import toast from "react-hot-toast";
 import FollowListingDialog from "./FollowListingDialog";
@@ -21,6 +21,7 @@ import { EditProfileDrawer, EditProfileDialog } from "./EditProfile";
 import { Badge } from "@/components/ui/badge";
 import { calculateAge } from "@/utils/formatDate";
 import { SettingSheet, SettingDrawer } from "./Settings";
+import { AxiosError } from "axios";
 
 
 const Profile = () => {
@@ -32,8 +33,12 @@ const Profile = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [user, setUser] = useState<User>();
     const [posts, setPosts] = useState<Post[]>();
+    const [allowedToViewProfile, setAllowedToViewProfile] = useState(true);
 
-    const { data: postData } = useGetPostsByUserId(Number(userId));
+    const { data: postData, isError: isGetPostError, error: getPostError } = useGetPostsByUserId({
+        userId: Number(userId),
+        enabled: !!allowedToViewProfile
+    });
     const { data: userData } = useGetUserByUserId(Number(userId));
     const { data: followingCountData } = useGetFollowingCount({ following_id: Number(userId) });
     const { data: followerCountData } = useGetFollowerCount({ follower_id: Number(userId) });
@@ -81,6 +86,18 @@ const Profile = () => {
             setUser(userData.data)
         }
     }, [userData]);
+
+    useEffect(() => {
+        if (isGetPostError) {
+            const error = getPostError as AxiosError;
+            const data = error?.response?.data as ResponseBody<string>;
+            if (data.data === "Not allowed to access this profile") {
+                setAllowedToViewProfile(false);
+            }
+
+            // setAllowedToViewProfile(false);
+        }
+    }, [isGetPostError]);
 
     const renderBioWithLinksAndBreaks = (bio: string | undefined) => {
         // Sanitize the bio using DOMPurify
@@ -290,34 +307,48 @@ const Profile = () => {
             </div> */}
 
             {/* User posts Listing */}
-            <Tabs defaultValue="posts" className="w-full mt-4 pb-8">
-                <TabsList className="flex items-center mx-auto w-fit">
-                    <TabsTrigger value="posts">
-                        <div className="flex flex-row gap-1 items-center">
-                            <Icon name="grid-2x2" />
-                            Posts
+            {allowedToViewProfile &&
+                <Tabs defaultValue="posts" className="w-full mt-4 pb-8">
+                    <TabsList className="flex items-center mx-auto w-fit">
+                        <TabsTrigger value="posts">
+                            <div className="flex flex-row gap-1 items-center">
+                                <Icon name="grid-2x2" />
+                                Posts
+                            </div>
+                        </TabsTrigger>
+                        <TabsTrigger value="reels">
+                            <div className="flex flex-row gap-1 items-center">
+                                <Icon name="clapperboard" />
+                                Reels
+                            </div>
+                        </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="posts" className="grid grid-cols-3 gap-1">
+                        {posts?.map((post) => {
+                            return (
+                                <PostCard
+                                    post={post}
+                                    userId={user?.id}
+                                    key={post.id}
+                                />
+                            )
+                        })}
+                    </TabsContent>
+                    {!posts &&
+                        <div className="w-full py-10 text-muted-foreground flex flex-col items-center justify-center">
+                            <Icon name="loader-circle" className="animate-spin mx-auto" />
                         </div>
-                    </TabsTrigger>
-                    <TabsTrigger value="reels">
-                        <div className="flex flex-row gap-1 items-center">
-                            <Icon name="clapperboard" />
-                            Reels
-                        </div>
-                    </TabsTrigger>
-                </TabsList>
-                <TabsContent value="posts" className="grid grid-cols-3 gap-1">
-                    {posts?.map((post) => {
-                        return (
-                            <PostCard
-                                post={post}
-                                userId={user?.id}
-                                key={post.id}
-                            />
-                        )
-                    })}
-                </TabsContent>
-                <TabsContent value="reels">Still under developing...</TabsContent>
-            </Tabs>
+                    }
+                    <TabsContent value="reels">Still under developing...</TabsContent>
+                </Tabs>
+            }
+
+            {!allowedToViewProfile &&
+                <div className="w-full py-10 text-muted-foreground flex flex-col items-center justify-center">
+                    <Icon name="ban" className="w-10 h-10 font-light" />
+                    <p className="text-xl">You are not allowed to access this profile</p>
+                </div>
+            }
         </div >
     );
 }

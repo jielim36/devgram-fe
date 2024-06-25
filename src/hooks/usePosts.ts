@@ -116,7 +116,8 @@ const fetchPostsByUserId = async (context: QueryFunctionContext<string[]>): Prom
     return await getPostsByUserId(Number(userId));
 }
 
-export const useGetPostsByUserId = (userId: number) => useQuery({
+export const useGetPostsByUserId = ({ userId, enabled }: { userId: number, enabled: boolean }) => useQuery({
     queryKey: POST_QUERY_KEY.concat(userId.toString()),
-    queryFn: fetchPostsByUserId
+    queryFn: fetchPostsByUserId,
+    enabled: enabled
 });
