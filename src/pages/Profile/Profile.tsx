@@ -20,6 +20,7 @@ import { userInfo } from "os";
 import { EditProfileDrawer, EditProfileDialog } from "./EditProfile";
 import { Badge } from "@/components/ui/badge";
 import { calculateAge } from "@/utils/formatDate";
+import { SettingSheet, SettingDrawer } from "./Settings";
 
 
 const Profile = () => {
@@ -157,11 +158,12 @@ const Profile = () => {
                                     userInfo={userInfoData?.data}
                                 />
                             }
-                            {isOwner && <Button >Settings</Button>}
+                            {/* {isOwner && <Button >Settings</Button>} */}
                             {isOwner &&
-                                <Button variant="ghost" className="flex-none">
-                                    <Icon name="settings" />
-                                </Button>
+                                // <Button variant="ghost" className="flex-none">
+                                //     <Icon name="settings" />
+                                // </Button>
+                                <SettingDrawer />
                             }
                             {!isOwner && <Button className="flex-none" onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</Button>}
                             {!isOwner && <Button className="flex-none">Message</Button>}
@@ -188,11 +190,9 @@ const Profile = () => {
                                 userInfo={userInfoData?.data}
                             />
                         }
-                        {isOwner && <Button >Settings</Button>}
+                        {/* {isOwner && <Button >Settings</Button>} */}
                         {isOwner &&
-                            <Button variant="ghost" className="flex-none">
-                                <Icon name="settings" />
-                            </Button>
+                            <SettingSheet />
                         }
                         {!isOwner && <Button className="flex-none" onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</Button>}
                         {!isOwner && <Button className="flex-none">Message</Button>}

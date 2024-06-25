@@ -247,8 +247,12 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
                                 <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
                                         mode="single"
-                                        selected={field.value ? parse(field.value, dateFormat, new Date()) : null}
-                                        onSelect={(date: Date) => field.onChange(format(date, dateFormat))}
+                                        selected={field.value ? parse(field.value, dateFormat, new Date()) : undefined}
+                                        onSelect={(date: Date | undefined) => {
+                                            if (date) {
+                                                field.onChange(format(date, dateFormat));
+                                            }
+                                        }}
                                         disabled={(date: Date) =>
                                             date > new Date() || date < new Date("1900-01-01")
                                         }
