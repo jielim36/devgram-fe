@@ -67,11 +67,6 @@ const Layout = () => {
             href: "/",
         },
         {
-            title: "Popular",
-            icon: <Icon name="trending-up" />,
-            href: "/popular",
-        },
-        {
             title: "Reels",
             icon: <Icon name="clapperboard" />,
             href: "/reels",

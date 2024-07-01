@@ -18,7 +18,6 @@ import { AuthProvider } from '@/utils/AuthProvider';
 
 const Layout = React.lazy(() => import('@/components/Layout/Layout'));
 const Home = React.lazy(() => import('../pages/Home/Home'));
-const Popular = React.lazy(() => import('@/pages/Popular/Popular'));
 const Reels = React.lazy(() => import('@/pages/Reels/Reels'));
 const Following = React.lazy(() => import('@/pages/Following/Following'));
 const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
@@ -56,7 +55,6 @@ function App() {
                 <Routes>
                   <Route path={routes.home} element={<Layout />}>
                     <Route index element={<Home />} />
-                    <Route path={routes.popular} element={<Popular />} />
                     <Route path={routes.reels} element={<Reels />} />
                     <Route path={routes.following} element={<Following />} />
                     <Route path={routes.profile} element={<Profile />} />
