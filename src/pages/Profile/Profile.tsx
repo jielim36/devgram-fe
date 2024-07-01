@@ -155,7 +155,7 @@ const Profile = () => {
                         userId={user?.id}
                         avatar_url={user?.avatar_url}
                         hasStory={user?.stories != undefined && user?.stories?.length > 0 || true}
-                        className="h-20 md:h-40 aspect-square"
+                        className="w-1/4 md:w-auto md:h-40 aspect-square"
                         avatarClassName="h-full w-full"
                         boldBorder
                         fallbackStrokeWidth={0.7}
@@ -163,23 +163,23 @@ const Profile = () => {
                     />
 
                     {/* User Info for Mobile */}
-                    <div className="block md:hidden">
+                    <div className="w-3/4 h-fit flex flex-row justify-between items-center md:hidden">
                         <p className="text-lg font-semibold pr-4 truncate">
                             {user?.username}
                         </p>
-                        <div className="flex flex-wrap gap-2">
+                        {!isOwner &&
+                            <Button variant="ghost" className="flex-none">
+                                <Icon name="ellipsis" />
+                            </Button>
+                        }
+                        {/* <div className="flex flex-wrap gap-2">
                             {isOwner &&
-                                // <Button className="flex-none">Edit Profile</Button>
                                 <EditProfileDrawer
                                     user={me!}
                                     userInfo={userInfoData?.data}
                                 />
                             }
-                            {/* {isOwner && <Button >Settings</Button>} */}
                             {isOwner &&
-                                // <Button variant="ghost" className="flex-none">
-                                //     <Icon name="settings" />
-                                // </Button>
                                 <SettingDrawer />
                             }
                             {!isOwner && <Button className="flex-none" onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</Button>}
@@ -189,7 +189,7 @@ const Profile = () => {
                                     <Icon name="ellipsis" />
                                 </Button>
                             }
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -286,7 +286,7 @@ const Profile = () => {
                     </div>
 
                     {/* Bio */}
-                    <article className="grow text-ellipsis h-44 overflow-auto">
+                    <article className="grow text-ellipsis max-h-44 overflow-auto">
                         <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(userInfoData?.data?.bio)} />
                         {!userInfoData?.data?.bio && <p className="text-muted-foreground">No Bio</p>}
                     </article>
@@ -347,6 +347,13 @@ const Profile = () => {
                 <div className="w-full py-10 text-muted-foreground flex flex-col items-center justify-center">
                     <Icon name="ban" className="w-10 h-10 font-light" />
                     <p className="text-xl">You are not allowed to access this profile</p>
+                </div>
+            }
+
+            {posts?.length === 0 &&
+                <div className="w-full xs:py-14 text-muted-foreground flex flex-col items-center justify-center">
+                    <Icon name="camera-off" className="w-10 h-10 font-light mb-2" />
+                    <p className="text-xl font-semibold">No posts yet</p>
                 </div>
             }
         </div >
