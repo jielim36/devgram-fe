@@ -48,6 +48,7 @@ import UnauthorizedPage from "@/pages/InvalidPages/UnauthorizedPage";
 import toast from "react-hot-toast";
 import SkeletonPage from "../Suspense/SkeletonPage";
 import { Button } from "../ui/button";
+import ReelUploader from "../ReelsUploader/ReelsUploader";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -160,8 +161,10 @@ const Layout = () => {
                             <ImageCropContainer trigger={
                                 <Button variant={"ghost"} className="font-normal">Post</Button>
                             } />
+                            <ReelUploader trigger={
+                                <Button variant={"ghost"} className="font-normal">Reel</Button>
+                            } />
                             <Button variant={"ghost"} className="font-normal">Story</Button>
-                            <Button variant={"ghost"} className="font-normal">Reels</Button>
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <NavigationMenuComponent user={user} />
