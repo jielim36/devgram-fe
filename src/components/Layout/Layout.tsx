@@ -47,6 +47,7 @@ import PostSkeleton from "../Suspense/PostSkeleton";
 import UnauthorizedPage from "@/pages/InvalidPages/UnauthorizedPage";
 import toast from "react-hot-toast";
 import SkeletonPage from "../Suspense/SkeletonPage";
+import { Button } from "../ui/button";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -149,9 +150,20 @@ const Layout = () => {
                     <Input placeholder="Search" className="pl-8" />
                 </div>
                 <div className="flex gap-4 items-center">
-                    <ImageCropContainer trigger={
-                        <Icon name="plus" color="white" />
-                    } />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="bg-gradient py-2 px-4 rounded-sm hover:scale-110 transition duration-300 ease-in-out">
+                            <Icon name="plus" color="white" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="min-w-fit w-fit px-2 flex flex-col">
+                            <DropdownMenuLabel>Upload</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <ImageCropContainer trigger={
+                                <Button variant={"ghost"} className="font-normal">Post</Button>
+                            } />
+                            <Button variant={"ghost"} className="font-normal">Story</Button>
+                            <Button variant={"ghost"} className="font-normal">Reels</Button>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                     <NavigationMenuComponent user={user} />
                     <div className="">
                         <ProfileMenu user={user} />
