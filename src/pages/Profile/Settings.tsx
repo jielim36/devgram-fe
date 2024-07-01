@@ -102,9 +102,11 @@ const privacySettingsFormSchema = z.object({
     canSeePostFollower: z.boolean(),
     canSeePostFollowing: z.boolean(),
     canSeePostFriend: z.boolean(),
+    canSeePostAll: z.boolean(),
     postVisibilityDurationFollower: z.enum(VisibilityDayArr),
     postVisibilityDurationFollowing: z.enum(VisibilityDayArr),
     postVisibilityDurationFriend: z.enum(VisibilityDayArr),
+    postVisibilityDurationAll: z.enum(VisibilityDayArr),
 });
 
 const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) => {
@@ -124,9 +126,11 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
     const isAllowedFollower = form.watch("canSeePostFollower");
     const isAllowedFollowing = form.watch("canSeePostFollowing");
     const isAllowedFriend = form.watch("canSeePostFriend");
+    const isAllowedAll = form.watch("canSeePostAll");
     const postVisibilityDurationFollower = form.watch("postVisibilityDurationFollower");
     const postVisibilityDurationFollowing = form.watch("postVisibilityDurationFollowing");
     const postVisibilityDurationFriend = form.watch("postVisibilityDurationFriend");
+    const postVisibilityDurationAll = form.watch("postVisibilityDurationAll");
     const { data: privacySetting } = useGetPrivacySettingByUserId({
         userId: user?.id || 0,
         enabled: !!user?.id
@@ -166,14 +170,24 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
         }
     }, [privacySetting])
 
+    useEffect(() => {
+        if (isAllowedAll) {
+            form.setValue("canSeePostFollower", true);
+            form.setValue("canSeePostFollowing", true);
+            form.setValue("canSeePostFriend", true);
+        }
+    }, [isAllowedAll]);
+
     const handleReset = () => {
         form.reset({
             canSeePostFollower: true,
             canSeePostFollowing: true,
             canSeePostFriend: true,
+            canSeePostAll: true,
             postVisibilityDurationFollower: "0",
             postVisibilityDurationFollowing: "0",
             postVisibilityDurationFriend: "0",
+            postVisibilityDurationAll: "0",
         });
     }
 
@@ -184,9 +198,11 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
             canSeePostFollower: values.canSeePostFollower,
             canSeePostFollowing: values.canSeePostFollowing,
             canSeePostFriend: values.canSeePostFriend,
+            canSeePostAll: values.canSeePostAll,
             postVisibilityDurationFollower: Number(values.postVisibilityDurationFollower) as VisibilityDurationType,
             postVisibilityDurationFollowing: Number(values.postVisibilityDurationFollowing) as VisibilityDurationType,
             postVisibilityDurationFriend: Number(values.postVisibilityDurationFriend) as VisibilityDurationType,
+            postVisibilityDurationAll: Number(values.postVisibilityDurationAll) as VisibilityDurationType,
         }
 
         toast.promise(updatePrivacySettingMutation.mutateAsync({ userId: user.id, privacySetting }), {
@@ -212,9 +228,10 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                         name="canSeePostFollower"
                         render={({ field }) => (
                             <FormItem className="flex items-center justify-between">
-                                <FormLabel className="h-fit mt-2">Follower</FormLabel>
+                                <FormLabel className="h-fit mt-2">Only Follower</FormLabel>
                                 <FormControl>
                                     <Switch
+                                        disabled={isAllowedAll || isAllowedFriend}
                                         className=""
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
@@ -229,9 +246,10 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                         name="canSeePostFollowing"
                         render={({ field }) => (
                             <FormItem className="flex items-center justify-between">
-                                <FormLabel className="h-fit mt-2">Following</FormLabel>
+                                <FormLabel className="h-fit mt-2">Only Following</FormLabel>
                                 <FormControl>
                                     <Switch
+                                        disabled={isAllowedAll || isAllowedFriend}
                                         className=""
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
@@ -246,7 +264,25 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                         name="canSeePostFriend"
                         render={({ field }) => (
                             <FormItem className="flex items-center justify-between">
-                                <FormLabel className="h-fit mt-2">Friend</FormLabel>
+                                <FormLabel className="h-fit mt-2">Only Friend</FormLabel>
+                                <FormControl>
+                                    <Switch
+                                        disabled={isAllowedAll}
+                                        className=""
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="canSeePostAll"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center justify-between">
+                                <FormLabel className="h-fit mt-2">All</FormLabel>
                                 <FormControl>
                                     <Switch
                                         className=""
@@ -329,6 +365,34 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                                     defaultValue={field.value}
                                     value={field.value}
                                     disabled={!isAllowedFriend}
+                                >
+                                    <SelectTrigger className="w-1/3">
+                                        <SelectValue placeholder="Select date" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {VisibilityDayArr.map((day) => (
+                                            <SelectItem key={day} value={day}>
+                                                {day === "0" ? "Forever" : `${day} days`}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="postVisibilityDurationAll"
+                        render={({ field }) => (
+                            <FormItem className="flex justify-between items-center">
+                                <FormLabel className={`mt-2 ${isAllowedAll ? "" : "text-muted-foreground"}`}>All</FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    value={field.value}
+                                    disabled={!isAllowedAll}
                                 >
                                     <SelectTrigger className="w-1/3">
                                         <SelectValue placeholder="Select date" />

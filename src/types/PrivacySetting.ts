@@ -6,7 +6,9 @@ export type PrivacySetting = {
     canSeePostFollower: boolean,
     canSeePostFollowing: boolean,
     canSeePostFriend: boolean,
+    canSeePostAll: boolean,
     postVisibilityDurationFollower: VisibilityDurationType,
     postVisibilityDurationFollowing: VisibilityDurationType,
     postVisibilityDurationFriend: VisibilityDurationType,
+    postVisibilityDurationAll: VisibilityDurationType,
 }
