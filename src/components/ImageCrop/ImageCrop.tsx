@@ -36,10 +36,9 @@ const ImageCropContainer: React.FC<ImageCropContainerProps> = ({ trigger }) => {
 
     return (
         <Dialog >
-            <DialogTrigger>
-                <div className="bg-gradient py-2 px-4 rounded-sm hover:scale-110 transition duration-300 ease-in-out">
-                    {trigger}
-                </div>
+            <DialogTrigger asChild>
+                {/* <div className="bg-gradient py-2 px-4 rounded-sm hover:scale-110 transition duration-300 ease-in-out"> */}
+                {trigger}
             </DialogTrigger>
             <DialogContent disableCloseBtn className="p-1">
                 <ImageCrop />
