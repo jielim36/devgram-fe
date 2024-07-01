@@ -386,25 +386,28 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                         control={form.control}
                         name="postVisibilityDurationAll"
                         render={({ field }) => (
-                            <FormItem className="flex justify-between items-center">
-                                <FormLabel className={`mt-2 ${isAllowedAll ? "" : "text-muted-foreground"}`}>All</FormLabel>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                    value={field.value}
-                                    disabled={!isAllowedAll}
-                                >
-                                    <SelectTrigger className="w-1/3">
-                                        <SelectValue placeholder="Select date" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {VisibilityDayArr.map((day) => (
-                                            <SelectItem key={day} value={day}>
-                                                {day === "0" ? "Forever" : `${day} days`}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                            <FormItem className="mt-2">
+                                <div className="flex justify-between items-center">
+                                    <FormLabel className={`mt-2 ${isAllowedAll ? "" : "text-muted-foreground"}`}>All</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        value={field.value}
+                                        disabled={!isAllowedAll}
+                                    >
+                                        <SelectTrigger className="w-1/3">
+                                            <SelectValue placeholder="Select date" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {VisibilityDayArr.map((day) => (
+                                                <SelectItem key={day} value={day}>
+                                                    {day === "0" ? "Forever" : `${day} days`}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <FormDescription className="text-muted-foreground text-xs">Visibility duration for the user not your following and follower.</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
