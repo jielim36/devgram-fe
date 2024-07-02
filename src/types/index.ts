@@ -5,6 +5,7 @@ export * from './Comment';
 export * from './Like';
 export * from "./Follow";
 export * from "./PrivacySetting";
+export * from "./Reel";
 
 export type ResponseBody<T> = {
     code: number;

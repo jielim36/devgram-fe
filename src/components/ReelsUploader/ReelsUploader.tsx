@@ -23,6 +23,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import InputWithEmoji from "../InputWithEmoji/InputWithEmoji";
+import { useAddReel } from "@/hooks/useReel";
+import toast from "react-hot-toast";
+import { ReelRequestBody } from "@/types";
+import { useAuth } from "@/utils/AuthProvider";
+import { ReelPlatformCheck } from "@/utils/ReelPlatformUrlUtils";
 
 
 
@@ -42,6 +47,15 @@ const ReelUploader: React.FC<ReelUploaderProps> = ({
     trigger
 }) => {
 
+    const [open, setOpen] = useState(false)
+    const { user } = useAuth();
+    const addReelMutation = useAddReel({
+        onSuccess: () => {
+            setOpen(false)
+        },
+        onError: () => {
+        }
+    });
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -53,11 +67,32 @@ const ReelUploader: React.FC<ReelUploaderProps> = ({
     const [description, setDescription] = useState("")
 
     const onSubmit = (data: z.infer<typeof FormSchema>) => {
-        console.log(data);
+        const platform: string | undefined = ReelPlatformCheck(data.reelLink);
+        if (platform === undefined) {
+            toast.error("Invalid platform");
+            return;
+        }
+        if (!user?.id) {
+            toast.error("User not found");
+            return;
+        }
+
+        const reelRequestBody: ReelRequestBody = {
+            description: description,
+            reel_url: data.reelLink,
+            platform: platform,
+            user_id: user?.id
+        }
+
+        toast.promise(addReelMutation.mutateAsync({ reelRequestBody: reelRequestBody }), {
+            loading: "Uploading reel...",
+            success: "Reel uploaded successfully",
+            error: "Failed to upload reel",
+        });
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {trigger}
             </DialogTrigger>
@@ -90,12 +125,10 @@ const ReelUploader: React.FC<ReelUploaderProps> = ({
                                 <FormItem>
                                     <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        {/* <Input placeholder="Description" {...field} /> */}
                                         <InputWithEmoji
                                             content={description}
                                             setContent={setDescription}
-                                            textAreaClassName=" max-h-[40vh]"
-
+                                            textAreaClassName="max-h-[40vh]"
                                         />
                                     </FormControl>
                                     <FormMessage />

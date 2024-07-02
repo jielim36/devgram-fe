@@ -4,3 +4,4 @@ export const COMMENT_QUERY_KEY = ['comments'];
 export const LIKE_QUERY_KEY = ['likes'];
 export const FOLLOW_QUERY_KEY = ['follows'];
 export const PRIVACY_SETTING_QUERY_KEY = ['privacySettings'];
+export const REEL_QUERY_KEY = ['reels'];
