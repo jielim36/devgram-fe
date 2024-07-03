@@ -1,10 +1,12 @@
 import React from 'react';
 import ReelsContainer from './ReelContainer';
+import ReelsSlider from './ReelsSlider';
 
 const Reels = () => {
+
     return (
         <div className='w-full flex justify-center'>
-            <ReelsContainer src="TI_a7i5h8N4" />
+            <ReelsSlider />
         </div>
     );
 }
