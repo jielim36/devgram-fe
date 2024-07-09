@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Icon from "@/components/Icon/Icon";
 import { set } from "date-fns";
 import { nextTick } from "process";
+import toast from "react-hot-toast";
 
 const ReelsSlider = () => {
 
@@ -30,7 +31,6 @@ const ReelsSlider = () => {
         page: currentPage,
         enabled: !isLoading || !isError || currentPage > 0 || !isNoRecordFound,
     });
-    const [reachEnd, setReachEnd] = useState(false);
 
     useEffect(() => {
 
@@ -43,6 +43,7 @@ const ReelsSlider = () => {
         }
 
         if (popularReelsResult?.isSuccess && popularReelsResult?.data?.data?.length === 0 && currentPage > 1) {
+            toast.error("No more reels found");
             setIsNoRecordFound(true);
         }
 
@@ -85,21 +86,23 @@ const ReelsSlider = () => {
             onSlideChange={handleSlideChange}
         >
             {popularReelsList.map((reel: Reel, index) => (
-                <SwiperSlide key={index} className="w-full flex justify-center">
-                    <div onClick={() => setPlay(!play)}>
-                        <ReelsContainer reel={reel} isPlaying={activeIndex === index && play} />
-                    </div>
+                <SwiperSlide key={index} className="w-full flex flex-col justify-center items-center">
+                    <SlidePrevButton className={`block md:hidden w-[300px] ${activeIndex === index ? "" : "hidden"} ${activeIndex === 0 ? "opacity-0" : ""}`} variant="ghost" disabled={activeIndex === 0} />
+                    <ReelsContainer reel={reel} isPlaying={activeIndex === index && play} onClick={() => setPlay(!play)} />
+                    <SlideNextButton className="block md:hidden w-[300px]" variant="ghost" />
                 </SwiperSlide>
             ))}
 
             {/* For desktop */}
-            <div className="hidden absolute right-1/2 top-0 translate-x-[255px] h-full xs:flex flex-col justify-between py-5">
+            <div className="hidden absolute right-1/2 top-0 translate-x-[255px] xs:flex flex-col justify-between py-5">
                 <SlidePrevButton />
-                <SlideNextButton loadMore={handleLoadMore} reachEnd={reachEnd} />
+            </div>
+            <div className="hidden absolute right-1/2 bottom-0 translate-x-[255px] xs:flex flex-col justify-between py-5">
+                <SlideNextButton />
             </div>
 
             {/* For mobile */}
-            <div className="flex flex-col justify-between xs:hidden absolute top-0 right-1/2 translate-x-1/2 w-[300px]">
+            {/* <div className="flex flex-col justify-between xs:hidden absolute top-0 right-1/2 translate-x-1/2 w-[300px]">
                 <SlidePrevButton className={`w-full ${activeIndex === 0 ? "opacity-0" : ""}`} variant="ghost" disabled={activeIndex === 0} />
                 <div
                     className="w-full aspect-reel"
@@ -107,7 +110,7 @@ const ReelsSlider = () => {
                     onClick={() => setPlay(!play)}
                 />
                 <SlideNextButton className="w-full" variant="ghost" loadMore={handleLoadMore} reachEnd={reachEnd} />
-            </div>
+            </div> */}
         </Swiper>
     );
 }
@@ -115,21 +118,14 @@ const ReelsSlider = () => {
 function SlideNextButton({
     className,
     variant = "secondary",
-    loadMore,
-    reachEnd,
 }: {
     className?: string,
     variant?: "secondary" | "ghost",
-    loadMore: () => void,
-    reachEnd: boolean,
 }) {
     const swiper = useSwiper();
 
     const handleNextSlide = () => {
         swiper.slideNext();
-        if (reachEnd) {
-            loadMore();
-        }
     }
 
     return (
@@ -139,7 +135,7 @@ function SlideNextButton({
             className={className}
             onClick={handleNextSlide}
         >
-            <Icon name='chevron-down' className='w-6 h-6' />
+            <Icon name='chevron-down' className='w-6 h-6 mx-auto' />
         </Button>
     );
 }
@@ -155,7 +151,7 @@ function SlidePrevButton({ className, variant = "secondary", disabled = false }:
             onClick={() => swiper.slidePrev()}
         // disabled={disabled}
         >
-            <Icon name='chevron-up' className='w-6 h-6' />
+            <Icon name='chevron-up' className='w-6 h-6 mx-auto' />
         </Button>
     );
 }
