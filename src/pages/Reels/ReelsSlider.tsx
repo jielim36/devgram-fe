@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useGetPopularReels } from "@/hooks/useReel";
 import { useIntersection } from "@mantine/hooks";
-import { useEffect, useRef, useState } from "react";
+import { act, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import { Pagination, Navigation, Mousewheel } from 'swiper/modules';
 import ReelsContainer from "./ReelContainer";
@@ -28,20 +28,9 @@ const ReelsSlider = () => {
     // });
     const popularReelsResult = useGetPopularReels({
         page: currentPage,
-        enabled: !isLoading || !isError,
+        enabled: !isLoading || !isError || currentPage > 0 || !isNoRecordFound,
     });
-
-    // const handleLoadMore = () => {
-    //     if (popularReelsResult.isFetchingNextPage) return;
-    //     if (popularReelsResult?.hasNextPage === false) return;
-    //     if (isError) return;
-
-    //     popularReelsResult.fetchNextPage({ cancelRefetch: true });
-    // }
-
-    // if (entry?.isIntersecting) {
-    //     handleLoadMore();
-    // }
+    const [reachEnd, setReachEnd] = useState(false);
 
     useEffect(() => {
 
@@ -59,37 +48,28 @@ const ReelsSlider = () => {
 
         // init first page data
         if (popularReelsResult?.isSuccess && popularReelsResult?.data?.data && currentPage === 1) {
-            console.log("FETCH");
             setPopularReelsList([...popularReelsList, ...popularReelsResult.data.data]);
         }
 
     }, [popularReelsResult?.data?.data]);
 
-    useEffect(() => {
-        console.log("POPULAR REELS LIST", popularReelsList);
-    }, [popularReelsList]);
-
     const handleLoadMore = () => {
-        console.log("LOAD MORE");
 
-        if (isError) {
-            console.log("IS ERROR");
-            return;
-        }
-        if (popularReelsResult?.data?.data?.length === 0) {
-            console.log("NO RECORD FOUND");
+        if (isError || !popularReelsResult || popularReelsResult?.data?.data?.length === 0 || isNoRecordFound) {
             return;
         }
 
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
-        console.log("CURRENT PAGE", nextPage);
-
     }
 
     const handleSlideChange = (swiper: any) => {
         setActiveIndex(swiper.activeIndex);
         setPlay(true);
+
+        if (swiper.activeIndex === popularReelsList.length - 1) {
+            handleLoadMore();
+        }
     }
 
     return (
@@ -103,7 +83,6 @@ const ReelsSlider = () => {
             touchStartPreventDefault={false}
             touchStartForcePreventDefault={false}
             onSlideChange={handleSlideChange}
-            onReachEnd={handleLoadMore}
         >
             {popularReelsList.map((reel: Reel, index) => (
                 <SwiperSlide key={index} className="w-full flex justify-center">
@@ -116,7 +95,7 @@ const ReelsSlider = () => {
             {/* For desktop */}
             <div className="hidden absolute right-1/2 top-0 translate-x-[255px] h-full xs:flex flex-col justify-between py-5">
                 <SlidePrevButton />
-                <SlideNextButton />
+                <SlideNextButton loadMore={handleLoadMore} reachEnd={reachEnd} />
             </div>
 
             {/* For mobile */}
@@ -127,21 +106,38 @@ const ReelsSlider = () => {
                     style={{ pointerEvents: "none" }}
                     onClick={() => setPlay(!play)}
                 />
-                <SlideNextButton className="w-full" variant="ghost" />
+                <SlideNextButton className="w-full" variant="ghost" loadMore={handleLoadMore} reachEnd={reachEnd} />
             </div>
         </Swiper>
     );
 }
 
-function SlideNextButton({ className, variant = "secondary" }: { className?: string, variant?: "secondary" | "ghost" }) {
+function SlideNextButton({
+    className,
+    variant = "secondary",
+    loadMore,
+    reachEnd,
+}: {
+    className?: string,
+    variant?: "secondary" | "ghost",
+    loadMore: () => void,
+    reachEnd: boolean,
+}) {
     const swiper = useSwiper();
+
+    const handleNextSlide = () => {
+        swiper.slideNext();
+        if (reachEnd) {
+            loadMore();
+        }
+    }
 
     return (
         <Button
             variant={variant}
             size={"icon"}
             className={className}
-            onClick={() => swiper.slideNext()}
+            onClick={handleNextSlide}
         >
             <Icon name='chevron-down' className='w-6 h-6' />
         </Button>
