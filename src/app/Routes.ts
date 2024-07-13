@@ -3,6 +3,8 @@ export const routes = {
     reels: "/reels",
     following: "/following",
     profile: "/profile/:userId",
+    chat: "/chat/:userId",
+    chatWithoutUserId: "/chat",
     login: "/login",
     register: "/register",
     notFound: "/404"

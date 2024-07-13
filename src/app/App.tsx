@@ -15,11 +15,13 @@ import { AuthProvider } from '@/utils/AuthProvider';
 // import Following from '@/pages/Following/Following';
 // import Profile from '@/pages/Profile/Profile';
 // import Error404NotFound from '@/pages/InvalidPages/Error404NotFound';
+// import Chat from '@/pages/chat/Chat';
 
 const Layout = React.lazy(() => import('@/components/Layout/Layout'));
 const Home = React.lazy(() => import('../pages/Home/Home'));
 const Reels = React.lazy(() => import('@/pages/Reels/Reels'));
 const Following = React.lazy(() => import('@/pages/Following/Following'));
+const Chat = React.lazy(() => import('@/pages/chat/Chat'));
 const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
 const Login = React.lazy(() => import('../pages/Login/Login'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
@@ -59,6 +61,8 @@ function App() {
                     <Route path={routes.following} element={<Following />} />
                     <Route path={routes.profile} element={<Profile />} />
                   </Route>
+                  <Route path={routes.chat} element={<Chat />} />
+                  <Route path={routes.chatWithoutUserId} element={<Chat />} />
                   <Route path="*" element={<Navigate to={routes.notFound} />} />
                   <Route path={routes.login} element={<Login />} />
                   <Route path={routes.notFound} element={<Error404NotFound />} />
