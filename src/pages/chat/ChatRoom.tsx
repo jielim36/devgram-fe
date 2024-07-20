@@ -1,57 +1,103 @@
-import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
-import Icon from "@/components/Icon/Icon";
-import InputWithEmoji from "@/components/InputWithEmoji/InputWithEmoji";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Message, User } from "@/types";
-import { useAuth } from "@/utils/AuthProvider";
-import { useEffect, useRef, useState } from "react";
-import { useParams } from 'react-router-dom';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
+import { useAuth } from "@/utils/AuthProvider";
+import { pusherClient } from "@/utils/pusherClient";
+import { useAddMessage, useGetInitMessages } from "@/hooks";
+import toast from "react-hot-toast";
+import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
+import Icon from "@/components/Icon/Icon";
+import InputWithEmoji from "@/components/InputWithEmoji/InputWithEmoji";
+import { Message, User } from "@/types";
 
 type ChatRoomProps = {
     user: User;
 }
 
-const ChatRoom: React.FC<ChatRoomProps> = ({
-    user
-}) => {
-
+const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const { userId } = useParams();
     const { user: me } = useAuth();
-    const [message, setMessage] = useState<string>("");
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const scrollParentAreaRef = useRef<HTMLDivElement>(null);
-    const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [message, setMessage] = useState<string>("");
+    const messagesRef = useRef<Message[]>(messages);
+    const { data: initMessageData, isSuccess: initMessageSuccess } = useGetInitMessages({
+        user1_id: me!.id,
+        user2_id: user.id,
+        enabled: !!userId && !!me?.id
+    });
+    const addMessageMutation = useAddMessage({
+        onSuccess: (data) => {
+            setMessage("");
+            setMessages([...messages, data.data]);
+        },
+    });
+
+    useEffect(() => {
+        messagesRef.current = messages;
+    }, [messages]);
 
     useEffect(() => {
         if (scrollAreaRef.current) {
-            // Auto scroll to bottom
             scrollAreaRef.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" });
         }
-    }, [scrollAreaRef]);
+    }, [scrollAreaRef, messages]);
 
     useEffect(() => {
-        // console.log(userId);
-    }, [userId]);
+        if (!initMessageData) return;
+        setMessages(initMessageData.data);
+    }, [initMessageData]);
 
     useEffect(() => {
-        // console.log(userId);
-        console.log(isAtBottom);
+        if (!me?.id || !userId || !initMessageSuccess) return;
 
-    }, [isAtBottom]);
+        const channelName = `chat.${me?.id}`;
+
+        pusherClient.subscribe(channelName)
+            .bind("incoming-msg", (data: Message) => {
+                const message: Message = data;
+                if (message.sender_id !== Number(userId)) return;
+                const newMessageList = [...messagesRef.current, message];
+                setMessages(newMessageList);
+            });
+
+        return () => {
+            pusherClient.unsubscribe(channelName);
+        }
+    }, [userId, initMessageSuccess]);
+
+    const handleSendMessage = () => {
+        if (!message || message.length === 0) return;
+        if (!me?.id) return;
+
+        const newMessage: Message = {
+            id: undefined,
+            chat_id: undefined,
+            sender_id: me?.id,
+            receiver_id: user.id,
+            content: message,
+            is_read: false,
+            created_at: undefined,
+            updated_at: undefined
+        }
+        toast.promise(addMessageMutation.mutateAsync(newMessage), {
+            loading: "Sending message...",
+            success: "Message sent!",
+            error: "Failed to send message!"
+        });
+    }
 
     if (!userId || !me) return null;
 
     return (
         <div className="h-full w-full flex flex-col">
-
-            {/* User Info */}
             <div className="flex flex-row items-center py-2 px-4 gap-2">
                 <AvatarContainer avatar_url={user.avatar_url} hasStory={true} className="h-fit" />
                 <div className="flex flex-col">
@@ -64,17 +110,13 @@ const ChatRoom: React.FC<ChatRoomProps> = ({
             </div>
             <Separator />
 
-            {/* Chat Messages */}
-            <ScrollArea>
-                <div
-                    ref={scrollAreaRef}
-                    className="h-full flex flex-col gap-4 p-4 justify-end"
-                >
-                    {fakeMessages.map((message) => (
+            <ScrollArea className="grow">
+                <div ref={scrollAreaRef} className="h-full flex flex-col gap-4 p-4 justify-end">
+                    {messages?.length > 0 && messages.map((message) => (
                         <div key={message.id} className={`group w-full`}>
                             <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
                                 <AvatarContainer avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url} hasStory={false} />
-                                <div className="px-3 py-2 border w-fit rounded-md font-normal">
+                                <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
                                     {message.content}
                                 </div>
                                 <Popover>
@@ -111,15 +153,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({
                 </div>
             </ScrollArea >
 
-            {
-                isAtBottom ? null : (
-                    <div>GO Back</div>
-                )
-            }
-
-            < Separator />
-            {/* Input message */}
-            < div className="pl-4 pr-2 py-2 flex flex-row items-center gap-1" >
+            <Separator />
+            <div className="pl-4 pr-2 py-2 flex flex-row items-center gap-1">
                 <div className="grow">
                     <InputWithEmoji
                         content={message}
@@ -128,148 +163,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({
                         textAreaClassName="resize-none min-h-4 max-h-12"
                     />
                 </div>
-                <Button className="" variant={"ghost"}>
+                <Button className="" variant={"ghost"} onClick={handleSendMessage}>
                     <Icon name="send-horizontal" className="" />
                 </Button>
             </div >
         </div >
-    )
+    );
 }
-
-const fakeMessages: Message[] = [
-    {
-        id: 1,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Hey, how are you?",
-        is_read: true,
-        created_at: "2023-07-12T14:48:00.000Z",
-        updated_at: "2023-07-12T14:48:00.000Z"
-    },
-    {
-        id: 2,
-        chat_id: 1,
-        sender_id: 1002,
-        receiver_id: 1001,
-        content: "I'm good, thanks! How about you?",
-        is_read: true,
-        created_at: "2023-07-12T14:49:00.000Z",
-        updated_at: "2023-07-12T14:49:00.000Z"
-    },
-    {
-        id: 3,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Doing well! What are you up to?",
-        is_read: false,
-        created_at: "2023-07-12T14:50:00.000Z",
-        updated_at: "2023-07-12T14:50:00.000Z"
-    },
-    {
-        id: 4,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Just working on a project. You?",
-        is_read: false,
-        created_at: "2023-07-12T14:51:00.000Z",
-        updated_at: "2023-07-12T14:51:00.000Z"
-    },
-    {
-        id: 5,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Did you see the latest news?",
-        refer_msg_id: 4,
-        reaction: "👍",
-        is_read: true,
-        created_at: "2023-07-12T15:00:00.000Z",
-        updated_at: "2023-07-12T15:00:00.000Z"
-    },
-    {
-        id: 6,
-        chat_id: 1,
-        sender_id: 1002,
-        receiver_id: 1001,
-        content: "Yes, it's quite interesting.",
-        is_read: true,
-        created_at: "2023-07-12T15:01:00.000Z",
-        updated_at: "2023-07-12T15:01:00.000Z"
-    },
-    {
-        id: 7,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "We should discuss it later.",
-        is_read: false,
-        created_at: "2023-07-12T15:02:00.000Z",
-        updated_at: "2023-07-12T15:02:00.000Z"
-    },
-    {
-        id: 8,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Are you coming to the meeting?",
-        is_read: true,
-        created_at: "2023-07-12T15:10:00.000Z",
-        updated_at: "2023-07-12T15:10:00.000Z"
-    },
-    {
-        id: 9,
-        chat_id: 1,
-        sender_id: 1002,
-        receiver_id: 1001,
-        content: "Yes, I'll be there in 10 minutes.",
-        is_read: false,
-        created_at: "2023-07-12T15:11:00.000Z",
-        updated_at: "2023-07-12T15:11:00.000Z"
-    },
-    {
-        id: 10,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Great, see you soon!",
-        is_read: false,
-        created_at: "2023-07-12T15:12:00.000Z",
-        updated_at: "2023-07-12T15:12:00.000Z"
-    },
-    {
-        id: 11,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Great, see you soon!",
-        is_read: false,
-        created_at: "2023-07-12T15:12:00.000Z",
-        updated_at: "2023-07-12T15:12:00.000Z"
-    },
-    {
-        id: 12,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Great, see you soon!",
-        is_read: false,
-        created_at: "2023-07-12T15:12:00.000Z",
-        updated_at: "2023-07-12T15:12:00.000Z"
-    },
-    {
-        id: 13,
-        chat_id: 1,
-        sender_id: 1001,
-        receiver_id: 1002,
-        content: "Great, see you soon!",
-        is_read: false,
-        created_at: "2023-07-12T15:12:00.000Z",
-        updated_at: "2023-07-12T15:12:00.000Z"
-    }
-];
-
 
 export default ChatRoom;

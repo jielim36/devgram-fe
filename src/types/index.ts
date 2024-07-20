@@ -7,6 +7,7 @@ export * from "./Follow";
 export * from "./PrivacySetting";
 export * from "./Reel";
 export * from "./Message";
+export * from "./Chat";
 
 export type ResponseBody<T> = {
     code: number;

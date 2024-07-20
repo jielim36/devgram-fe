@@ -25,10 +25,11 @@ const fetchUserByUserId = async (context: QueryFunctionContext<string[]>): Promi
     return await getUserByUserId(Number(postId));
 };
 
-export const useGetUserByUserId = (userId: number) => {
+export const useGetUserByUserId = (userId: number, enabled?: boolean) => {
     return useQuery({
         queryKey: USER_QUERY_KEY.concat(userId.toString()),
         queryFn: fetchUserByUserId,
+        enabled: enabled,
     });
 }
 

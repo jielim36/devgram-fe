@@ -28,6 +28,7 @@ const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404N
 import CustomToaster from '@/components/Toast/CustomToast';
 import { routes } from './Routes';
 import Icon from '@/components/Icon/Icon';
+import { ChattingProvider } from '@/utils/ChattingProvider';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,21 +54,23 @@ function App() {
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <BrowserRouter>
             <AuthProvider>
-              <React.Suspense fallback={<Spinner />}>
-                <Routes>
-                  <Route path={routes.home} element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path={routes.reels} element={<Reels />} />
-                    <Route path={routes.following} element={<Following />} />
-                    <Route path={routes.profile} element={<Profile />} />
-                  </Route>
-                  <Route path={routes.chat} element={<Chat />} />
-                  <Route path={routes.chatWithoutUserId} element={<Chat />} />
-                  <Route path="*" element={<Navigate to={routes.notFound} />} />
-                  <Route path={routes.login} element={<Login />} />
-                  <Route path={routes.notFound} element={<Error404NotFound />} />
-                </Routes>
-              </React.Suspense>
+              <ChattingProvider>
+                <React.Suspense fallback={<Spinner />}>
+                  <Routes>
+                    <Route path={routes.home} element={<Layout />}>
+                      <Route index element={<Home />} />
+                      <Route path={routes.reels} element={<Reels />} />
+                      <Route path={routes.following} element={<Following />} />
+                      <Route path={routes.profile} element={<Profile />} />
+                    </Route>
+                    <Route path={routes.chat} element={<Chat />} />
+                    <Route path={routes.chatWithoutUserId} element={<Chat />} />
+                    <Route path="*" element={<Navigate to={routes.notFound} />} />
+                    <Route path={routes.login} element={<Login />} />
+                    <Route path={routes.notFound} element={<Error404NotFound />} />
+                  </Routes>
+                </React.Suspense>
+              </ChattingProvider>
             </AuthProvider>
           </BrowserRouter>
         </ThemeProvider>
