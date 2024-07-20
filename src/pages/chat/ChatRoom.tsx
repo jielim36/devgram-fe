@@ -94,6 +94,17 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         });
     }
 
+    const compareMessageTimeDifference = (message: Message, index: number): number => {
+        // compare current message with previous message, return time difference with minutes
+        if (index === 0) return 0;
+        const previousMessage = messages[index - 1];
+        const currentMessageTime = new Date(message.created_at ?? "").getTime();
+        const previousMessageTime = previousMessage.created_at ? new Date(previousMessage.created_at).getTime() : 0;
+        const timeDifference = currentMessageTime - previousMessageTime;
+        const minutesDifference = Math.floor(timeDifference / 1000 / 60);
+        return minutesDifference;
+    }
+
     if (!userId || !me) return null;
 
     return (
@@ -113,10 +124,21 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             <ScrollArea className="grow">
                 <div ref={scrollAreaRef} className="h-full flex flex-col gap-1 p-4 justify-end">
                     {messages?.length > 0 && messages.map((message, index) => (
-                        <div key={message.id} className={`group w-full ${index !== 0 && message.sender_id === messages[index - 1].sender_id ? "" : "mt-6"}`}>
+                        <div key={message.id} className={`group w-full ${index !== 0 && message.sender_id !== messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "mt-6" : ""}`}>
+                            {compareMessageTimeDifference(message, index) >= 10 && (
+                                <div className="flex justify-center items-center gap-3 overflow-hidden py-4">
+                                    <Separator className="opacity-70" />
+                                    <p className="text-muted-foreground text-xs whitespace-nowrap">10 minutes ago</p>
+                                    <Separator className="opacity-70" />
+                                </div>
+                            )}
                             <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
                                 <div className={`flex gap-1 items-start ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"}`}>
-                                    <AvatarContainer avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url} hasStory={false} className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id ? "opacity-0" : ""}`} />
+                                    <AvatarContainer
+                                        avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url}
+                                        hasStory={false}
+                                        className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
+                                    />
                                     <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
                                         {message.content}
                                     </div>
