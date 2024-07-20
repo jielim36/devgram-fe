@@ -111,9 +111,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             <Separator />
 
             <ScrollArea className="grow">
-                <div ref={scrollAreaRef} className="h-full flex flex-col gap-4 p-4 justify-end">
+                <div ref={scrollAreaRef} className="h-full flex flex-col gap-1 p-4 justify-end">
                     {messages?.length > 0 && messages.map((message, index) => (
-                        <div key={message.id} className={`group w-full`}>
+                        <div key={message.id} className={`group w-full ${index !== 0 && message.sender_id === messages[index - 1].sender_id ? "" : "mt-6"}`}>
                             <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
                                 <div className={`flex gap-1 items-start ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"}`}>
                                     <AvatarContainer avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url} hasStory={false} className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id ? "opacity-0" : ""}`} />
