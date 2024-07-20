@@ -115,13 +115,15 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                     {messages?.length > 0 && messages.map((message, index) => (
                         <div key={message.id} className={`group w-full`}>
                             <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
-                                <AvatarContainer avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url} hasStory={false} className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id ? "opacity-0" : ""}`} />
-                                <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
-                                    {message.content}
+                                <div className={`flex gap-1 items-start ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"}`}>
+                                    <AvatarContainer avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url} hasStory={false} className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id ? "opacity-0" : ""}`} />
+                                    <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
+                                        {message.content}
+                                    </div>
                                 </div>
                                 <Popover>
                                     <PopoverTrigger>
-                                        <div className={`opacity-0 group-hover:opacity-100 cursor-pointer px-2`}>
+                                        <div className={`opacity-0 group-hover:opacity-100 cursor-pointer px-2 m-auto`}>
                                             <Icon name="ellipsis" />
                                         </div>
                                     </PopoverTrigger>
