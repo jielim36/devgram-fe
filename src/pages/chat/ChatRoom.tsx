@@ -16,6 +16,7 @@ import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
 import Icon from "@/components/Icon/Icon";
 import InputWithEmoji from "@/components/InputWithEmoji/InputWithEmoji";
 import { Message, User } from "@/types";
+import { late } from "zod";
 
 type ChatRoomProps = {
     user: User;
@@ -28,6 +29,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>("");
     const messagesRef = useRef<Message[]>(messages);
+    const [latestReadChatIdByReceiver, setLatestReadChatIdByReceiver] = useState<number | null>(null);
     const { data: initMessageData, isSuccess: initMessageSuccess } = useGetInitMessages({
         user1_id: me!.id,
         user2_id: user.id,
@@ -42,6 +44,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
 
     useEffect(() => {
         messagesRef.current = messages;
+        const latestReadChatId = messages.slice().reverse().find(msg => msg.is_read && msg.sender_id === me?.id)?.id || null
+        console.log("latestReadChatId", latestReadChatId);
+
+        setLatestReadChatIdByReceiver(latestReadChatId);
     }, [messages]);
 
     useEffect(() => {
@@ -124,12 +130,14 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             <ScrollArea className="grow">
                 <div ref={scrollAreaRef} className="h-full flex flex-col gap-1 p-4 justify-end">
                     {messages?.length > 0 && messages.map((message, index) => (
-                        <div key={message.id} className={`group w-full ${index !== 0 && message.sender_id !== messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "mt-6" : ""}`}>
+                        <div
+                            key={message.id}
+                            className={`group w-full ${index !== 0 && message.sender_id !== messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "mt-6" : ""}`}>
                             {compareMessageTimeDifference(message, index) >= 10 && (
-                                <div className="flex justify-center items-center gap-3 overflow-hidden py-4">
-                                    <Separator className="opacity-70" />
+                                <div className="flex justify-center items-center gap-3 overflow-hidden py-4 opacity-70">
+                                    <Separator />
                                     <p className="text-muted-foreground text-xs whitespace-nowrap">10 minutes ago</p>
-                                    <Separator className="opacity-70" />
+                                    <Separator />
                                 </div>
                             )}
                             <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
@@ -139,8 +147,13 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                         hasStory={false}
                                         className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
                                     />
-                                    <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
-                                        {message.content}
+                                    <div className={`flex flex-col gap-1 ${message.sender_id === me.id ? "items-end" : ""}`}>
+                                        <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
+                                            {message.content}
+                                        </div>
+                                        {message.id === latestReadChatIdByReceiver && (
+                                            <span className={`text-muted-foreground text-xs px-2`}>Seen</span>
+                                        )}
                                     </div>
                                 </div>
                                 <Popover>
