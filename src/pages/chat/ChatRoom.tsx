@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { useAuth } from "@/utils/AuthProvider";
 import { pusherClient } from "@/utils/pusherClient";
-import { useAddMessage, useGetInitMessages } from "@/hooks";
+import { useAddMessage, useGetInitMessages, useUpdateIsRead } from "@/hooks";
 import toast from "react-hot-toast";
 import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
 import Icon from "@/components/Icon/Icon";
@@ -18,6 +18,7 @@ import InputWithEmoji from "@/components/InputWithEmoji/InputWithEmoji";
 import { Message, User } from "@/types";
 import { late } from "zod";
 import convertDate, { convertDateToReadableDate } from "@/utils/convertDateFormat";
+import { set } from "date-fns";
 
 type ChatRoomProps = {
     user: User;
@@ -27,10 +28,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const { userId } = useParams();
     const { user: me } = useAuth();
     const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const [currentChatId, setCurrentChatId] = useState<number | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>("");
     const messagesRef = useRef<Message[]>(messages);
-    const [latestReadChatIdByReceiver, setLatestReadChatIdByReceiver] = useState<number | null>(null);
+    const [latestReadMessageIdByReceiver, setLatestReadMessageIdByReceiver] = useState<number | null>(null);
     const { data: initMessageData, isSuccess: initMessageSuccess, isLoading: isInitLoading, isPending: isInitPending } = useGetInitMessages({
         user1_id: me!.id,
         user2_id: user.id,
@@ -42,13 +44,15 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             setMessages([...messages, data.data]);
         },
     });
+    const useUpdateIsReadMutation = useUpdateIsRead({
+        onSuccess: (data) => {
+        }
+    });
 
     useEffect(() => {
         messagesRef.current = messages;
         const latestReadChatId = messages.slice().reverse().find(msg => msg.is_read && msg.sender_id === me?.id)?.id || null
-        console.log("latestReadChatId", latestReadChatId);
-
-        setLatestReadChatIdByReceiver(latestReadChatId);
+        setLatestReadMessageIdByReceiver(latestReadChatId);
     }, [messages]);
 
     useEffect(() => {
@@ -60,20 +64,61 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     useEffect(() => {
         if (!initMessageData) return;
         setMessages(initMessageData.data);
+        if (initMessageData.data.length > 0 && initMessageData.data[0]?.chat_id) {
+            setCurrentChatId(initMessageData.data[0]?.chat_id);
+            useUpdateIsReadMutation.mutate({ chatId: initMessageData.data[0]?.chat_id, receiverId: Number(userId) });
+        }
     }, [initMessageData]);
+
+    useEffect(() => {
+        if (!currentChatId) return;
+        const receiveReadEvent = "read";
+
+        const handleReceiveReadEvent = (data: number) => {
+            if (data != null && data === currentChatId) {
+                const updateReadMsgs = messages.map(msg => {
+                    if (msg.sender_id === me?.id) {
+                        return { ...msg, is_read: true };
+                    }
+                    return msg;
+                });
+                setMessages(updateReadMsgs);
+
+                const myMsgs = messages.filter(msg => msg.sender_id === me?.id);
+                const latestSentMsgId = myMsgs[myMsgs.length - 1]?.id;
+                if (!latestSentMsgId) return;
+
+                setLatestReadMessageIdByReceiver(latestSentMsgId);
+            }
+        };
+
+        pusherClient.bind(receiveReadEvent, handleReceiveReadEvent);
+
+        return () => {
+            pusherClient.unbind(receiveReadEvent, handleReceiveReadEvent);
+        };
+    }, [currentChatId, messages]);
 
     useEffect(() => {
         if (!me?.id || !userId || !initMessageSuccess) return;
 
         const channelName = `chat.${me?.id}`;
+        const receiveMsgEvent = "incoming-msg";
 
-        pusherClient.subscribe(channelName)
-            .bind("incoming-msg", (data: Message) => {
-                const message: Message = data;
-                if (message.sender_id !== Number(userId)) return;
-                const newMessageList = [...messagesRef.current, message];
-                setMessages(newMessageList);
-            });
+        pusherClient.subscribe(channelName);
+        pusherClient.bind(receiveMsgEvent, (data: Message) => {
+            const message: Message = data;
+            if (message.sender_id !== Number(userId)) return;
+            const newMessageList = [...messagesRef.current, message];
+            setMessages(newMessageList);
+            if (message.chat_id) {
+                setCurrentChatId(message.chat_id);
+            }
+            // update is_read status of the receiving message at sender side
+            if (Number(userId) && message.chat_id) {
+                useUpdateIsReadMutation.mutate({ chatId: message.chat_id, receiverId: message.sender_id });
+            }
+        });
 
         return () => {
             pusherClient.unsubscribe(channelName);
@@ -160,7 +205,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                         <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
                                             {message.content}
                                         </div>
-                                        {message.id === latestReadChatIdByReceiver && (
+                                        {message.id === latestReadMessageIdByReceiver && (
                                             <span className={`text-muted-foreground text-xs px-2`}>Seen</span>
                                         )}
                                     </div>
