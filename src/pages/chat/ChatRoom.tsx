@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { useAuth } from "@/utils/AuthProvider";
 import { pusherClient } from "@/utils/pusherClient";
-import { useAddMessage, useGetInitMessages, useUpdateIsRead } from "@/hooks";
+import { useAddMessage, useDeleteMessage, useGetInitMessages, useUpdateIsRead } from "@/hooks";
 import toast from "react-hot-toast";
 import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
 import Icon from "@/components/Icon/Icon";
@@ -19,6 +19,7 @@ import { Message, User } from "@/types";
 import { late } from "zod";
 import convertDate, { convertDateToReadableDate } from "@/utils/convertDateFormat";
 import { set } from "date-fns";
+import DeleteMessageDialog from "./DeleteMessageDialog";
 
 type ChatRoomProps = {
     user: User;
@@ -47,6 +48,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const useUpdateIsReadMutation = useUpdateIsRead({
         onSuccess: (data) => {
         }
+    });
+    const useDeleteMessageMutation = useDeleteMessage({
+        onSuccess: () => { }
     });
 
     useEffect(() => {
@@ -146,6 +150,20 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         });
     }
 
+    const handleDeleteMessage = (messageId: number | undefined) => {
+        if (!messageId) return;
+        toast.promise(useDeleteMessageMutation.mutateAsync(messageId), {
+            loading: "Deleting message...",
+            success: "Message deleted!",
+            error: "Failed to delete message!"
+        }).then((data) => {
+            if (data?.data) {
+                const updatedMessages = messages.filter(msg => msg.id !== messageId);
+                setMessages(updatedMessages);
+            }
+        });
+    }
+
     const compareMessageTimeDifference = (message: Message, index: number): number => {
         // compare current message with previous message, return time difference with minutes
         if (index === 0) return 0;
@@ -232,10 +250,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                             <p>Edit</p>
                                         </div>
                                         <Separator />
-                                        <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                            <Icon name="trash-2" />
-                                            <p>Delete</p>
-                                        </div>
+                                        <DeleteMessageDialog trigger={
+                                            <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
+                                                <Icon name="trash-2" />
+                                                <p>Delete</p>
+                                            </div>
+                                        } onDelete={() => handleDeleteMessage(message?.id)} />
                                     </PopoverContent>
                                 </Popover>
                             </div>

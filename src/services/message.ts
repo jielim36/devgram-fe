@@ -16,3 +16,8 @@ export const updateIsRead = async (chatId: number, receiverId: number): Promise<
     const response = await axiosClient.put(`/message/read/${chatId}/receiver/${receiverId}`);
     return response.data;
 }
+
+export const deleteMessageById = async (messageId: number): Promise<ResponseBody<boolean>> => {
+    const response = await axiosClient.delete(`/message/${messageId}`);
+    return response.data;
+}
