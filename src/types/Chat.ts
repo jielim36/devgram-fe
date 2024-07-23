@@ -9,3 +9,10 @@ export type Chat = {
     unread_count?: number;
     created_at?: string;
 }
+
+export type ChatRequest = {
+    id?: number;
+    user1_id: number;
+    user2_id: number;
+    created_at?: string;
+}

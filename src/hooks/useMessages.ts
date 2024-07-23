@@ -1,4 +1,4 @@
-import { Chat, Message } from "@/types";
+import { Chat, ChatRequest, Message } from "@/types";
 import { ResponseHandlerType } from ".";
 import { QueryFunctionContext, useMutation, useQuery } from "@tanstack/react-query";
 import { addMessage, initMessages } from "@/services";
@@ -19,7 +19,7 @@ export const useGetInitMessages = ({ user1_id, user2_id, enabled }: { user1_id: 
         queryKey: MESSAGE_QUERY_KEY.concat([user1_id.toString(), user2_id.toString()]),
         queryFn: async (context: QueryFunctionContext<string[]>) => {
             const [_, user1_id, user2_id] = context.queryKey;
-            const chat: Chat = {
+            const chat: ChatRequest = {
                 user1_id: parseInt(user1_id),
                 user2_id: parseInt(user2_id)
             }
