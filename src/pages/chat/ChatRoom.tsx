@@ -206,7 +206,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                             {message.content}
                                         </div>
                                         {message.id === latestReadMessageIdByReceiver && (
-                                            <span className={`text-muted-foreground text-xs px-2`}>Seen</span>
+                                            <span className={`text-muted-foreground text-xs px-2 animate-slide-up`}>Seen</span>
                                         )}
                                     </div>
                                 </div>
