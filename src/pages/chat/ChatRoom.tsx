@@ -75,9 +75,33 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     }, [initMessageData]);
 
     useEffect(() => {
+        if (!me?.id || !userId || !initMessageSuccess) return;
         if (!currentChatId) return;
+
+        const channelName = `chat.${me?.id}`;
+        const receiveMsgEvent = "incoming-msg";
+        const deleteReceiveMsgEvent = "delete-msg";
         const receiveReadEvent = "read";
 
+        pusherClient.subscribe(channelName);
+        pusherClient.bind(receiveMsgEvent, (data: Message) => {
+            const message: Message = data;
+            if (message.sender_id !== Number(userId)) return;
+            const newMessageList = [...messagesRef.current, message];
+            setMessages(newMessageList);
+            if (message.chat_id) {
+                setCurrentChatId(message.chat_id);
+            }
+            // update is_read status of the receiving message at sender side
+            if (Number(userId) && message.chat_id) {
+                useUpdateIsReadMutation.mutate({ chatId: message.chat_id, receiverId: message.sender_id });
+            }
+        });
+        pusherClient.bind(deleteReceiveMsgEvent, (data: number) => {
+            if (data != null) {
+                deleteMessageByIdInChatRoom(data);
+            }
+        });
         const handleReceiveReadEvent = (data: number) => {
             if (data != null && data === currentChatId) {
                 const updateReadMsgs = messages.map(msg => {
@@ -98,36 +122,16 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
 
         pusherClient.bind(receiveReadEvent, handleReceiveReadEvent);
 
-        return () => {
-            pusherClient.unbind(receiveReadEvent, handleReceiveReadEvent);
-        };
-    }, [currentChatId, messages]);
-
-    useEffect(() => {
-        if (!me?.id || !userId || !initMessageSuccess) return;
-
-        const channelName = `chat.${me?.id}`;
-        const receiveMsgEvent = "incoming-msg";
-
-        pusherClient.subscribe(channelName);
-        pusherClient.bind(receiveMsgEvent, (data: Message) => {
-            const message: Message = data;
-            if (message.sender_id !== Number(userId)) return;
-            const newMessageList = [...messagesRef.current, message];
-            setMessages(newMessageList);
-            if (message.chat_id) {
-                setCurrentChatId(message.chat_id);
-            }
-            // update is_read status of the receiving message at sender side
-            if (Number(userId) && message.chat_id) {
-                useUpdateIsReadMutation.mutate({ chatId: message.chat_id, receiverId: message.sender_id });
-            }
-        });
 
         return () => {
             pusherClient.unsubscribe(channelName);
         }
-    }, [userId, initMessageSuccess]);
+    }, [userId, initMessageSuccess, messages, currentChatId]);
+
+    const deleteMessageByIdInChatRoom = (messageId: number) => {
+        const updatedMessages = messages.filter(msg => msg.id !== messageId);
+        setMessages(updatedMessages);
+    }
 
     const handleSendMessage = () => {
         if (!message || message.length === 0) return;
@@ -150,16 +154,15 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         });
     }
 
-    const handleDeleteMessage = (messageId: number | undefined) => {
-        if (!messageId) return;
-        toast.promise(useDeleteMessageMutation.mutateAsync(messageId), {
+    const handleDeleteMessage = (message: Message) => {
+        toast.promise(useDeleteMessageMutation.mutateAsync(message), {
             loading: "Deleting message...",
             success: "Message deleted!",
             error: "Failed to delete message!"
         }).then((data) => {
             if (data?.data) {
-                const updatedMessages = messages.filter(msg => msg.id !== messageId);
-                setMessages(updatedMessages);
+                if (!message.id) return;
+                deleteMessageByIdInChatRoom(message?.id);
             }
         });
     }
@@ -244,18 +247,26 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                             <Icon name="laugh" />
                                             <p>React</p>
                                         </div>
-                                        <Separator />
-                                        <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                            <Icon name="pencil" />
-                                            <p>Edit</p>
-                                        </div>
-                                        <Separator />
-                                        <DeleteMessageDialog trigger={
-                                            <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                                <Icon name="trash-2" />
-                                                <p>Delete</p>
-                                            </div>
-                                        } onDelete={() => handleDeleteMessage(message?.id)} />
+                                        {message.sender_id === me.id && (
+                                            <>
+                                                <Separator />
+                                                <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
+                                                    <Icon name="pencil" />
+                                                    <p>Edit</p>
+                                                </div>
+                                            </>
+                                        )}
+                                        {message.sender_id === me.id && (
+                                            <>
+                                                <Separator />
+                                                <DeleteMessageDialog trigger={
+                                                    <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
+                                                        <Icon name="trash-2" />
+                                                        <p>Delete</p>
+                                                    </div>
+                                                } onDelete={() => handleDeleteMessage(message)} />
+                                            </>
+                                        )}
                                     </PopoverContent>
                                 </Popover>
                             </div>

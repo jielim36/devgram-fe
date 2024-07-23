@@ -41,8 +41,8 @@ export const useUpdateIsRead = ({ onSuccess, onError }: ResponseHandlerType<bool
 
 export const useDeleteMessage = ({ onSuccess, onError }: ResponseHandlerType<boolean>) => {
     return useMutation({
-        mutationFn: async (messageId: number): Promise<ResponseBody<boolean>> => {
-            return await deleteMessageById(messageId);
+        mutationFn: async (message: Message): Promise<ResponseBody<boolean>> => {
+            return await deleteMessageById(message);
         },
         onSuccess: onSuccess,
         onError: onError

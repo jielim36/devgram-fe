@@ -17,7 +17,7 @@ export const updateIsRead = async (chatId: number, receiverId: number): Promise<
     return response.data;
 }
 
-export const deleteMessageById = async (messageId: number): Promise<ResponseBody<boolean>> => {
-    const response = await axiosClient.delete(`/message/${messageId}`);
+export const deleteMessageById = async (message: Message): Promise<ResponseBody<boolean>> => {
+    const response = await axiosClient.delete(`/message`, { data: message });
     return response.data;
 }
