@@ -60,4 +60,27 @@ export const convertDateWithShort = (dateString: string) => {
     }
 }
 
+export const convertDateToReadableDate = (dateString: string) => {
+    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const isToday = date.getFullYear() === now.getFullYear() &&
+        date.getMonth() === now.getMonth() &&
+        date.getDate() === now.getDate();
+
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    if (date.getFullYear() === now.getFullYear()) {
+        return `${month} ${day} AT ${hours}:${minutes}`;
+    } else {
+        const year = date.getFullYear();
+        return `${month} ${day}, ${year} AT ${hours}:${minutes}`;
+    }
+}
+
 export default convertDate;

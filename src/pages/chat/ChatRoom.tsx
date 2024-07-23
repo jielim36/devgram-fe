@@ -17,6 +17,7 @@ import Icon from "@/components/Icon/Icon";
 import InputWithEmoji from "@/components/InputWithEmoji/InputWithEmoji";
 import { Message, User } from "@/types";
 import { late } from "zod";
+import convertDate, { convertDateToReadableDate } from "@/utils/convertDateFormat";
 
 type ChatRoomProps = {
     user: User;
@@ -30,7 +31,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const [message, setMessage] = useState<string>("");
     const messagesRef = useRef<Message[]>(messages);
     const [latestReadChatIdByReceiver, setLatestReadChatIdByReceiver] = useState<number | null>(null);
-    const { data: initMessageData, isSuccess: initMessageSuccess } = useGetInitMessages({
+    const { data: initMessageData, isSuccess: initMessageSuccess, isLoading: isInitLoading, isPending: isInitPending } = useGetInitMessages({
         user1_id: me!.id,
         user2_id: user.id,
         enabled: !!userId && !!me?.id
@@ -113,6 +114,14 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
 
     if (!userId || !me) return null;
 
+    if (isInitLoading || isInitPending) {
+        return (
+            <div className="h-full w-full flex justify-center items-center">
+                <Icon name="loader-circle" className="animate-spin text-muted-foreground h-12 w-12" />;
+            </div>
+        )
+    }
+
     return (
         <div className="h-full w-full flex flex-col">
             <div className="flex flex-row items-center py-2 px-4 gap-2">
@@ -133,10 +142,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                         <div
                             key={message.id}
                             className={`group w-full ${index !== 0 && message.sender_id !== messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "mt-6" : ""}`}>
-                            {compareMessageTimeDifference(message, index) >= 10 && (
+                            {compareMessageTimeDifference(message, index) >= 10 && message?.created_at && (
                                 <div className="flex justify-center items-center gap-3 overflow-hidden py-4 opacity-70">
                                     <Separator />
-                                    <p className="text-muted-foreground text-xs whitespace-nowrap">10 minutes ago</p>
+                                    <p className="text-muted-foreground text-xs whitespace-nowrap">{convertDateToReadableDate(message?.created_at)}</p>
                                     <Separator />
                                 </div>
                             )}
