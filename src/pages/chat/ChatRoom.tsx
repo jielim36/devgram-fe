@@ -17,12 +17,13 @@ import Icon from "@/components/Icon/Icon";
 import InputWithEmoji from "@/components/InputWithEmoji/InputWithEmoji";
 import { Message, User } from "@/types";
 import { late } from "zod";
-import convertDate, { convertDateToReadableDate } from "@/utils/convertDateFormat";
+import convertDate, { convertDateToReadableDate, formatTo12HourTime } from "@/utils/convertDateFormat";
 import { set } from "date-fns";
 import DeleteMessageDialog from "./DeleteMessageDialog";
 import ReactMessageSelectionBar from "./ReactMessageSelectionBar";
 import MessageSelectionMenu from "./MessageSelectionMenu";
 import { Card } from "@/components/ui/card";
+import { CheckCheckIcon, CheckIcon } from "lucide-react";
 
 type ChatRoomProps = {
     user: User;
@@ -258,25 +259,42 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                 </div>
                             )}
                             <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
-                                <div className={`flex gap-1 items-start ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"}`}>
-                                    <AvatarContainer
-                                        avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url}
-                                        hasStory={false}
-                                        className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
-                                    />
-                                    <div className={`flex flex-col gap-1 ${message.sender_id === me.id ? "items-end" : ""}`}>
-                                        <div className="relative px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
-                                            {message.content}
-                                            {message.reaction && (
-                                                <Card className={`absolute ${message.sender_id === me.id ? "right-1" : "left-1"} p-[2px] rounded-full animate-spinner-grow`}>
-                                                    <p className="text-xs text-muted-foreground">{message.reaction}</p>
-                                                </Card>
-                                            )}
+                                <div className={`flex gap-1 items-end ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"}`}>
+                                    {/* {message.sender_id !== me.id && (
+                                        <AvatarContainer
+                                            avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url}
+                                            hasStory={false}
+                                            className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
+                                        />
+                                    )} */}
+                                    <Card className={`px-3 py-2 relative flex flex-col gap-1 ${message.sender_id === me.id ? "items-end" : ""}`}>
+                                        <div className="flex flex-row gap-2 items-end">
+                                            <div className="w-fit rounded-md font-normal break-all whitespace-pre-wrap">
+                                                {message.content}
+                                            </div>
+                                            <div className="flex flex-row justify-center items-center gap-[2px]">
+                                                <p className="text-xs text-muted-foreground">
+                                                    {formatTo12HourTime(message.created_at ?? "")}
+                                                </p>
+                                                {message.sender_id === me.id && (
+                                                    message.is_read ?
+                                                        <CheckCheckIcon width={12} height={12} className={`${message.is_read ? "text-blue-500" : "text-muted-foreground"}`} />
+                                                        :
+                                                        <CheckIcon width={12} height={12} className={`${message.is_read ? "text-blue-500" : "text-muted-foreground"}`} />
+                                                )}
+                                            </div>
                                         </div>
-                                        {message.id === latestReadMessageIdByReceiver && (
-                                            <span className={`text-muted-foreground text-xs px-2 animate-slide-up`}>Seen</span>
+                                        {message.reaction && (
+                                            <Card className={`absolute -bottom-4 ${message.sender_id === me.id ? "right-2" : "left-2"} p-[2px] rounded-full animate-spinner-grow`}>
+                                                <p className="text-xs text-muted-foreground">{message.reaction}</p>
+                                            </Card>
                                         )}
-                                    </div>
+                                    </Card>
+                                    {message.id === latestReadMessageIdByReceiver && (
+                                        <p className="text-xs text-muted-foreground py-1">
+                                            Seen
+                                        </p>
+                                    )}
                                 </div>
                                 <MessageSelectionMenu
                                     index={index}
