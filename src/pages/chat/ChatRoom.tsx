@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { UIEvent, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -20,6 +20,8 @@ import { late } from "zod";
 import convertDate, { convertDateToReadableDate } from "@/utils/convertDateFormat";
 import { set } from "date-fns";
 import DeleteMessageDialog from "./DeleteMessageDialog";
+import ReactMessageSelectionBar from "./ReactMessageSelectionBar";
+import MessageSelectionMenu from "./MessageSelectionMenu";
 
 type ChatRoomProps = {
     user: User;
@@ -34,6 +36,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const [message, setMessage] = useState<string>("");
     const messagesRef = useRef<Message[]>(messages);
     const [latestReadMessageIdByReceiver, setLatestReadMessageIdByReceiver] = useState<number | null>(null);
+    const [openMessageSelectionMenuIndex, setOpenMessageSelectionMenuIndex] = useState<number>(-1);
     const { data: initMessageData, isSuccess: initMessageSuccess, isLoading: isInitLoading, isPending: isInitPending } = useGetInitMessages({
         user1_id: me!.id,
         user2_id: user.id,
@@ -178,6 +181,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         return minutesDifference;
     }
 
+    const onAddReaction = (reaction: string, messageId: number) => {
+        console.log(reaction, messageId);
+    }
+
     if (!userId || !me) return null;
 
     if (isInitLoading || isInitPending) {
@@ -202,7 +209,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             </div>
             <Separator />
 
-            <ScrollArea className="grow">
+            <ScrollArea className="grow" isDisabledScroll={openMessageSelectionMenuIndex !== -1}>
                 <div ref={scrollAreaRef} className="h-full flex flex-col gap-1 p-4 justify-end">
                     {messages?.length > 0 && messages.map((message, index) => (
                         <div
@@ -231,44 +238,14 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                         )}
                                     </div>
                                 </div>
-                                <Popover>
-                                    <PopoverTrigger>
-                                        <div className={`opacity-0 group-hover:opacity-100 cursor-pointer px-2 m-auto`}>
-                                            <Icon name="ellipsis" />
-                                        </div>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="flex flex-col min-w-0 w-fit p-0">
-                                        <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                            <Icon name="reply" />
-                                            <p>Reply</p>
-                                        </div>
-                                        <Separator />
-                                        <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                            <Icon name="laugh" />
-                                            <p>React</p>
-                                        </div>
-                                        {message.sender_id === me.id && (
-                                            <>
-                                                <Separator />
-                                                <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                                    <Icon name="pencil" />
-                                                    <p>Edit</p>
-                                                </div>
-                                            </>
-                                        )}
-                                        {message.sender_id === me.id && (
-                                            <>
-                                                <Separator />
-                                                <DeleteMessageDialog trigger={
-                                                    <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                                        <Icon name="trash-2" />
-                                                        <p>Delete</p>
-                                                    </div>
-                                                } onDelete={() => handleDeleteMessage(message)} />
-                                            </>
-                                        )}
-                                    </PopoverContent>
-                                </Popover>
+                                <MessageSelectionMenu
+                                    index={index}
+                                    isMe={message.sender_id === me.id}
+                                    message={message}
+                                    onDelete={handleDeleteMessage}
+                                    onAddReaction={onAddReaction}
+                                    setIsOpenMessageSelectionMenu={setOpenMessageSelectionMenuIndex}
+                                />
                             </div>
                         </div>
                     ))}
