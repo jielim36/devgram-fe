@@ -282,7 +282,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                     {messages?.length > 0 && messages.map((message, index) => (
                         <div
                             key={message.id}
-                            className={`group w-full ${index !== 0 && message.sender_id !== messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "mt-6" : ""}`}>
+                            className={`group w-full 
+                                    ${index !== 0 && message.sender_id !== messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "mt-6" : ""}
+                                    ${message.reaction ? "mb-4" : ""}`}
+                        >
                             {compareMessageTimeDifference(message, index) >= 10 && message?.created_at && (
                                 <div className="flex justify-center items-center gap-3 overflow-hidden py-4 opacity-70">
                                     <Separator />
@@ -292,13 +295,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                             )}
                             <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
                                 <div className={`flex gap-1 items-end ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"}`}>
-                                    {/* {message.sender_id !== me.id && (
-                                        <AvatarContainer
-                                            avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url}
-                                            hasStory={false}
-                                            className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
-                                        />
-                                    )} */}
+                                    <AvatarContainer
+                                        avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url}
+                                        hasStory={false}
+                                        className={`hidden lg:block ${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
+                                    />
                                     <Card className={`px-3 py-2 relative flex flex-col gap-1 ${message.sender_id === me.id ? "items-end" : ""}`}>
                                         <div className="flex flex-row gap-2 items-end">
                                             <div className="w-fit rounded-md font-normal break-all whitespace-pre-wrap">
