@@ -9,12 +9,14 @@ import { Separator } from "@/components/ui/separator";
 import ReactMessageSelectionBar from "./ReactMessageSelectionBar";
 import DeleteMessageDialog from "./DeleteMessageDialog";
 import { useEffect, useState } from "react";
+import UpdateMessageContentDialog from "./UpdateMessageContentDialog";
 
 type MessageSelectionMenuProps = {
     isMe: boolean;
     message: Message;
     onDelete: (message: Message) => void;
     onAddReaction: (reaction: string, messageId: number) => void;
+    onUpdateMessageContent: (message: Message) => void;
     setIsOpenMessageSelectionMenu: (index: number) => void;
     index: number
 }
@@ -24,6 +26,7 @@ const MessageSelectionMenu: React.FC<MessageSelectionMenuProps> = ({
     message,
     onDelete,
     onAddReaction,
+    onUpdateMessageContent,
     setIsOpenMessageSelectionMenu,
     index
 }) => {
@@ -65,10 +68,16 @@ const MessageSelectionMenu: React.FC<MessageSelectionMenuProps> = ({
                 {isMe && (
                     <>
                         <Separator />
-                        <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                            <Icon name="pencil" />
-                            <p>Edit</p>
-                        </div>
+                        <UpdateMessageContentDialog
+                            trigger={
+                                <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
+                                    <Icon name="pencil" />
+                                    <p>Edit</p>
+                                </div>
+                            }
+                            message={message}
+                            onUpdateMessageContent={onUpdateMessageContent}
+                        />
                     </>
                 )}
                 {isMe && (

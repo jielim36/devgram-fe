@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { useAuth } from "@/utils/AuthProvider";
 import { pusherClient } from "@/utils/pusherClient";
-import { useAddMessage, useAddMessageReaction, useDeleteMessage, useGetInitMessages, useUpdateIsRead } from "@/hooks";
+import { useAddMessage, useAddMessageReaction, useDeleteMessage, useGetInitMessages, useUpdateIsRead, useUpdateMessageContent } from "@/hooks";
 import toast from "react-hot-toast";
 import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
 import Icon from "@/components/Icon/Icon";
@@ -60,6 +60,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const useAddMessageReactionMutation = useAddMessageReaction({
         onSuccess: (data) => { }
     });
+    const useUpdateMessageContentMutation = useUpdateMessageContent({
+        onSuccess: (data) => { }
+    });
 
     useEffect(() => {
         messagesRef.current = messages;
@@ -92,6 +95,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         const deleteReceiveMsgEvent = "delete-msg";
         const receiveReadEvent = "read-msg";
         const receiveReactionEvent = "reaction-msg";
+        const receiveUpdateContentEvent = "content-msg";
 
         pusherClient.subscribe(channelName);
         pusherClient.bind(receiveMsgEvent, (data: Message) => {
@@ -112,7 +116,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                 deleteMessageByIdInChatRoom(data);
             }
         });
-
 
         const handleReceiveReadEvent = (data: number) => {
             if (data != null && data === currentChatId) {
@@ -138,6 +141,17 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             const updatedMessages = messages.map(msg => {
                 if (msg.id === message.id) {
                     return { ...msg, reaction: message.reaction };
+                }
+                return msg;
+            });
+            setMessages(updatedMessages);
+        });
+
+        pusherClient.bind(receiveUpdateContentEvent, (data: Message) => {
+            const message: Message = data;
+            const updatedMessages = messages.map(msg => {
+                if (msg.id === message.id) {
+                    return { ...msg, content: message.content };
                 }
                 return msg;
             });
@@ -213,6 +227,24 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                 const updatedMessages = messages.map(msg => {
                     if (msg.id === messageId) {
                         return { ...msg, reaction: reaction };
+                    }
+                    return msg;
+                });
+                setMessages(updatedMessages);
+            }
+        });
+    }
+
+    const onUpdateMessageContent = (message: Message) => {
+        toast.promise(useUpdateMessageContentMutation.mutateAsync(message), {
+            loading: "Updating message...",
+            success: "Message updated!",
+            error: "Failed to update message!"
+        }).then((data) => {
+            if (data?.data) {
+                const updatedMessages = messages.map(msg => {
+                    if (msg.id === message.id) {
+                        return { ...msg, content: message.content };
                     }
                     return msg;
                 });
@@ -302,6 +334,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                     message={message}
                                     onDelete={handleDeleteMessage}
                                     onAddReaction={onAddReaction}
+                                    onUpdateMessageContent={onUpdateMessageContent}
                                     setIsOpenMessageSelectionMenu={setOpenMessageSelectionMenuIndex}
                                 />
                             </div>
