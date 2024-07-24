@@ -31,7 +31,13 @@ const ReactMessageSelectionBar: React.FC<ReactMessageSelectionBarProps> = ({
 
     const handleAddReaction = (reaction: keyof typeof reactions) => {
         if (!message?.id) return;
-        onAddReaction(reactions[reaction], message?.id);
+
+        if (message?.reaction === (reactions[reaction as keyof typeof reactions])) {
+            // cancel reaction
+            onAddReaction('', message?.id);
+        } else {
+            onAddReaction(reactions[reaction], message?.id);
+        }
     }
 
     return (
@@ -40,23 +46,12 @@ const ReactMessageSelectionBar: React.FC<ReactMessageSelectionBarProps> = ({
                 {trigger}
             </PopoverTrigger>
             <PopoverContent className="w-fit rounded-full overflow-hidden flex flex-row gap-1 p-1">
-                {/* Loop the element of reactions and generate button */}
-                {/* <div>
-                    <Button
-                        size={"icon"}
-                        variant={"ghost"}
-                        className="rounded-full"
-                        onClick={() => handleAddReaction('like')}
-                    >
-                        {reactions.like}
-                    </Button>
-                </div> */}
                 {Object.keys(reactions).map((reaction) => (
                     <div key={reaction}>
                         <Button
                             size={"icon"}
                             variant={"ghost"}
-                            className="rounded-full"
+                            className={`rounded-full ${message?.reaction === (reactions[reaction as keyof typeof reactions]) ? 'bg-muted' : ''}`}
                             onClick={() => handleAddReaction(reaction as keyof typeof reactions)}
                         >
                             {reactions[reaction as keyof typeof reactions]}

@@ -57,7 +57,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         onSuccess: () => { }
     });
     const useAddMessageReactionMutation = useAddMessageReaction({
-        onSuccess: () => { }
+        onSuccess: (data) => { }
     });
 
     useEffect(() => {
@@ -81,6 +81,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         }
     }, [initMessageData]);
 
+    // Bind all chat real-time events
     useEffect(() => {
         if (!me?.id || !userId || !initMessageSuccess) return;
         if (!currentChatId) return;
@@ -88,7 +89,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         const channelName = `chat.${me?.id}`;
         const receiveMsgEvent = "incoming-msg";
         const deleteReceiveMsgEvent = "delete-msg";
-        const receiveReadEvent = "read";
+        const receiveReadEvent = "read-msg";
+        const receiveReactionEvent = "reaction-msg";
 
         pusherClient.subscribe(channelName);
         pusherClient.bind(receiveMsgEvent, (data: Message) => {
@@ -109,6 +111,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                 deleteMessageByIdInChatRoom(data);
             }
         });
+
+
         const handleReceiveReadEvent = (data: number) => {
             if (data != null && data === currentChatId) {
                 const updateReadMsgs = messages.map(msg => {
@@ -126,9 +130,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                 setLatestReadMessageIdByReceiver(latestSentMsgId);
             }
         };
-
         pusherClient.bind(receiveReadEvent, handleReceiveReadEvent);
 
+        pusherClient.bind(receiveReactionEvent, (data: Message) => {
+            const message: Message = data;
+            const updatedMessages = messages.map(msg => {
+                if (msg.id === message.id) {
+                    return { ...msg, reaction: message.reaction };
+                }
+                return msg;
+            });
+            setMessages(updatedMessages);
+        });
 
         return () => {
             pusherClient.unsubscribe(channelName);
@@ -194,6 +207,16 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             loading: "Adding reaction...",
             success: "Reaction added!",
             error: "Failed to add reaction!"
+        }).then((data) => {
+            if (data?.data) {
+                const updatedMessages = messages.map(msg => {
+                    if (msg.id === messageId) {
+                        return { ...msg, reaction: reaction };
+                    }
+                    return msg;
+                });
+                setMessages(updatedMessages);
+            }
         });
     }
 
