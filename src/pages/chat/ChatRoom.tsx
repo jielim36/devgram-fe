@@ -22,6 +22,7 @@ import { set } from "date-fns";
 import DeleteMessageDialog from "./DeleteMessageDialog";
 import ReactMessageSelectionBar from "./ReactMessageSelectionBar";
 import MessageSelectionMenu from "./MessageSelectionMenu";
+import { Card } from "@/components/ui/card";
 
 type ChatRoomProps = {
     user: User;
@@ -241,8 +242,13 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                         className={`${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
                                     />
                                     <div className={`flex flex-col gap-1 ${message.sender_id === me.id ? "items-end" : ""}`}>
-                                        <div className="px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
+                                        <div className="relative px-3 py-2 border w-fit rounded-md font-normal break-all whitespace-pre-wrap">
                                             {message.content}
+                                            {message.reaction && (
+                                                <Card className={`absolute ${message.sender_id === me.id ? "right-1" : "left-1"} p-[2px] rounded-full animate-spinner-grow`}>
+                                                    <p className="text-xs text-muted-foreground">{message.reaction}</p>
+                                                </Card>
+                                            )}
                                         </div>
                                         {message.id === latestReadMessageIdByReceiver && (
                                             <span className={`text-muted-foreground text-xs px-2 animate-slide-up`}>Seen</span>
