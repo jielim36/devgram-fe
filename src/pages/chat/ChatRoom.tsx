@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { useAuth } from "@/utils/AuthProvider";
 import { pusherClient } from "@/utils/pusherClient";
-import { useAddMessage, useDeleteMessage, useGetInitMessages, useUpdateIsRead } from "@/hooks";
+import { useAddMessage, useAddMessageReaction, useDeleteMessage, useGetInitMessages, useUpdateIsRead } from "@/hooks";
 import toast from "react-hot-toast";
 import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
 import Icon from "@/components/Icon/Icon";
@@ -53,6 +53,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         }
     });
     const useDeleteMessageMutation = useDeleteMessage({
+        onSuccess: () => { }
+    });
+    const useAddMessageReactionMutation = useAddMessageReaction({
         onSuccess: () => { }
     });
 
@@ -183,6 +186,14 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
 
     const onAddReaction = (reaction: string, messageId: number) => {
         console.log(reaction, messageId);
+        const message = messages.find(msg => msg.id === messageId);
+        if (!message) return;
+        const newMessage = { ...message, reaction: reaction };
+        toast.promise(useAddMessageReactionMutation.mutateAsync(newMessage), {
+            loading: "Adding reaction...",
+            success: "Reaction added!",
+            error: "Failed to add reaction!"
+        });
     }
 
     if (!userId || !me) return null;

@@ -21,3 +21,8 @@ export const deleteMessageById = async (message: Message): Promise<ResponseBody<
     const response = await axiosClient.delete(`/message`, { data: message });
     return response.data;
 }
+
+export const addMessageReaction = async (message: Message): Promise<ResponseBody<boolean>> => {
+    const response = await axiosClient.put(`/message/reaction`, message);
+    return response.data;
+}

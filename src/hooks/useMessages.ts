@@ -1,7 +1,7 @@
 import { Chat, ChatRequest, Message, ResponseBody } from "@/types";
 import { ResponseHandlerType } from ".";
 import { QueryFunctionContext, useMutation, useQuery } from "@tanstack/react-query";
-import { addMessage, deleteMessageById, initMessages, updateIsRead } from "@/services";
+import { addMessage, addMessageReaction, deleteMessageById, initMessages, updateIsRead } from "@/services";
 import { MESSAGE_QUERY_KEY } from "@/constants";
 
 export const useAddMessage = ({ onSuccess, onError }: ResponseHandlerType<Message>) => {
@@ -43,6 +43,16 @@ export const useDeleteMessage = ({ onSuccess, onError }: ResponseHandlerType<boo
     return useMutation({
         mutationFn: async (message: Message): Promise<ResponseBody<boolean>> => {
             return await deleteMessageById(message);
+        },
+        onSuccess: onSuccess,
+        onError: onError
+    });
+}
+
+export const useAddMessageReaction = ({ onSuccess, onError }: ResponseHandlerType<boolean>) => {
+    return useMutation({
+        mutationFn: async (message: Message): Promise<ResponseBody<boolean>> => {
+            return await addMessageReaction(message);
         },
         onSuccess: onSuccess,
         onError: onError
