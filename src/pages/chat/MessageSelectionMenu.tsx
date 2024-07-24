@@ -50,12 +50,16 @@ const MessageSelectionMenu: React.FC<MessageSelectionMenuProps> = ({
                 {!isMe && (
                     <>
                         <Separator />
-                        <ReactMessageSelectionBar trigger={
-                            <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
-                                <Icon name="laugh" />
-                                <p>React</p>
-                            </div>
-                        } onAddReaction={onAddReaction} />
+                        <ReactMessageSelectionBar
+                            trigger={
+                                <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
+                                    <Icon name="laugh" />
+                                    <p>React</p>
+                                </div>
+                            }
+                            onAddReaction={onAddReaction}
+                            message={message}
+                        />
                     </>
                 )}
                 {isMe && (
