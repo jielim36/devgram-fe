@@ -17,3 +17,7 @@ export const pusherServer = new PusherServer({
 export const pusherClient = new PusherClient(PUSHER_KEY, {
     cluster: PUSHER_CLUSTER,
 });
+
+export const pusherChattingClient = new PusherClient(PUSHER_KEY, {
+    cluster: PUSHER_CLUSTER,
+});

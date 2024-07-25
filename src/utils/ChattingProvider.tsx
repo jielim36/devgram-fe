@@ -3,7 +3,7 @@ import { Chat } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Message } from "@/types";
 import { useAuth } from "./AuthProvider";
-import { pusherClient } from "./pusherClient";
+import { pusherChattingClient as pusherClient } from "./pusherClient";
 
 type ChattingProviderProps = {
     children: React.ReactNode;
@@ -47,6 +47,8 @@ export const ChattingProvider: React.FC<ChattingProviderProps> = ({ children }) 
         pusherClient.subscribe(channelName)
             .bind("incoming-msg", (data: Message) => {
                 const message: Message = data;
+                console.log("Incoming message: ", message);
+
                 const newMessageList = [...messages, message];
                 setMessages(newMessageList);
                 setChats((prevChats) => {
