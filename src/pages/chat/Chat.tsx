@@ -16,6 +16,19 @@ import { useGetChatRooms, useGetUserByUserId } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
 import { useChatting } from "@/utils/ChattingProvider";
 import toast from "react-hot-toast";
+import { useMediaQuery } from 'react-responsive';
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
+import { set } from "date-fns";
+import { Card } from "@/components/ui/card";
 
 const Chat = () => {
 
@@ -25,9 +38,11 @@ const Chat = () => {
     const [chattingUser, setChattingUser] = useState<User>();
     const useGetUserByUserIdQuery = useGetUserByUserId(Number(userId), false);
     const navigate = useNavigate();
+    const isMediumScreen = useMediaQuery({ minWidth: 768 });
+    const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
     const handlePreviousPage = () => {
-        history.back();
+        navigate("/")
     }
 
     const getChattingUserByPath = (): User | null => {
@@ -36,6 +51,12 @@ const Chat = () => {
         if (!targetChatRoom) return null;
         return targetChatRoom?.user1.id === Number(userId) ? targetChatRoom.user1 : targetChatRoom?.user2;
     }
+
+    useEffect(() => {
+        if (userId && chattingUser) {
+            setIsOpenDrawer(true);
+        }
+    }, [userId, chattingUser])
 
     useEffect(() => {
         if (!userId) return;
@@ -78,7 +99,50 @@ const Chat = () => {
         }
     }, [userId])
 
+    const handleDrawerClose = (isOpen: boolean) => {
+        if (!isOpen) {
+            navigate("/chat");
+            setChattingUser(undefined);
+            setIsOpenDrawer(isOpen);
+        }
+    }
+
     if (!me || !chatRooms) return null;
+
+    if (!isMediumScreen) {
+        return (
+            <div className="h-screen py-20 px-2 xs:px-10 md:px-20 2xl:px-56">
+                {/* Navigate */}
+                <div className="absolute top-0 left-0">
+                    <Button variant={"ghost"} onClick={handlePreviousPage} className="h-12 rounded-sm">
+                        <Icon name="arrow-left" />
+                    </Button>
+                </div>
+
+                {/* Theme */}
+                <ThemeToggleButton className="absolute top-1 right-1" />
+
+                <Card className="h-full">
+                    <div className="relative w-full flex flex-row pl-5 pt-4 pb-1 gap-2">
+                        <p className="text-xl font-medium leading-non">Messages</p>
+                    </div>
+                    <UserList chatRooms={chatRooms} me={me} userId={Number(userId)} />
+                </Card>
+                <Drawer open={isOpenDrawer} onOpenChange={handleDrawerClose}>
+                    <DrawerContent className="h-screen pb-4">
+                        <div className="h-full relative">
+                            <DrawerClose className="absolute right-1 top-0 p-4" >
+                                <Icon name="x" />
+                            </DrawerClose>
+                            {userId && chattingUser &&
+                                <ChatRoom user={chattingUser} />
+                            }
+                        </div>
+                    </DrawerContent>
+                </Drawer>
+            </div>
+        );
+    }
 
     return (
         <div className="h-screen py-20 px-2 xs:px-10 md:px-20 2xl:px-56">
@@ -127,13 +191,15 @@ type UserListProps = {
     chatRooms?: ChatType[];
     userId: number;
     className?: string;
+    isDrawerMode?: boolean;
 }
 
 export const UserList: React.FC<UserListProps> = ({
     me,
     chatRooms,
     userId,
-    className = ""
+    className = "",
+    isDrawerMode = false
 }) => {
 
     const navigate = useNavigate();
@@ -146,6 +212,29 @@ export const UserList: React.FC<UserListProps> = ({
 
     const isCurrentChat = (chat: ChatType): boolean => {
         return chat.user1.id === userId || chat.user2.id === userId;
+    }
+
+    if (isDrawerMode) {
+        return (
+            <ScrollArea className={`h-full w-full py-2 ${className}`} >
+                {
+                    chatRooms.map((chat) => (
+                        <div key={chat.id} className={`flex flex-row items-end gap-1 px-4 py-3 hover:bg-muted cursor-pointer ${isCurrentChat(chat) ? "bg-muted" : ""}`} onClick={() => handleUserClick(chat.user1.id === me.id ? chat.user2 : chat.user1)}>
+                            <AvatarContainer avatar_url={chat.user1.id === me.id ? chat.user2.avatar_url : chat.user1.avatar_url} hasStory={true} className="h-fit" />
+                            <div className="pl-3 flex flex-col grow">
+                                <span className="font-medium">{chat.user1.id === me.id ? chat.user2.username : chat.user1.username}</span>
+                                <span className={`text-muted-foreground line-clamp-1 text-sm break-all ${!chat.latestMessage?.content ? "opacity-30" : ""}`}>{chat.latestMessage?.content || "Type something"}</span>
+                            </div>
+                            {!isCurrentChat &&
+                                <div className={`relative bg-gradient rounded-full h-4 aspect-square text-center text-xs text-white mb-[2px] ${(chat.unread_count === undefined || chat.unread_count <= 0) ? "opacity-0" : ""}`}>
+                                    {chat.unread_count}
+                                </div>
+                            }
+                        </div>
+                    ))
+                }
+            </ScrollArea >
+        );
     }
 
     return (
