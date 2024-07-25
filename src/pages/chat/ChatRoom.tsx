@@ -37,6 +37,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>("");
     const messagesRef = useRef<Message[]>(messages);
+    const [replyMessageId, setReplyMessageId] = useState<number | undefined>(undefined);
     const [latestReadMessageIdByReceiver, setLatestReadMessageIdByReceiver] = useState<number | null>(null);
     const [openMessageSelectionMenuIndex, setOpenMessageSelectionMenuIndex] = useState<number>(-1);
     const { data: initMessageData, isSuccess: initMessageSuccess, isLoading: isInitLoading, isPending: isInitPending } = useGetInitMessages({
@@ -179,6 +180,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             receiver_id: user.id,
             content: message,
             is_read: false,
+            refer_msg_id: replyMessageId,
             created_at: undefined,
             updated_at: undefined
         }
@@ -284,7 +286,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                             key={message.id}
                             className={`group w-full 
                                     ${index !== 0 && message.sender_id !== messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "mt-6" : ""}
-                                    ${message.reaction ? "mb-4" : ""}`}
+                                    ${message.reaction ? "mb-4" : ""}
+                                    ${replyMessageId === message.id ? "bg-muted p-1 rounded-lg" : ""}
+                                    `}
                         >
                             {compareMessageTimeDifference(message, index) >= 10 && message?.created_at && (
                                 <div className="flex justify-center items-center gap-3 overflow-hidden py-4 opacity-70">
@@ -293,15 +297,27 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                     <Separator />
                                 </div>
                             )}
-                            <div className={`max-w-[70%] w-fit flex gap-1 items-center ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} ${message.sender_id === me.id ? "float-right" : ""}`}>
+                            <div className={`max-w-[70%] w-fit flex gap-1 items-center 
+                                ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"} 
+                                ${message.sender_id === me.id ? "float-right" : ""}
+                                `}
+                            >
                                 <div className={`flex gap-1 items-end ${message.sender_id === me.id ? "flex-row-reverse" : "flex-row"}`}>
                                     <AvatarContainer
                                         avatar_url={message.sender_id === me.id ? me.avatar_url : user.avatar_url}
                                         hasStory={false}
                                         className={`hidden lg:block ${index !== 0 && message.sender_id === messages[index - 1].sender_id && compareMessageTimeDifference(message, index) < 10 ? "opacity-0" : ""}`}
                                     />
-                                    <Card className={`px-3 py-2 relative flex flex-col gap-1 ${message.sender_id === me.id ? "items-end" : ""}`}>
-                                        <div className="flex flex-row gap-2 items-end">
+                                    <Card className={`relative flex flex-col gap-1 ${message.sender_id === me.id ? "items-end" : ""}`}>
+                                        {/* Refer message */}
+                                        {message.refer_msg_id &&
+                                            <div className="p-1 h-full w-full">
+                                                <div className="bg-muted py-1 px-2 w-full rounded-md font-xs break-all whitespace-nowrap truncate ">
+                                                    {messages.find(msg => msg.id === message.refer_msg_id)?.content}
+                                                </div>
+                                            </div>
+                                        }
+                                        <div className={`px-3 pb-2 ${message.refer_msg_id ? "" : "pt-2"} flex flex-row gap-2 items-end`}>
                                             <div className="w-fit rounded-md font-normal break-all whitespace-pre-wrap">
                                                 {message.content}
                                             </div>
@@ -336,6 +352,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                                     onDelete={handleDeleteMessage}
                                     onAddReaction={onAddReaction}
                                     onUpdateMessageContent={onUpdateMessageContent}
+                                    setReplyMessageId={setReplyMessageId}
                                     setIsOpenMessageSelectionMenu={setOpenMessageSelectionMenuIndex}
                                 />
                             </div>
@@ -345,19 +362,30 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             </ScrollArea >
 
             <Separator />
-            <div className="pl-4 pr-2 py-2 flex flex-row items-center gap-1">
-                <div className="grow">
-                    <InputWithEmoji
-                        content={message}
-                        setContent={setMessage}
-                        containerClassName="m-0"
-                        textAreaClassName="resize-none min-h-4 max-h-12"
-                    />
-                </div>
-                <Button className="" variant={"ghost"} onClick={handleSendMessage}>
-                    <Icon name="send-horizontal" className="" />
-                </Button>
-            </div >
+            <div className="flex flex-col pl-4 pr-2 py-2 gap-1">
+                {replyMessageId && (
+                    <div className="mx-2 pr-2 flex flex-row gap-2 items-center bg-muted rounded-md overflow-hidden text-nowrap">
+                        <div className="w-1 bg-muted-foreground h-full" />
+                        <div className="flex flex-row w-full py-2 gap-1 overflow-hidden">
+                            <p className="text-muted-foreground">Replying to:</p>
+                            <p className="text-muted-foreground truncate break-all">{messages.find(msg => msg.id === replyMessageId)?.content}</p>
+                        </div>
+                    </div>
+                )}
+                <div className="flex flex-row items-center gap-1">
+                    <div className="grow">
+                        <InputWithEmoji
+                            content={message}
+                            setContent={setMessage}
+                            containerClassName="m-0"
+                            textAreaClassName="resize-none min-h-4 max-h-12"
+                        />
+                    </div>
+                    <Button className="" variant={"ghost"} onClick={handleSendMessage}>
+                        <Icon name="send-horizontal" className="" />
+                    </Button>
+                </div >
+            </div>
         </div >
     );
 }

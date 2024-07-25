@@ -17,6 +17,7 @@ type MessageSelectionMenuProps = {
     onDelete: (message: Message) => void;
     onAddReaction: (reaction: string, messageId: number) => void;
     onUpdateMessageContent: (message: Message) => void;
+    setReplyMessageId: (messageId: number) => void;
     setIsOpenMessageSelectionMenu: (index: number) => void;
     index: number
 }
@@ -27,6 +28,7 @@ const MessageSelectionMenu: React.FC<MessageSelectionMenuProps> = ({
     onDelete,
     onAddReaction,
     onUpdateMessageContent,
+    setReplyMessageId,
     setIsOpenMessageSelectionMenu,
     index
 }) => {
@@ -38,6 +40,12 @@ const MessageSelectionMenu: React.FC<MessageSelectionMenuProps> = ({
         setIsOpenMessageSelectionMenu(isOpen ? index : -1);
     }, [isOpen]);
 
+    const handleReply = () => {
+        if (!message.id) return;
+        setReplyMessageId(message.id);
+        setIsOpen(false);
+    }
+
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger>
@@ -46,7 +54,7 @@ const MessageSelectionMenu: React.FC<MessageSelectionMenuProps> = ({
                 </div>
             </PopoverTrigger>
             <PopoverContent className="flex flex-col min-w-0 w-fit p-0">
-                <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted">
+                <div className="flex flex-row gap-3 p-3 cursor-pointer hover:bg-muted" onClick={handleReply}>
                     <Icon name="reply" />
                     <p>Reply</p>
                 </div>
