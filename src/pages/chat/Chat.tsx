@@ -158,9 +158,11 @@ export const UserList: React.FC<UserListProps> = ({
                             <span className="font-medium">{chat.user1.id === me.id ? chat.user2.username : chat.user1.username}</span>
                             <span className={`text-muted-foreground line-clamp-1 text-sm break-all ${!chat.latestMessage?.content ? "opacity-30" : ""}`}>{chat.latestMessage?.content || "Type something"}</span>
                         </div>
-                        <div className={`relative bg-gradient rounded-full h-4 aspect-square text-center text-xs text-white mb-[2px] ${(chat.unread_count === undefined || chat.unread_count <= 0) ? "opacity-0" : ""}`}>
-                            {chat.unread_count}
-                        </div>
+                        {!isCurrentChat &&
+                            <div className={`relative bg-gradient rounded-full h-4 aspect-square text-center text-xs text-white mb-[2px] ${(chat.unread_count === undefined || chat.unread_count <= 0) ? "opacity-0" : ""}`}>
+                                {chat.unread_count}
+                            </div>
+                        }
                     </div>
                 ))
             }

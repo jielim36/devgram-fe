@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
 import Icon from "@/components/Icon/Icon";
 import InputWithEmoji from "@/components/InputWithEmoji/InputWithEmoji";
-import { Message, User } from "@/types";
+import { Chat, Message, User } from "@/types";
 import { late } from "zod";
 import convertDate, { convertDateToReadableDate, formatTo12HourTime } from "@/utils/convertDateFormat";
 import { set } from "date-fns";
@@ -24,6 +24,7 @@ import ReactMessageSelectionBar from "./ReactMessageSelectionBar";
 import MessageSelectionMenu from "./MessageSelectionMenu";
 import { Card } from "@/components/ui/card";
 import { CheckCheckIcon, CheckIcon } from "lucide-react";
+import { useChatting } from "@/utils/ChattingProvider";
 
 type ChatRoomProps = {
     user: User;
@@ -40,6 +41,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     const [replyMessageId, setReplyMessageId] = useState<number | undefined>(undefined);
     const [latestReadMessageIdByReceiver, setLatestReadMessageIdByReceiver] = useState<number | null>(null);
     const [openMessageSelectionMenuIndex, setOpenMessageSelectionMenuIndex] = useState<number>(-1);
+    const { chats, setChats } = useChatting();
     const { data: initMessageData, isSuccess: initMessageSuccess, isLoading: isInitLoading, isPending: isInitPending } = useGetInitMessages({
         user1_id: me!.id,
         user2_id: user.id,
@@ -69,6 +71,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         messagesRef.current = messages;
         const latestReadChatId = messages.slice().reverse().find(msg => msg.is_read && msg.sender_id === me?.id)?.id || null
         setLatestReadMessageIdByReceiver(latestReadChatId);
+
+        // set unread_count to 0
+        if (currentChatId) {
+            const newChats = chats.map(chat => {
+                if (chat.id === currentChatId) {
+                    return { ...chat, unread_count: 0 };
+                }
+                return chat;
+            });
+            setChats(newChats);
+        }
+
     }, [messages]);
 
     useEffect(() => {
