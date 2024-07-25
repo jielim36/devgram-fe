@@ -288,7 +288,8 @@ export function NavigationMenuComponent({ user }: { user: User }) {
                     }
                     />
                     <NavigationMenuContent>
-                        <UserList me={user} userId={-1} chatRooms={chatRooms} className="w-80" />
+                        {/* Chat Listing */}
+                        <UserList me={user} userId={-1} chatRooms={chatRooms} className="w-80 h-80" />
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
