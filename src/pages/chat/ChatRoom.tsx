@@ -216,7 +216,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
     }
 
     const onAddReaction = (reaction: string, messageId: number) => {
-        console.log(reaction, messageId);
         const message = messages.find(msg => msg.id === messageId);
         if (!message) return;
         const newMessage = { ...message, reaction: reaction };
