@@ -49,6 +49,8 @@ import toast from "react-hot-toast";
 import SkeletonPage from "../Suspense/SkeletonPage";
 import { Button } from "../ui/button";
 import ReelUploader from "../ReelsUploader/ReelsUploader";
+import { UserList } from "@/pages/chat/Chat";
+import { useChatting } from "@/utils/ChattingProvider";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -271,6 +273,8 @@ const components: { title: string; href: string; description: string }[] = [
 ]
 
 export function NavigationMenuComponent({ user }: { user: User }) {
+    const { chats: chatRooms } = useChatting();
+
     return (
         <NavigationMenu>
             <NavigationMenuList>
@@ -284,41 +288,7 @@ export function NavigationMenuComponent({ user }: { user: User }) {
                     }
                     />
                     <NavigationMenuContent>
-                        <ul className="flex flex-col w-80">
-                            <ListItem href="/chat/1001">
-                                <div className="flex flex-row gap-2">
-                                    <Avatar>
-                                        <AvatarFallback className="bg-accent">G</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">Grace Ng</span>
-                                        <span className="text-muted-foreground line-clamp-1">Hey, are you therefgsdfg fgsdfg fdgsdf gfdgdfgdfg fgsfg?</span>
-                                    </div>
-                                </div>
-                            </ListItem>
-                            <ListItem href="/chat/1001">
-                                <div className="flex flex-row gap-2">
-                                    <Avatar>
-                                        <AvatarFallback className="bg-accent">G</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">Grace Ng</span>
-                                        <span className="text-muted-foreground line-clamp-1">Hey, are you therefgsdfg fgsdfg fdgsdf gfdgdfgdfg fgsfg?</span>
-                                    </div>
-                                </div>
-                            </ListItem>
-                            <ListItem href="/chat/1001">
-                                <div className="flex flex-row gap-2">
-                                    <Avatar>
-                                        <AvatarFallback className="bg-accent">G</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">Grace Ng</span>
-                                        <span className="text-muted-foreground line-clamp-1">Hey, are you therefgsdfg fgsdfg fdgsdf gfdgdfgdfg fgsfg?</span>
-                                    </div>
-                                </div>
-                            </ListItem>
-                        </ul>
+                        <UserList me={user} userId={-1} chatRooms={chatRooms} className="w-80" />
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
