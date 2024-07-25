@@ -47,8 +47,6 @@ export const ChattingProvider: React.FC<ChattingProviderProps> = ({ children }) 
         pusherClient.subscribe(channelName)
             .bind("incoming-msg", (data: Message) => {
                 const message: Message = data;
-                console.log("Incoming message: ", message);
-
                 const newMessageList = [...messages, message];
                 setMessages(newMessageList);
                 setChats((prevChats) => {
