@@ -11,7 +11,7 @@ type ChattingProviderProps = {
 
 type ChattingProviderState = {
     messages: Message[];
-    setMessages: (message: Message[]) => void;
+    setMessages: (messages: Message[]) => void;
     chats: Chat[];
     setChats: (chats: Chat[]) => void;
 }
@@ -51,7 +51,15 @@ export const ChattingProvider: React.FC<ChattingProviderProps> = ({ children }) 
                 setMessages(newMessageList);
                 setChats((prevChats) => {
                     const chatIndex = prevChats.findIndex((chat) => chat.id === message.chat_id);
-                    prevChats[chatIndex].latestMessage = message;
+                    if (chatIndex !== -1) {
+                        const updatedChats = [...prevChats];
+                        const updatedChat = { ...updatedChats[chatIndex], latestMessage: message };
+                        if (updatedChat.unread_count !== undefined) {
+                            updatedChat.unread_count += 1;
+                        }
+                        updatedChats[chatIndex] = updatedChat;
+                        return updatedChats;
+                    }
                     return prevChats;
                 });
             });
@@ -59,7 +67,7 @@ export const ChattingProvider: React.FC<ChattingProviderProps> = ({ children }) 
         return () => {
             pusherClient.unsubscribe(channelName);
         }
-    }, [me]);
+    }, [me, messages]);
 
     const value = {
         messages,
