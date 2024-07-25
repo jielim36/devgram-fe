@@ -58,7 +58,12 @@ export const ChattingProvider: React.FC<ChattingProviderProps> = ({ children }) 
                             updatedChat.unread_count += 1;
                         }
                         updatedChats[chatIndex] = updatedChat;
-                        return updatedChats;
+                        return updatedChats.sort((a, b) => {
+                            if (a.latestMessage?.created_at && b.latestMessage?.created_at) {
+                                return new Date(b.latestMessage.created_at).getTime() - new Date(a.latestMessage.created_at).getTime();
+                            }
+                            return 0;
+                        });
                     }
                     return prevChats;
                 });

@@ -216,18 +216,21 @@ export const UserList: React.FC<UserListProps> = ({
     return (
         <ScrollArea className={`h-full w-full py-2 ${className}`} >
             {
-                chatRooms.map((chat) => (
+                chatRooms.sort((a, b) => {
+                    if (a.latestMessage?.created_at && b.latestMessage?.created_at) {
+                        return new Date(b.latestMessage.created_at).getTime() - new Date(a.latestMessage.created_at).getTime();
+                    }
+                    return 0;
+                }).map((chat) => (
                     <div key={chat.id} className={`flex flex-row items-end gap-1 px-4 py-3 hover:bg-muted cursor-pointer ${isCurrentChat(chat) ? "bg-muted" : ""}`} onClick={() => handleUserClick(chat.user1.id === me.id ? chat.user2 : chat.user1)}>
                         <AvatarContainer avatar_url={chat.user1.id === me.id ? chat.user2.avatar_url : chat.user1.avatar_url} hasStory={true} className="h-fit" />
                         <div className="pl-3 flex flex-col grow">
                             <span className="font-medium">{chat.user1.id === me.id ? chat.user2.username : chat.user1.username}</span>
                             <span className={`text-muted-foreground line-clamp-1 text-sm break-all ${!chat.latestMessage?.content ? "opacity-30" : ""}`}>{chat.latestMessage?.content || "Type something"}</span>
                         </div>
-                        {!isCurrentChat &&
-                            <div className={`relative bg-gradient rounded-full h-4 aspect-square text-center text-xs text-white mb-[2px] ${(chat.unread_count === undefined || chat.unread_count <= 0) ? "opacity-0" : ""}`}>
-                                {chat.unread_count}
-                            </div>
-                        }
+                        <div className={`relative bg-gradient rounded-full h-4 aspect-square text-center text-xs text-white mb-[2px] ${(chat.unread_count === undefined || chat.unread_count <= 0) ? "opacity-0" : ""}`}>
+                            {chat.unread_count}
+                        </div>
                     </div>
                 ))
             }
