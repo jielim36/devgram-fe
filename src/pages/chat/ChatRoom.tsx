@@ -100,6 +100,13 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         }
     }, [initMessageData]);
 
+    useEffect(() => {
+        if (!userId) return;
+        const targetChatRoom = chats?.find(chat => chat.user1.id === Number(userId) || chat.user2.id === Number(userId));
+        if (!targetChatRoom?.id) return;
+        setCurrentChatId(targetChatRoom.id);
+    }, [userId])
+
     // Bind all chat real-time events
     useEffect(() => {
         if (!me?.id || !userId || !initMessageSuccess) return;
@@ -115,12 +122,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         pusherClient.subscribe(channelName);
         pusherClient.bind(receiveMsgEvent, (data: Message) => {
             const message: Message = data;
-            if (message.sender_id !== Number(userId)) return;
+            if (message.sender_id !== Number(userId) && message.chat_id !== currentChatId) return;
+
             const newMessageList = [...messagesRef.current, message];
             setMessages(newMessageList);
-            if (message.chat_id) {
-                setCurrentChatId(message.chat_id);
-            }
             // update is_read status of the receiving message at sender side
             if (Number(userId) && message.chat_id) {
                 useUpdateIsReadMutation.mutate({ chatId: message.chat_id, receiverId: message.sender_id });
@@ -175,6 +180,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
 
         return () => {
             pusherClient.unsubscribe(channelName);
+            pusherClient.unbind(receiveMsgEvent);
+            pusherClient.unbind(deleteReceiveMsgEvent);
+            pusherClient.unbind(receiveReadEvent);
+            pusherClient.unbind(receiveReactionEvent);
+            pusherClient.unbind(receiveUpdateContentEvent);
         }
     }, [userId, initMessageSuccess, messages, currentChatId]);
 
