@@ -7,15 +7,10 @@ import {
 } from '@tanstack/react-query'
 import { ThemeProvider, useTheme } from '@/utils/ThemeProvider';
 import { AuthProvider } from '@/utils/AuthProvider';
-// import Home from '../pages/Home/Home';
-// import Login from '../pages/Login/Login';
-// import Layout from '@/components/Layout/Layout';
-// import Popular from '@/pages/Popular/Popular';
-// import Reels from '@/pages/Reels/Reels';
-// import Following from '@/pages/Following/Following';
-// import Profile from '@/pages/Profile/Profile';
-// import Error404NotFound from '@/pages/InvalidPages/Error404NotFound';
-// import Chat from '@/pages/chat/Chat';
+import CustomToaster from '@/components/Toast/CustomToast';
+import { routes } from './Routes';
+import Icon from '@/components/Icon/Icon';
+import { ChattingProvider } from '@/utils/ChattingProvider';
 
 const Layout = React.lazy(() => import('@/components/Layout/Layout'));
 const Home = React.lazy(() => import('../pages/Home/Home'));
@@ -25,11 +20,6 @@ const Chat = React.lazy(() => import('@/pages/chat/Chat'));
 const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
 const Login = React.lazy(() => import('../pages/Login/Login'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
-import CustomToaster from '@/components/Toast/CustomToast';
-import { routes } from './Routes';
-import Icon from '@/components/Icon/Icon';
-import { ChattingProvider } from '@/utils/ChattingProvider';
-
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
