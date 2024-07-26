@@ -279,13 +279,17 @@ export function NavigationMenuComponent({ user }: { user: User }) {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <DotContainer children={
-                        <NavigationMenuTrigger onClick={() => {
-                            window.location.href = '/chat';
-                        }}>
-                            <Icon name="send" />
-                        </NavigationMenuTrigger>
-                    }
+                    <DotContainer
+                        children={
+                            <NavigationMenuTrigger
+                                onClick={() => {
+                                    window.location.href = '/chat';
+                                }}
+                            >
+                                <Icon name="send" />
+                            </NavigationMenuTrigger>
+                        }
+                        hasDot={chatRooms?.length > 0 && chatRooms.filter((chat) => chat?.unread_count && chat?.unread_count > 0).length > 0}
                     />
                     <NavigationMenuContent>
                         {/* Chat Listing */}
@@ -293,11 +297,13 @@ export function NavigationMenuComponent({ user }: { user: User }) {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <DotContainer children={
-                        <NavigationMenuTrigger>
-                            <Icon name="inbox" />
-                        </NavigationMenuTrigger>
-                    }
+                    <DotContainer
+                        children={
+                            <NavigationMenuTrigger>
+                                <Icon name="inbox" />
+                            </NavigationMenuTrigger>
+                        }
+                        hasDot={true}
                     />
                     <NavigationMenuContent>
                         <ul className="flex flex-col w-80">
