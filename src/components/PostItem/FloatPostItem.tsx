@@ -24,6 +24,7 @@ import { POST_QUERY_KEY } from "@/constants";
 import DeleteCommentDialog from "./DeleteCommentDialog";
 import { useMediaQuery } from "react-responsive";
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
+import { ScrollArea } from "../ui/scroll-area";
 
 type FloatPostProps = {
     // post: Post;
@@ -43,7 +44,7 @@ const FloatPostItem: React.FC<FloatPostProps & FloatPostItemProps> = ({ postId, 
             <DialogTrigger className={triggerClassName}>
                 {trigger}
             </DialogTrigger>
-            <DialogContent className="p-2 w-[90vw] lg:w-[85vw] max-h-[95vh]" disableCloseBtn>
+            <DialogContent className="p-2 w-fit lg:w-[85vw] max-h-[95vh]" disableCloseBtn>
                 <FloatPost postId={postId} />
             </DialogContent>
         </Dialog>
@@ -53,6 +54,7 @@ const FloatPostItem: React.FC<FloatPostProps & FloatPostItemProps> = ({ postId, 
 const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
 
     const isLargeScreen = useMediaQuery({ minWidth: 1024 });
+    const isWidthGreaterThanHeight = useMediaQuery({ query: '(min-aspect-ratio: 1/1)' });
     const [isOpenDrawerComment, setIsOpenDrawerComment] = useState(false);
     const [post, setPost] = useState<Post>();
     const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -400,15 +402,12 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
     // Mobile view
     return (
         <div className="">
-            <PostSwiper postImages={post?.images_url || []} className="overflow-hidden rounded-md" />
+            <PostSwiper postImages={post?.images_url || []} className={`overflow-hidden rounded-md ${isWidthGreaterThanHeight ? "h-[80vh] w-[80vh]" : "h-[90vw] w-[90vw]"}`} />
             <Drawer open={isOpenDrawerComment} onOpenChange={setIsOpenDrawerComment}>
                 <DrawerTrigger className="w-full" asChild>
                     <Button variant={"ghost"}>
                         <div className="flex flex-col w-full justify-center items-center">
-                            {
-                                <ChevronUpIcon />
-                            }
-
+                            <ChevronUpIcon />
                             <p>Open Comments</p>
                         </div>
                     </Button>
