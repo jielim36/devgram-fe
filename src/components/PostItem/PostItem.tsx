@@ -74,7 +74,7 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post }, ref)
                         <p className="text-muted-foreground">{convertDate(post.created_at)}</p>
                     </div>
                 </div>
-                <PostMenuSelection post={post} userId={user?.id} triggerClassName="px-2" />
+                {post.user.id === user?.id && <PostMenuSelection post={post} userId={user?.id} triggerClassName="px-2" />}
             </div>
 
             <PostSwiper postImages={post.images_url} />

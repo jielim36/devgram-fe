@@ -245,7 +245,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                         />
                         <p className="font-bold">{post?.user?.username}</p>
                     </div>
-                    <PostMenuSelection post={post} userId={user?.id} />
+                    {post.user.id === user?.id && <PostMenuSelection post={post} userId={user?.id} />}
                 </div>
                 <Separator className="my-2" />
                 <div className="h-full flex flex-col overflow-y-scroll px-2">
