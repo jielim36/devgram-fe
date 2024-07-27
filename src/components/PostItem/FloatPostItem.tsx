@@ -1,7 +1,7 @@
 import { Comment, Post, User } from "@/types";
 import AvatarContainer from "../AvatarContainer/AvatarContainer";
 import { Button } from "../ui/button";
-import { HeartIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, HeartIcon } from "lucide-react";
 import PostSwiper from "../Swiper/PostSwiper";
 import "@/style/color.css"
 import { Separator } from "../ui/separator";
@@ -22,6 +22,8 @@ import toast from "react-hot-toast";
 import { queryClient } from "@/app/App";
 import { POST_QUERY_KEY } from "@/constants";
 import DeleteCommentDialog from "./DeleteCommentDialog";
+import { useMediaQuery } from "react-responsive";
+import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 
 type FloatPostProps = {
     // post: Post;
@@ -50,6 +52,8 @@ const FloatPostItem: React.FC<FloatPostProps & FloatPostItemProps> = ({ postId, 
 
 const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
 
+    const isLargeScreen = useMediaQuery({ minWidth: 1024 });
+    const [isOpenDrawerComment, setIsOpenDrawerComment] = useState(false);
     const [post, setPost] = useState<Post>();
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [currentLikeCommentId, setCurrentLikeCommentId] = useState<number | null>(null);
@@ -228,15 +232,8 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
         )
     }
 
-    return (
-        <div className="flex flex-col lg:flex-row h-[95vh] xl:h-[85vh] lg:h-[70vh] gap-2 overflow-auto lg:overflow-hidden" >
-            {post?.images_url && post?.images_url?.length > 0 &&
-                <div className={`grow h-full w-full max-h-[90vw] xl:max-h-[85vh] lg:max-h-[70vh] rounded-md lg:h-[70vh]`}>
-                    <PostSwiper postImages={post?.images_url} className={`h-[90vw] xl:h-[85vh] lg:h-[70vh] lg:w-[70vh] xl:w-[85vh] max-h-[50vh] xl:max-h-[85vh] lg:max-h-[70vh] w-full overflow-hidden rounded-md`} swiperClassName="" />
-                </div>
-            }
-
-            {/* Information */}
+    const InformationArea = () => {
+        return (
             <div className="pt-2 xl:pt-0 px-0 pb-3 flex flex-col justify-between h-full lg:overflow-auto w-full">
                 <div className="flex flex-row justify-between items-center px-2">
                     <div className="flex flex-row items-center gap-2">
@@ -380,6 +377,46 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                     </div>
                 </div>
             </div>
+        );
+    }
+
+    if (isLargeScreen) {
+
+        return (
+            <div className="flex flex-col lg:flex-row h-[95vh] xl:h-[85vh] lg:h-[70vh] gap-2 overflow-auto lg:overflow-hidden" >
+                {post?.images_url && post?.images_url?.length > 0 &&
+                    <div className={`grow h-full w-full max-h-[90vw] xl:max-h-[85vh] lg:max-h-[70vh] rounded-md lg:h-[70vh]`}>
+                        <PostSwiper postImages={post?.images_url} className={`h-[90vh] xl:h-[85vh] lg:h-[70vh] lg:w-[70vh] xl:w-[85vh] max-h-[50vh] xl:max-h-[85vh] lg:max-h-[70vh] w-full overflow-hidden rounded-md`} swiperClassName="" />
+                    </div>
+                }
+
+                {/* Information */}
+                <InformationArea />
+
+            </div>
+        );
+    }
+
+    // Mobile view
+    return (
+        <div className="">
+            <PostSwiper postImages={post?.images_url || []} className="overflow-hidden rounded-md" />
+            <Drawer open={isOpenDrawerComment} onOpenChange={setIsOpenDrawerComment}>
+                <DrawerTrigger className="w-full" asChild>
+                    <Button variant={"ghost"}>
+                        <div className="flex flex-col w-full justify-center items-center">
+                            {
+                                <ChevronUpIcon />
+                            }
+
+                            <p>Open Comments</p>
+                        </div>
+                    </Button>
+                </DrawerTrigger>
+                <DrawerContent className="h-[90vh] px-1">
+                    <InformationArea />
+                </DrawerContent>
+            </Drawer>
         </div>
     );
 }
