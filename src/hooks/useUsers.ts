@@ -33,7 +33,7 @@ export const useGetUserByUserId = (userId: number, enabled?: boolean) => {
     });
 }
 
-export const useGetUserInfoByUserId = (userId: number) => {
+export const useGetUserInfoByUserId = (userId: number, enabled?: boolean) => {
     return useQuery({
         queryKey: USER_QUERY_KEY.concat(userId.toString(), "info"),
         queryFn: async (context: QueryFunctionContext<string[]>) => {
