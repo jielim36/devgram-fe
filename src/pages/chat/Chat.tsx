@@ -216,12 +216,7 @@ export const UserList: React.FC<UserListProps> = ({
     return (
         <ScrollArea className={`h-full w-full py-2 ${className}`} >
             {
-                chatRooms.sort((a, b) => {
-                    if (a.latestMessage?.created_at && b.latestMessage?.created_at) {
-                        return new Date(b.latestMessage.created_at).getTime() - new Date(a.latestMessage.created_at).getTime();
-                    }
-                    return 0;
-                }).map((chat) => (
+                chatRooms.map((chat) => (
                     <div key={chat.id} className={`flex flex-row items-end gap-1 px-4 py-3 hover:bg-muted cursor-pointer ${isCurrentChat(chat) ? "bg-muted" : ""}`} onClick={() => handleUserClick(chat.user1.id === me.id ? chat.user2 : chat.user1)}>
                         <AvatarContainer avatar_url={chat.user1.id === me.id ? chat.user2.avatar_url : chat.user1.avatar_url} hasStory={true} className="h-fit" />
                         <div className="pl-3 flex flex-col grow">
