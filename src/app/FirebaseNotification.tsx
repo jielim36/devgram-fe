@@ -51,9 +51,7 @@ function FirebaseNotification() {
     const { user } = useAuth();
 
     const saveTokenMutation = useSaveFirebaseToken({
-        onSuccess: () => {
-            console.log("Token saved");
-        }
+        onSuccess: () => { }
     });
 
     // This is self invoking function that listen of the notification
@@ -72,7 +70,6 @@ function FirebaseNotification() {
     const handleGetFirebaseToken = (user: User) => {
         getFirebaseToken().then((firebaseToken: string | undefined) => {
             if (firebaseToken) {
-                console.log(firebaseToken);
                 const message: FirebaseNotificationRequest = {
                     token: firebaseToken,
                     title: "Hello",
@@ -91,8 +88,6 @@ function FirebaseNotification() {
 
     // Need this handle FCM token generation when a user manually blocks or allows notification
     useEffect(() => {
-        console.log(window.Notification?.permission);
-
         if (
             "Notification" in window &&
             window.Notification?.permission === "granted"

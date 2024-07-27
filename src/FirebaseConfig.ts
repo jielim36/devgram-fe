@@ -10,16 +10,6 @@ const APP_ID = import.meta.env.VITE_FIREBASE_APP_ID;
 const MEASUREMENT_ID = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID;
 const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 
-
-console.log("API_KEY", API_KEY);
-console.log("AUTH_DOMAIN", AUTH_DOMAIN);
-console.log("PROJECT_ID", PROJECT_ID);
-console.log("STORAGE_BUCKET", STORAGE_BUCKET);
-console.log("MESSAGING_SENDER_ID", MESSAGING_SENDER_ID);
-console.log("APP_ID", APP_ID);
-console.log("MEASUREMENT_ID", MEASUREMENT_ID);
-console.log("VAPID_KEY", VAPID_KEY);
-
 const firebaseConfig = {
     apiKey: API_KEY,
     authDomain: AUTH_DOMAIN,
