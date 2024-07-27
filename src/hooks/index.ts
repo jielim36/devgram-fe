@@ -8,6 +8,7 @@ export * from "./useFollow";
 export * from "./usePrivacySetting";
 export * from "./useMessages";
 export * from "./useChat";
+export * from "./useFCM";
 
 export type ResponseHandlerType<T> = {
     onSuccess?: (data: ResponseBody<T>) => void;

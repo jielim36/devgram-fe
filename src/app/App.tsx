@@ -11,6 +11,9 @@ import CustomToaster from '@/components/Toast/CustomToast';
 import { routes } from './Routes';
 import Icon from '@/components/Icon/Icon';
 import { ChattingProvider } from '@/utils/ChattingProvider';
+import { getFirebaseToken, messaging } from "@/FirebaseConfig";
+import { MessagePayload, onMessage } from "firebase/messaging";
+import FirebaseNotification from './FirebaseNotification';
 
 const Layout = React.lazy(() => import('@/components/Layout/Layout'));
 const Home = React.lazy(() => import('../pages/Home/Home'));
@@ -20,6 +23,7 @@ const Chat = React.lazy(() => import('@/pages/chat/Chat'));
 const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
 const Login = React.lazy(() => import('../pages/Login/Login'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -33,6 +37,11 @@ const Spinner = () => (
     <Icon name="loader-circle" className="animate-spin text-muted-foreground h-12 w-12" />
   </div>
 );
+
+interface NotificationPayloadProps {
+  data?: MessagePayload | undefined;
+  open: boolean;
+}
 
 function App() {
 
@@ -61,6 +70,7 @@ function App() {
                   </Routes>
                 </React.Suspense>
               </ChattingProvider>
+              <FirebaseNotification />
             </AuthProvider>
           </BrowserRouter>
         </ThemeProvider>
