@@ -23,9 +23,8 @@ import { calculateAge } from "@/utils/formatDate"
 
 export function UserInfoCard({ trigger, userId }: { trigger: React.ReactNode, userId: number }) {
 
-    const [isOpenHoverCard, setIsOpenHoverCard] = useState(false);
-    const { data: userData } = useGetUserByUserId(userId, isOpenHoverCard);
-    const { data: userInfoData } = useGetUserInfoByUserId(userId, isOpenHoverCard);
+    const { data: userData } = useGetUserByUserId(userId);
+    const { data: userInfoData } = useGetUserInfoByUserId(userId);
 
     const UserInfoCard = () => {
         return (
@@ -66,16 +65,6 @@ export function UserInfoCard({ trigger, userId }: { trigger: React.ReactNode, us
     }
 
     return (
-        <HoverCard open={isOpenHoverCard} onOpenChange={setIsOpenHoverCard}>
-            <HoverCardTrigger>
-                {trigger}
-            </HoverCardTrigger>
-            <HoverCardContent className="w-80">
-                {userData && userInfoData && <UserInfoCard />}
-                {!(userData && userInfoData) && (
-                    <p className="text-bold">ERROR FETCHING</p>
-                )}
-            </HoverCardContent>
-        </HoverCard>
+        <UserInfoCard />
     )
 }

@@ -1,7 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import "@/style/color.css"
+import "@/style/color.css";
 import Icon from "../Icon/Icon";
 import { UserInfoCard } from "./UserInfoCard";
+import { useState } from "react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
+import React from "react";
 
 type AvatarContainerProps = {
     userId?: number;
@@ -13,9 +16,9 @@ type AvatarContainerProps = {
     fallbackStrokeWidth?: number;
     fallbackClassName?: string;
     disableHoverInfoCard?: boolean;
-}
+};
 
-const AvatarContainer: React.FC<AvatarContainerProps> = ({
+const AvatarContainer: React.FC<AvatarContainerProps> = React.memo(({
     avatar_url,
     hasStory,
     className,
@@ -30,6 +33,7 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
     const padding = boldBorder ? "p-[4px]" : "p-[2px]";
     const childPadding = boldBorder ? "p-[2px]" : "p-[1px]";
     const userProfilePath = `/profile/${userId}`;
+    const [isOpenHoverCard, setIsOpenHoverCard] = useState(false);
 
     const handleAvatarClick = () => {
         if (hasStory) {
@@ -37,7 +41,7 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
         } else if (userId) {
             window.location.href = userProfilePath;
         }
-    }
+    };
 
     const UserAvatarContainer = () => {
         return (
@@ -55,15 +59,22 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
                 </div>
             </div>
         );
-    }
+    };
 
     if (!userId || disableHoverInfoCard) {
         return <UserAvatarContainer />;
     }
 
     return (
-        <UserInfoCard trigger={<UserAvatarContainer />} userId={userId} />
+        <HoverCard open={isOpenHoverCard} onOpenChange={setIsOpenHoverCard}>
+            <HoverCardTrigger>
+                <UserAvatarContainer />
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+                {isOpenHoverCard && <UserInfoCard trigger={<></>} userId={userId} />}
+            </HoverCardContent>
+        </HoverCard>
     );
-}
+});
 
 export default AvatarContainer;
