@@ -153,16 +153,17 @@ const Profile = () => {
                     <AvatarContainer
                         userId={user?.id}
                         avatar_url={user?.avatar_url}
-                        hasStory={user?.stories != undefined && user?.stories?.length > 0 || true}
-                        className="w-1/4 md:w-auto md:h-40 aspect-square"
-                        avatarClassName="h-full w-full"
+                        hasStory={user?.stories != undefined && user?.stories?.length > 0}
+                        className="w-1/4 h-fit md:w-auto md:h-40 aspect-square"
+                        avatarClassName="h-fit w-full"
                         boldBorder
                         fallbackStrokeWidth={0.7}
                         fallbackClassName="w-full h-full"
+                        disableHoverInfoCard
                     />
 
                     {/* User Info for Mobile */}
-                    <div className="w-3/4 h-fit flex flex-row justify-between items-center md:hidden">
+                    <div className="w-3/4 h-fit flex flex-col gap-1 justify-between items-start md:hidden">
                         <p className="text-lg font-semibold pr-4 truncate">
                             {user?.username}
                         </p>
@@ -171,7 +172,7 @@ const Profile = () => {
                                 <Icon name="ellipsis" />
                             </Button>
                         }
-                        {/* <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2">
                             {isOwner &&
                                 <EditProfileDrawer
                                     user={me!}
@@ -188,7 +189,7 @@ const Profile = () => {
                                     <Icon name="ellipsis" />
                                 </Button>
                             }
-                        </div> */}
+                        </div>
                     </div>
                 </div>
 

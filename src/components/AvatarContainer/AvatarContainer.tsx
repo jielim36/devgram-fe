@@ -12,6 +12,7 @@ type AvatarContainerProps = {
     boldBorder?: boolean;
     fallbackStrokeWidth?: number;
     fallbackClassName?: string;
+    disableHoverInfoCard?: boolean;
 }
 
 const AvatarContainer: React.FC<AvatarContainerProps> = ({
@@ -22,7 +23,8 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
     boldBorder = false,
     userId,
     fallbackStrokeWidth = 2,
-    fallbackClassName
+    fallbackClassName,
+    disableHoverInfoCard = false
 }) => {
 
     const padding = boldBorder ? "p-[4px]" : "p-[2px]";
@@ -37,13 +39,13 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
         }
     }
 
-    const userAvatarContainer = () => {
+    const UserAvatarContainer = () => {
         return (
             <div
                 className={`${hasStory ? "bg-gradient-2" : ""} ${padding} rounded-full cursor-pointer ${className}`}
                 onClick={handleAvatarClick}
             >
-                <div className={`rounded-full ${childPadding} card-color`}>
+                <div className={`rounded-full ${childPadding} card-color h-fit`}>
                     <Avatar className={`w-9 h-9 ${avatarClassName}`}>
                         <AvatarImage src={avatar_url} />
                         <AvatarFallback className="">
@@ -55,12 +57,12 @@ const AvatarContainer: React.FC<AvatarContainerProps> = ({
         );
     }
 
-    if (!userId) {
-        return userAvatarContainer();
+    if (!userId || disableHoverInfoCard) {
+        return <UserAvatarContainer />;
     }
 
     return (
-        <UserInfoCard trigger={userAvatarContainer()} userId={userId} />
+        <UserInfoCard trigger={<UserAvatarContainer />} userId={userId} />
     );
 }
 
