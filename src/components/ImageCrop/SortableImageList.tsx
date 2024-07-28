@@ -19,6 +19,7 @@ import { ImgType } from './ImageCrop';
 import { Card } from '../ui/card';
 import { useTheme } from '@/utils/ThemeProvider';
 import {
+    restrictToHorizontalAxis,
     restrictToVerticalAxis,
     restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
@@ -106,11 +107,10 @@ const SortableImageList: React.FC<SortableImageListProps> = ({
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
-                modifiers={[restrictToVerticalAxis]}
+                modifiers={[restrictToHorizontalAxis]}
             >
                 <SortableContext
                     items={imgList.map(item => item.id)}
-
                     strategy={rectSortingStrategy}
                 >
                     <div className='flex flex-row gap-4'>
