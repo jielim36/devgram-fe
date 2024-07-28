@@ -234,154 +234,6 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
         )
     }
 
-    const InformationArea = () => {
-        return (
-            <div className="pt-2 xl:pt-0 px-0 pb-3 flex flex-col justify-between h-full lg:overflow-auto w-full">
-                <div className="flex flex-row justify-between items-center px-2">
-                    <div className="flex flex-row items-center gap-2">
-                        <AvatarContainer
-                            userId={post?.user?.id}
-                            avatar_url={post?.user?.avatar_url}
-                            hasStory={post?.user?.stories != undefined && post?.user?.stories?.length > 0}
-                            className="flex-none"
-                        />
-                        <p className="font-bold">{post?.user?.username}</p>
-                    </div>
-                    {post.user.id === user?.id && <PostMenuSelection post={post} userId={user?.id} />}
-                </div>
-                <Separator className="my-2" />
-                <div className="h-full flex flex-col overflow-y-scroll px-2">
-                    {/* Comments Area */}
-                    <div className="grow flex flex-col gap-2 text-sm">
-                        <div className="flex flex-row">
-                            <div>
-                                <AvatarContainer
-                                    userId={post?.user?.id}
-                                    avatar_url={post?.user?.avatar_url}
-                                    hasStory={post?.user?.stories != undefined && post?.user.stories?.length > 0}
-                                />
-                            </div>
-                            <div className="grow flex-col px-2">
-                                {/* Comment Information: username and date*/}
-                                <div className="flex flex-row gap-1 items-center">
-                                    <p className="font-bold">{post?.user?.username}</p>
-                                    <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
-                                    <p className="text-xs">{convertDateWithShort(post?.created_at)}</p>
-                                </div>
-
-                                {/* comment content */}
-                                <p className="">{post?.description}</p>
-                            </div>
-                        </div>
-                        {post?.comments && post?.comments?.length > 0 && buildCommentTree(post?.comments).map((comment, index) => (
-                            <div key={index} className={`flex flex-row ${currentReplyCommentId === comment?.id ? replyingStyle : ""}`}>
-                                <div>
-                                    <AvatarContainer
-                                        userId={comment?.user?.id}
-                                        avatar_url={comment?.user?.avatar_url}
-                                        hasStory={comment?.user?.stories != undefined && comment?.user?.stories?.length > 0}
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1 w-full">
-                                    {/* Parent comment */}
-                                    <div className="flex flex-row">
-                                        <div className="grow flex-col px-2">
-                                            {/* Comment Information: username and date*/}
-                                            <div className="flex flex-row gap-1 items-center">
-                                                <p className="font-bold">{comment?.user?.username}</p>
-                                                <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
-                                                <p className="text-xs">{convertDateWithShort(comment?.created_at)}</p>
-                                            </div>
-
-                                            {/* comment content */}
-                                            <p className="">{comment?.content}</p>
-                                            <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
-                                                <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
-                                                {comment.children && comment.children.length > 0 && (
-                                                    <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
-                                                        {expandedComments[comment.id] ? 'Hide comments' : 'View comments'}
-                                                    </p>
-                                                )}
-                                                {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
-                                                    // <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
-                                                    <DeleteCommentDialog commentId={comment.id} />
-                                                }
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col items-center">
-                                            <HeartIcon
-                                                fill={comment.is_liked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"}
-                                                className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
-                                                onClick={() => handleLikeComment(comment.id)}
-                                            />
-                                            <p className="text-xs">{comment?.likes || ""}</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Child comments */}
-                                    {expandedComments[comment.id] && comment.children &&
-                                        generateChildComments({
-                                            comments: comment?.children,
-                                            user: user!,
-                                            index: index,
-                                            handleReplyBtn,
-                                            handleLikeComment,
-                                            expandedComments,
-                                            toggleViewComments,
-                                            post
-                                        })
-                                    }
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <Separator className="my-1" />
-
-                <div className="">
-                    {/* Interaction List */}
-                    <div className="flex flex-row justify-between">
-                        <div className="flex flex-row gap-2">
-                            <Button variant={"link"} size="icon" onClick={handleLikePost}>
-                                <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
-                            </Button>
-                            <Button variant={"link"} size="icon" onClick={handleMessageBtn}>
-                                <Icon name="message-circle" />
-                            </Button>
-                            <Button variant={"link"} size="icon">
-                                <Icon name="send" />
-                            </Button>
-                        </div>
-                        <Button variant={"link"} size="icon">
-                            <Icon name="bookmark" />
-                        </Button>
-                    </div>
-
-                    {post?.likes && post?.likes.length > 0 && <LikeMessageGenerate likes={post?.likes} />}
-                    <div className="flex flex-row items-center gap-1 text-sm px-2">
-                        <p className="text-muted-foreground">{convertDate(post?.created_at)}</p>
-                    </div>
-                    <div className="flex w-full space-x-2 pt-4">
-                        <InputWithEmoji
-                            textAreaRef={commentInputRef}
-                            content={commentContent}
-                            setContent={setCommentContent}
-                            placeholder="Add a comment?..."
-                            containerClassName="flex-1"
-                            textAreaClassName="resize-none h-4"
-                            isShowLabel={false}
-                            autoFocus
-                        />
-                        <Button variant="default" size="icon" className="" onClick={handleAddComment}>
-                            <Icon name="send-horizontal" />
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     if (isLargeScreen) {
 
         return (
@@ -393,7 +245,149 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                 }
 
                 {/* Information */}
-                <InformationArea />
+                <div className="pt-2 xl:pt-0 px-0 pb-3 flex flex-col justify-between h-full lg:overflow-auto w-full">
+                    <div className="flex flex-row justify-between items-center px-2">
+                        <div className="flex flex-row items-center gap-2">
+                            <AvatarContainer
+                                userId={post?.user?.id}
+                                avatar_url={post?.user?.avatar_url}
+                                hasStory={post?.user?.stories != undefined && post?.user?.stories?.length > 0}
+                                className="flex-none"
+                            />
+                            <p className="font-bold">{post?.user?.username}</p>
+                        </div>
+                        {post.user.id === user?.id && <PostMenuSelection post={post} userId={user?.id} />}
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="h-full flex flex-col overflow-y-scroll px-2">
+                        {/* Comments Area */}
+                        <div className="grow flex flex-col gap-2 text-sm">
+                            <div className="flex flex-row">
+                                <div>
+                                    <AvatarContainer
+                                        userId={post?.user?.id}
+                                        avatar_url={post?.user?.avatar_url}
+                                        hasStory={post?.user?.stories != undefined && post?.user.stories?.length > 0}
+                                    />
+                                </div>
+                                <div className="grow flex-col px-2">
+                                    {/* Comment Information: username and date*/}
+                                    <div className="flex flex-row gap-1 items-center">
+                                        <p className="font-bold">{post?.user?.username}</p>
+                                        <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
+                                        <p className="text-xs">{convertDateWithShort(post?.created_at)}</p>
+                                    </div>
+
+                                    {/* comment content */}
+                                    <p className="">{post?.description}</p>
+                                </div>
+                            </div>
+                            {post?.comments && post?.comments?.length > 0 && buildCommentTree(post?.comments).map((comment, index) => (
+                                <div key={index} className={`flex flex-row ${currentReplyCommentId === comment?.id ? replyingStyle : ""}`}>
+                                    <div>
+                                        <AvatarContainer
+                                            userId={comment?.user?.id}
+                                            avatar_url={comment?.user?.avatar_url}
+                                            hasStory={comment?.user?.stories != undefined && comment?.user?.stories?.length > 0}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1 w-full">
+                                        {/* Parent comment */}
+                                        <div className="flex flex-row">
+                                            <div className="grow flex-col px-2">
+                                                {/* Comment Information: username and date*/}
+                                                <div className="flex flex-row gap-1 items-center">
+                                                    <p className="font-bold">{comment?.user?.username}</p>
+                                                    <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
+                                                    <p className="text-xs">{convertDateWithShort(comment?.created_at)}</p>
+                                                </div>
+
+                                                {/* comment content */}
+                                                <p className="">{comment?.content}</p>
+                                                <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
+                                                    <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
+                                                    {comment.children && comment.children.length > 0 && (
+                                                        <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
+                                                            {expandedComments[comment.id] ? 'Hide comments' : 'View comments'}
+                                                        </p>
+                                                    )}
+                                                    {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
+                                                        // <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
+                                                        <DeleteCommentDialog commentId={comment.id} />
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col items-center">
+                                                <HeartIcon
+                                                    fill={comment.is_liked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"}
+                                                    className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
+                                                    onClick={() => handleLikeComment(comment.id)}
+                                                />
+                                                <p className="text-xs">{comment?.likes || ""}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Child comments */}
+                                        {expandedComments[comment.id] && comment.children &&
+                                            generateChildComments({
+                                                comments: comment?.children,
+                                                user: user!,
+                                                index: index,
+                                                handleReplyBtn,
+                                                handleLikeComment,
+                                                expandedComments,
+                                                toggleViewComments,
+                                                post
+                                            })
+                                        }
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <Separator className="my-1" />
+
+                    <div className="">
+                        {/* Interaction List */}
+                        <div className="flex flex-row justify-between">
+                            <div className="flex flex-row gap-2">
+                                <Button variant={"link"} size="icon" onClick={handleLikePost}>
+                                    <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
+                                </Button>
+                                <Button variant={"link"} size="icon" onClick={handleMessageBtn}>
+                                    <Icon name="message-circle" />
+                                </Button>
+                                <Button variant={"link"} size="icon">
+                                    <Icon name="send" />
+                                </Button>
+                            </div>
+                            <Button variant={"link"} size="icon">
+                                <Icon name="bookmark" />
+                            </Button>
+                        </div>
+
+                        {post?.likes && post?.likes.length > 0 && <LikeMessageGenerate likes={post?.likes} />}
+                        <div className="flex flex-row items-center gap-1 text-sm px-2">
+                            <p className="text-muted-foreground">{convertDate(post?.created_at)}</p>
+                        </div>
+                        <div className="flex w-full space-x-2 pt-4">
+                            <InputWithEmoji
+                                textAreaRef={commentInputRef}
+                                content={commentContent}
+                                setContent={setCommentContent}
+                                placeholder="Add a comment?..."
+                                containerClassName="flex-1"
+                                textAreaClassName="resize-none h-4"
+                                isShowLabel={false}
+                                autoFocus
+                            />
+                            <Button variant="default" size="icon" className="" onClick={handleAddComment}>
+                                <Icon name="send-horizontal" />
+                            </Button>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         );
@@ -413,7 +407,149 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent className="h-[90vh] px-1">
-                    <InformationArea />
+                    <div className="pt-2 xl:pt-0 px-0 pb-3 flex flex-col justify-between h-full lg:overflow-auto w-full">
+                        <div className="flex flex-row justify-between items-center px-2">
+                            <div className="flex flex-row items-center gap-2">
+                                <AvatarContainer
+                                    userId={post?.user?.id}
+                                    avatar_url={post?.user?.avatar_url}
+                                    hasStory={post?.user?.stories != undefined && post?.user?.stories?.length > 0}
+                                    className="flex-none"
+                                />
+                                <p className="font-bold">{post?.user?.username}</p>
+                            </div>
+                            {post.user.id === user?.id && <PostMenuSelection post={post} userId={user?.id} />}
+                        </div>
+                        <Separator className="my-2" />
+                        <div className="h-full flex flex-col overflow-y-scroll px-2">
+                            {/* Comments Area */}
+                            <div className="grow flex flex-col gap-2 text-sm">
+                                <div className="flex flex-row">
+                                    <div>
+                                        <AvatarContainer
+                                            userId={post?.user?.id}
+                                            avatar_url={post?.user?.avatar_url}
+                                            hasStory={post?.user?.stories != undefined && post?.user.stories?.length > 0}
+                                        />
+                                    </div>
+                                    <div className="grow flex-col px-2">
+                                        {/* Comment Information: username and date*/}
+                                        <div className="flex flex-row gap-1 items-center">
+                                            <p className="font-bold">{post?.user?.username}</p>
+                                            <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
+                                            <p className="text-xs">{convertDateWithShort(post?.created_at)}</p>
+                                        </div>
+
+                                        {/* comment content */}
+                                        <p className="">{post?.description}</p>
+                                    </div>
+                                </div>
+                                {post?.comments && post?.comments?.length > 0 && buildCommentTree(post?.comments).map((comment, index) => (
+                                    <div key={index} className={`flex flex-row ${currentReplyCommentId === comment?.id ? replyingStyle : ""}`}>
+                                        <div>
+                                            <AvatarContainer
+                                                userId={comment?.user?.id}
+                                                avatar_url={comment?.user?.avatar_url}
+                                                hasStory={comment?.user?.stories != undefined && comment?.user?.stories?.length > 0}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-1 w-full">
+                                            {/* Parent comment */}
+                                            <div className="flex flex-row">
+                                                <div className="grow flex-col px-2">
+                                                    {/* Comment Information: username and date*/}
+                                                    <div className="flex flex-row gap-1 items-center">
+                                                        <p className="font-bold">{comment?.user?.username}</p>
+                                                        <div className="rounded-full w-[5px] h-[5px] bg-slate-400 translate-y-[1px]"></div>
+                                                        <p className="text-xs">{convertDateWithShort(comment?.created_at)}</p>
+                                                    </div>
+
+                                                    {/* comment content */}
+                                                    <p className="">{comment?.content}</p>
+                                                    <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
+                                                        <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
+                                                        {comment.children && comment.children.length > 0 && (
+                                                            <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
+                                                                {expandedComments[comment.id] ? 'Hide comments' : 'View comments'}
+                                                            </p>
+                                                        )}
+                                                        {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
+                                                            // <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
+                                                            <DeleteCommentDialog commentId={comment.id} />
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col items-center">
+                                                    <HeartIcon
+                                                        fill={comment.is_liked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"}
+                                                        className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
+                                                        onClick={() => handleLikeComment(comment.id)}
+                                                    />
+                                                    <p className="text-xs">{comment?.likes || ""}</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Child comments */}
+                                            {expandedComments[comment.id] && comment.children &&
+                                                generateChildComments({
+                                                    comments: comment?.children,
+                                                    user: user!,
+                                                    index: index,
+                                                    handleReplyBtn,
+                                                    handleLikeComment,
+                                                    expandedComments,
+                                                    toggleViewComments,
+                                                    post
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <Separator className="my-1" />
+
+                        <div className="">
+                            {/* Interaction List */}
+                            <div className="flex flex-row justify-between">
+                                <div className="flex flex-row gap-2">
+                                    <Button variant={"link"} size="icon" onClick={handleLikePost}>
+                                        <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
+                                    </Button>
+                                    <Button variant={"link"} size="icon" onClick={handleMessageBtn}>
+                                        <Icon name="message-circle" />
+                                    </Button>
+                                    <Button variant={"link"} size="icon">
+                                        <Icon name="send" />
+                                    </Button>
+                                </div>
+                                <Button variant={"link"} size="icon">
+                                    <Icon name="bookmark" />
+                                </Button>
+                            </div>
+
+                            {post?.likes && post?.likes.length > 0 && <LikeMessageGenerate likes={post?.likes} />}
+                            <div className="flex flex-row items-center gap-1 text-sm px-2">
+                                <p className="text-muted-foreground">{convertDate(post?.created_at)}</p>
+                            </div>
+                            <div className="flex w-full space-x-2 pt-4">
+                                <InputWithEmoji
+                                    textAreaRef={commentInputRef}
+                                    content={commentContent}
+                                    setContent={setCommentContent}
+                                    placeholder="Add a comment?..."
+                                    containerClassName="flex-1"
+                                    textAreaClassName="resize-none h-4"
+                                    isShowLabel={false}
+                                    autoFocus
+                                />
+                                <Button variant="default" size="icon" className="" onClick={handleAddComment}>
+                                    <Icon name="send-horizontal" />
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </DrawerContent>
             </Drawer>
         </div>
