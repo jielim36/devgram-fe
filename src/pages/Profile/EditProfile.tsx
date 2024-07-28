@@ -60,11 +60,13 @@ import { useState } from "react";
 type EditProfileProps = {
     user: User;
     userInfo?: UserInfo;
+    trigger?: React.ReactNode;
 }
 
 export const EditProfileDrawer: React.FC<EditProfileProps> = ({
     user,
     userInfo,
+    trigger
 }) => {
 
     const [open, setOpen] = useState(false);
@@ -72,9 +74,7 @@ export const EditProfileDrawer: React.FC<EditProfileProps> = ({
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild onClick={() => setOpen(true)}>
-                <Button>
-                    Edit Profile
-                </Button>
+                {trigger ? trigger : <Button>Edit Profile</Button>}
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>
@@ -99,6 +99,7 @@ export const EditProfileDrawer: React.FC<EditProfileProps> = ({
 export const EditProfileDialog: React.FC<EditProfileProps> = ({
     user,
     userInfo,
+    trigger,
 }) => {
 
     const [open, setOpen] = useState(false);
@@ -106,7 +107,7 @@ export const EditProfileDialog: React.FC<EditProfileProps> = ({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild onClick={() => setOpen(true)}>
-                <Button>Edit Profile</Button>
+                {trigger ? trigger : <Button>Edit Profile</Button>}
             </DialogTrigger>
             <DialogContent className="w-[500px] md:w-[700px] space-y-2">
                 <DialogHeader>

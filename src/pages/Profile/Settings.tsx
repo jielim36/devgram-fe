@@ -45,15 +45,23 @@ import { useAuth } from "@/utils/AuthProvider";
 import { useGetPrivacySettingByUserId, useUpdatePrivacySettingByUserId } from "@/hooks";
 import toast from "react-hot-toast";
 
-export const SettingSheet = () => {
+type SettingProps = {
+    trigger?: React.ReactNode;
+}
+
+export const SettingSheet: React.FC<SettingProps> = ({
+    trigger
+}) => {
     const [isOpen, setOpen] = React.useState(false);
 
     return (
         <Sheet open={isOpen} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" className="flex-none">
-                    <Icon name="settings" />
-                </Button>
+                {trigger ? trigger :
+                    <Button variant="ghost" className="flex-none">
+                        <Icon name="settings" />
+                    </Button>
+                }
             </SheetTrigger>
             <SheetContent>
                 <SheetHeader>
@@ -71,16 +79,19 @@ export const SettingSheet = () => {
     );
 }
 
-export const SettingDrawer = () => {
-
+export const SettingDrawer: React.FC<SettingProps> = ({
+    trigger
+}) => {
     const [isOpen, setOpen] = React.useState(false);
 
     return (
         <Drawer open={isOpen} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button variant="ghost">
-                    <Icon name="settings" />
-                </Button>
+                {trigger ? trigger :
+                    <Button variant="ghost">
+                        <Icon name="settings" />
+                    </Button>
+                }
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>

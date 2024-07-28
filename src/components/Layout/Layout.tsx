@@ -22,7 +22,11 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuPortal,
     DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -51,6 +55,8 @@ import { Button } from "../ui/button";
 import ReelUploader from "../ReelsUploader/ReelsUploader";
 import { UserList } from "@/pages/chat/Chat";
 import { useChatting } from "@/utils/ChattingProvider";
+import { EditProfileDialog, EditProfileDrawer } from "@/pages/Profile/EditProfile";
+import { SettingDrawer, SettingSheet } from "@/pages/Profile/Settings";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -388,8 +394,54 @@ const ProfileMenu = ({ user }: { user: User }) => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleJumpProfile}>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Devgram Premium</DropdownMenuItem>
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                        Settings
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                            {/* Edit Profile settings */}
+                            {/* Desktop */}
+                            <div className="hidden md:block">
+                                <EditProfileDialog user={user} trigger={
+                                    <Button variant={"ghost"} className="w-full flex flex-row gap-1 justify-start items-center">
+                                        <Icon name="user" />
+                                        Edit Profile
+                                    </Button>
+                                } />
+                            </div>
+                            {/* Mobile */}
+                            <div className="md:hidden">
+                                <EditProfileDrawer user={user} trigger={
+                                    <Button variant={"ghost"} className="w-full flex flex-row gap-1  justify-start items-center">
+                                        <Icon name="user" />
+                                        Edit Profile
+                                    </Button>
+                                } />
+                            </div>
+
+                            {/* Privacy Settings */}
+                            {/* Desktop */}
+                            <div className="hidden md:block">
+                                <SettingSheet trigger={
+                                    <Button variant={"ghost"} className="w-full flex flex-row gap-1  justify-start items-center">
+                                        <Icon name="settings" />
+                                        Privacy Settings
+                                    </Button>
+                                } />
+                            </div>
+                            {/* Mobile */}
+                            <div className="md:hidden">
+                                <SettingDrawer trigger={
+                                    <Button variant={"ghost"} className="w-full flex flex-row gap-1  justify-start items-center">
+                                        <Icon name="settings" />
+                                        Privacy Settings
+                                    </Button>
+                                } />
+                            </div>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <div className="p-2 flex flex-row items-center justify-between">
                     <Label htmlFor="theme-switcher">Dark mode</Label>
