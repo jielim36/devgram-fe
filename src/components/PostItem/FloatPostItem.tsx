@@ -362,9 +362,9 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                     <Icon name="send" />
                                 </Button>
                             </div>
-                            <Button variant={"link"} size="icon">
+                            {/* <Button variant={"link"} size="icon">
                                 <Icon name="bookmark" />
-                            </Button>
+                            </Button> */}
                         </div>
 
                         {post?.likes && post?.likes.length > 0 && <LikeMessageGenerate likes={post?.likes} />}

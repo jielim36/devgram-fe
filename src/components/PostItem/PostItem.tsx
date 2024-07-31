@@ -93,9 +93,9 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post }, ref)
                         <Icon name="send" />
                     </Button>
                 </div>
-                <Button variant={"link"} size="icon">
+                {/* <Button variant={"link"} size="icon">
                     <Icon name="bookmark" />
-                </Button>
+                </Button> */}
             </div>
 
             {/* Information */}
