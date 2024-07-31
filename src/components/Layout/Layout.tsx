@@ -125,7 +125,6 @@ const Layout = () => {
                             <ReelUploader trigger={
                                 <Button variant={"ghost"} className="font-normal">Reel</Button>
                             } />
-                            <Button variant={"ghost"} className="font-normal">Story</Button>
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <NavigationMenuComponent user={user} />
