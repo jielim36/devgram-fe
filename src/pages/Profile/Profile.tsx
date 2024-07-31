@@ -318,7 +318,7 @@ const Profile = () => {
 
             {/* User posts Listing */}
             {allowedToViewProfile &&
-                <Tabs defaultValue="posts" className="w-full mt-4 pb-8">
+                <Tabs defaultValue="posts" className="w-full mt-4 pb-20 xs:pb-8">
                     <TabsList className="flex items-center mx-auto w-fit">
                         <TabsTrigger value="posts">
                             <div className="flex flex-row gap-1 items-center">
