@@ -1,7 +1,7 @@
 import { QueryFunctionContext, useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { ResponseHandlerType } from ".";
 import { ReelRequestBody } from "@/types";
-import { addReel, getPopularReels } from "@/services/reel";
+import { addReel, getPopularReels, getReelsByUserId } from "@/services/reel";
 import { REEL_QUERY_KEY } from "@/constants";
 
 export const useAddReel = ({ onSuccess, onError }: ResponseHandlerType<boolean>) => {
@@ -36,6 +36,17 @@ export const useGetPopularReels = ({ enabled, page }: { enabled: boolean, page: 
         queryFn: async (context: QueryFunctionContext<string[]>) => {
             const [_, popularKey, page] = context.queryKey;
             return await getPopularReels(Number(page));
+        },
+        enabled: enabled
+    });
+}
+
+export const useGetReelsByUserId = ({ userId, enabled = true }: { userId: number, enabled?: boolean }) => {
+    return useQuery({
+        queryKey: REEL_QUERY_KEY.concat(userId.toString()),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, userId] = context.queryKey;
+            return await getReelsByUserId(userId);
         },
         enabled: enabled
     });

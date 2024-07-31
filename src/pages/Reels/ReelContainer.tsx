@@ -44,7 +44,7 @@ const ReelsContainer: React.FC<ReelsContainerProps> = ({
         } else {
             pauseVideo();
         }
-    });
+    }, [isPlaying]);
 
     return (
         <div className='relative aspect-reel w-[300px] xs:w-[400px]'>

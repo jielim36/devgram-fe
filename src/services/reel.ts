@@ -10,3 +10,8 @@ export const getPopularReels = async (page: number): Promise<ResponseBody<Reel[]
     const response = await axiosClient.get(`/reel/popular/${page}`);
     return response.data;
 }
+
+export const getReelsByUserId = async (userId: string): Promise<ResponseBody<Reel[]>> => {
+    const response = await axiosClient.get(`/reel/user/${userId}`);
+    return response.data;
+}

@@ -11,7 +11,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import { useAddFollow, useGetFollowerCount, useGetFollowingCount, useGetPostsByUserId, useGetUserByUserId, useGetUserInfoByUserId, useIsFollowing, useUnFollow } from "@/hooks";
-import { FollowList, Post, ResponseBody, User } from "@/types";
+import { FollowList, Post, Reel, ResponseBody, User } from "@/types";
 import PostCard from "./PostCard";
 import toast from "react-hot-toast";
 import FollowListingDialog from "./FollowListingDialog";
@@ -22,6 +22,9 @@ import { Badge } from "@/components/ui/badge";
 import { calculateAge } from "@/utils/formatDate";
 import { SettingSheet, SettingDrawer } from "./Settings";
 import { AxiosError } from "axios";
+import ReelListing, { ReelDialogContainer } from "./ReelListing";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useMediaQuery } from "react-responsive";
 
 export const renderBioWithLinksAndBreaks = (bio: string | undefined) => {
     // Sanitize the bio using DOMPurify
@@ -51,6 +54,9 @@ const Profile = () => {
     const [user, setUser] = useState<User>();
     const [posts, setPosts] = useState<Post[]>();
     const [allowedToViewProfile, setAllowedToViewProfile] = useState(true);
+    const [selectedReel, setSelectedReel] = useState<Reel | null>(null);
+    const isWidthGreaterThanHeight = useMediaQuery({ query: '(min-aspect-ratio: 1/1)' });
+
 
     const { data: postData, isError: isGetPostError, error: getPostError } = useGetPostsByUserId({
         userId: Number(userId),
@@ -133,6 +139,10 @@ const Profile = () => {
                 error: "Failed to follow"
             });
         }
+    }
+
+    const onClickReel = (reel: Reel) => {
+        setSelectedReel(reel);
     }
 
 
@@ -339,7 +349,9 @@ const Profile = () => {
                             <Icon name="loader-circle" className="animate-spin mx-auto" />
                         </div>
                     }
-                    <TabsContent value="reels">Still under developing...</TabsContent>
+                    <TabsContent value="reels">
+                        <ReelListing profileUserId={Number(userId)} onClickReel={onClickReel} />
+                    </TabsContent>
                 </Tabs>
             }
 
@@ -356,19 +368,19 @@ const Profile = () => {
                     <p className="text-xl font-semibold">No posts yet</p>
                 </div>
             }
+
+            <Dialog open={!!selectedReel} onOpenChange={() => { setSelectedReel(null) }}>
+                <DialogContent
+                    className={`p-1 w-[90vw] xs:w-[70vw] sm:w-[60vw] md:w-auto md:h-[90vh]`}
+                    disableCloseBtn
+                >
+                    {selectedReel && (
+                        <ReelDialogContainer reel={selectedReel} onClick={() => setSelectedReel(null)} mode="playing" />
+                    )}
+                </DialogContent>
+            </Dialog>
         </div >
     );
 }
-
-const fakeStories = [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-]
 
 export default Profile; 

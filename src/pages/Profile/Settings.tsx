@@ -128,9 +128,11 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
             canSeePostFollower: true,
             canSeePostFollowing: true,
             canSeePostFriend: true,
+            canSeePostAll: true,
             postVisibilityDurationFollower: "0",
             postVisibilityDurationFollowing: "0",
             postVisibilityDurationFriend: "0",
+            postVisibilityDurationAll: "0",
         },
     })
 
@@ -169,14 +171,16 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
 
     useEffect(() => {
         if (privacySetting) {
-            const { canSeePostFollower, canSeePostFollowing, canSeePostFriend, postVisibilityDurationFollower, postVisibilityDurationFollowing, postVisibilityDurationFriend } = privacySetting.data;
+            const { canSeePostFollower, canSeePostFollowing, canSeePostFriend, canSeePostAll, postVisibilityDurationFollower, postVisibilityDurationFollowing, postVisibilityDurationFriend, postVisibilityDurationAll } = privacySetting.data;
             form.reset({
                 canSeePostFollower,
                 canSeePostFollowing,
                 canSeePostFriend,
+                canSeePostAll,
                 postVisibilityDurationFollower: postVisibilityDurationFollower.toString() as VisibilityDurationStr,
                 postVisibilityDurationFollowing: postVisibilityDurationFollowing.toString() as VisibilityDurationStr,
                 postVisibilityDurationFriend: postVisibilityDurationFriend.toString() as VisibilityDurationStr,
+                postVisibilityDurationAll: postVisibilityDurationAll.toString() as VisibilityDurationStr,
             });
         }
     }, [privacySetting])
