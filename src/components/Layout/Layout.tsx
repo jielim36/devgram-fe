@@ -93,53 +93,6 @@ const Layout = () => {
         }
     ]
 
-    const stories = [
-        {
-            id: 1,
-            name: "Grace Ng",
-            avatar: user?.avatar_url,
-            stories: [
-                {
-                    id: 1,
-                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
-                    time: "2h",
-                },
-                {
-                    id: 2,
-                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
-                    time: "2h",
-                },
-                {
-                    id: 3,
-                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
-                    time: "2h",
-                },
-            ],
-        },
-        {
-            id: 2,
-            name: "Lim Yee Jie",
-            avatar: user?.avatar_url,
-            stories: [
-                {
-                    id: 1,
-                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
-                    time: "2h",
-                },
-                {
-                    id: 2,
-                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
-                    time: "2h",
-                },
-                {
-                    id: 3,
-                    src: "https://images.unsplash.com/photo-1593642532452-3b4f3b3a0e6b",
-                    time: "2h",
-                },
-            ],
-        },
-    ]
-
     if (!user) {
         return (
             <div className="h-screen w-screen flex justify-center items-center">
@@ -195,24 +148,6 @@ const Layout = () => {
                             </li>
                         ))}
                     </ul>
-                    <Accordion type="single" defaultValue="stories" collapsible className="w-full px-4 hidden lg:block">
-                        <Separator />
-                        <AccordionItem value="stories">
-                            <AccordionTrigger>Stories</AccordionTrigger>
-                            <AccordionContent>
-                                <ul>
-                                    {stories.map((story) => (
-                                        <li key={story.id}>
-                                            <div className="flex flex-row items-center gap-3 py-1 rounded-md hover:bg-accent hover:text-accent-foreground">
-                                                <AvatarContainer avatar_url={story.avatar} hasStory={story.stories.length > 0} />
-                                                <span>{story.name}</span>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
                 </Card>
 
 
@@ -240,44 +175,6 @@ const Layout = () => {
     )
 }
 
-const components: { title: string; href: string; description: string }[] = [
-    {
-        title: "Alert Dialog",
-        href: "/docs/primitives/alert-dialog",
-        description:
-            "A modal dialog that interrupts the user with important content and expects a response.",
-    },
-    {
-        title: "Hover Card",
-        href: "/docs/primitives/hover-card",
-        description:
-            "For sighted users to preview content available behind a link.",
-    },
-    {
-        title: "Progress",
-        href: "/docs/primitives/progress",
-        description:
-            "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-    },
-    {
-        title: "Scroll-area",
-        href: "/docs/primitives/scroll-area",
-        description: "Visually or semantically separates content.",
-    },
-    {
-        title: "Tabs",
-        href: "/docs/primitives/tabs",
-        description:
-            "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-    },
-    {
-        title: "Tooltip",
-        href: "/docs/primitives/tooltip",
-        description:
-            "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-    },
-]
-
 export function NavigationMenuComponent({ user }: { user: User }) {
     const { chats: chatRooms } = useChatting();
 
@@ -300,29 +197,6 @@ export function NavigationMenuComponent({ user }: { user: User }) {
                     <NavigationMenuContent>
                         {/* Chat Listing */}
                         <UserList me={user} userId={-1} chatRooms={chatRooms} className="w-80 h-80" />
-                    </NavigationMenuContent>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                    <DotContainer
-                        children={
-                            <NavigationMenuTrigger>
-                                <Icon name="inbox" />
-                            </NavigationMenuTrigger>
-                        }
-                        hasDot={true}
-                    />
-                    <NavigationMenuContent>
-                        <ul className="flex flex-col w-80">
-                            {components.map((component) => (
-                                <ListItem
-                                    key={component.title}
-                                    title={component.title}
-                                    href={component.href}
-                                >
-                                    {component.description}
-                                </ListItem>
-                            ))}
-                        </ul>
                     </NavigationMenuContent>
                 </NavigationMenuItem>
             </NavigationMenuList>
