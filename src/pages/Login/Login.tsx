@@ -24,9 +24,10 @@ import { useTheme } from "@/utils/ThemeProvider";
 const Login = () => {
 
     const { theme } = useTheme();
+    const serverUrl = import.meta.env.VITE_SERVER_URL;
 
     const handleLogin = (provider: string) => {
-        window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
+        window.location.href = `${serverUrl}/oauth2/authorization/${provider}`;
     };
 
     return (
