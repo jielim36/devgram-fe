@@ -87,6 +87,11 @@ const Layout = () => {
             href: "/following",
         },
         {
+            title: "Search",
+            icon: <Icon name="search" />,
+            href: "/search/post",
+        },
+        {
             title: "Profile",
             icon: <Icon name="user-round" />,
             href: `/profile/${user?.id}`,
@@ -107,10 +112,6 @@ const Layout = () => {
             {/* Top Navigation */}
             <Card className="absolute w-screen z-10 flex flex-row justify-end xs:justify-between items-center h-16 rounded-none px-2 xs:px-8">
                 <AppTitle className="flex-none text-white hidden md:block" defaultColor={theme === 'light'} isBold={true} />
-                <div className="hidden xs:block relative w-96">
-                    <Icon name="search" className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search" className="pl-8" />
-                </div>
                 <div className="flex gap-4 items-center">
                     <DropdownMenu>
                         <DropdownMenuTrigger className="bg-gradient py-2 px-4 rounded-sm hover:scale-110 transition duration-300 ease-in-out">

@@ -22,6 +22,7 @@ const Following = React.lazy(() => import('@/pages/Following/Following'));
 const Chat = React.lazy(() => import('@/pages/chat/Chat'));
 const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
 const Login = React.lazy(() => import('../pages/Login/Login'));
+const SearchPage = React.lazy(() => import('@/pages/Search/SearchPage'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
 
 export const queryClient = new QueryClient({
@@ -61,6 +62,7 @@ function App() {
                       <Route path={routes.reels} element={<Reels />} />
                       <Route path={routes.following} element={<Following />} />
                       <Route path={routes.profile} element={<Profile />} />
+                      <Route path={routes.searchPage} element={<SearchPage />} />
                     </Route>
                     <Route path={routes.chat} element={<Chat />} />
                     <Route path={routes.chatWithoutUserId} element={<Chat />} />
