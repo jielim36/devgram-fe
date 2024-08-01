@@ -1,4 +1,4 @@
-import { UpdateUserInfo, User, UserInfo } from "@/types/User";
+import { SearchUser, UpdateUserInfo, User, UserInfo } from "@/types/User";
 import axiosClient from "@/utils/axiosClient";
 import { ResponseBody } from "@/types";
 
@@ -26,3 +26,14 @@ export const updateUserInfo = async (updateUserInfo: UpdateUserInfo): Promise<Re
     const response = await axiosClient.put(`/user/${updateUserInfo.userInfoEntity?.user_id}/info`, updateUserInfo);
     return response.data;
 };
+
+export const getSearchUserWithPagination = async (page: number, searchValue: string): Promise<ResponseBody<SearchUser>> => {
+    const response = await axiosClient.get(`/user/search`, {
+        params: {
+            value: searchValue,
+            page: page,
+        }
+    }
+    );
+    return response.data;
+}

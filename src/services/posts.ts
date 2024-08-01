@@ -1,6 +1,6 @@
 import { User } from "@/types/User";
 import axiosClient from "@/utils/axiosClient";
-import { Post, ResponseBody } from "@/types";
+import { Post, ResponseBody, SearchPost } from "@/types";
 
 export const addPost = async (description: string, imgBlobArray: Blob[]): Promise<ResponseBody<boolean>> => {
     const formData = new FormData();
@@ -41,6 +41,17 @@ export const getFollowingPosts = async (userId: number): Promise<ResponseBody<Po
 
 export const getPopularPostWithPagination = async (page: number): Promise<ResponseBody<Post[]>> => {
     const response = await axiosClient.get(`/post/popular/page/${page}`);
+    return response.data;
+}
+
+export const getSearchPostWithPagination = async (page: number, searchValue: string): Promise<ResponseBody<SearchPost>> => {
+    const response = await axiosClient.get(`/post/search`, {
+        params: {
+            value: searchValue,
+            page: page,
+        }
+    }
+    );
     return response.data;
 }
 

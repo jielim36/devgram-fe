@@ -1,5 +1,5 @@
 import { POST_QUERY_KEY } from "@/constants";
-import { addPost, deletePost, getFollowingPostWithPagination, getFollowingPosts, getPopularPostWithPagination, getPopularPosts, getPostByPostId, getPostsByUserId, updatePostDescription } from "@/services";
+import { addPost, deletePost, getFollowingPostWithPagination, getFollowingPosts, getPopularPostWithPagination, getPopularPosts, getPostByPostId, getPostsByUserId, getSearchPostWithPagination, updatePostDescription } from "@/services";
 import { Post, ResponseBody } from "@/types";
 import {
     useQuery,
@@ -81,6 +81,18 @@ export const useGetPopularPostsInfinite = ({ enabled }: { enabled: boolean }) =>
         enabled: enabled
     });
 }
+
+export const useGetSearchPosts = ({ enabled, searchValue, page }: { enabled: boolean, searchValue: string, page: number }) => {
+    return useQuery({
+        queryKey: POST_QUERY_KEY.concat("search", searchValue, page.toString()),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, search, searchValue, page] = context.queryKey;
+            return await getSearchPostWithPagination(Number(page), searchValue);
+        },
+        enabled: enabled
+    });
+}
+
 
 export const useGetFollowingPostsInfinite = ({ userId, enabled }: { userId: number, enabled: boolean }) => {
     return useInfiniteQuery({

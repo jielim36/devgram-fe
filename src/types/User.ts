@@ -9,6 +9,7 @@ export type User = {
     avatar_url?: string;
     password?: string;
     stories?: Story[];
+    userInfo?: UserInfo;
     is_active: boolean;
     is_following?: boolean;
     created_at: string;
@@ -27,4 +28,11 @@ export type UserInfo = {
 export type UpdateUserInfo = {
     username?: string;
     userInfoEntity?: UserInfo;
+}
+
+export type SearchUser = {
+    data: User[];
+    page: number;
+    total: number;
+    limit: number;
 }

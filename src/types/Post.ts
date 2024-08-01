@@ -12,3 +12,10 @@ export type Post = {
     created_at: string;
     updated_at: string;
 }
+
+export type SearchPost = {
+    data: Post[];
+    page: number;
+    total: number;
+    limit: number;
+}

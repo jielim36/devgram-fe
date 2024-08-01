@@ -1,6 +1,6 @@
 import { queryClient } from '@/app/App';
 import { USER_QUERY_KEY } from '@/constants';
-import { getMe, getUserByUserId, getUserInfoByUserId, getUsers, updateUserInfo } from '@/services';
+import { getMe, getSearchUserWithPagination, getUserByUserId, getUserInfoByUserId, getUsers, updateUserInfo } from '@/services';
 import { ResponseBody, UpdateUserInfo, User, UserInfo } from '@/types';
 import {
     useQuery,
@@ -67,5 +67,16 @@ export const useUpdateUserInfo = () => {
         },
         onError: async (error, variables, context) => {
         },
+    });
+}
+
+export const useGetSearchUsers = ({ enabled, searchValue, page }: { enabled: boolean, searchValue: string, page: number }) => {
+    return useQuery({
+        queryKey: USER_QUERY_KEY.concat("search", searchValue, page.toString()),
+        queryFn: async (context: QueryFunctionContext<string[]>) => {
+            const [_, search, searchValue, page] = context.queryKey;
+            return await getSearchUserWithPagination(Number(page), searchValue);
+        },
+        enabled: enabled
     });
 }

@@ -89,7 +89,7 @@ const Layout = () => {
         {
             title: "Search",
             icon: <Icon name="search" />,
-            href: "/search/post",
+            href: "/search",
         },
         {
             title: "Profile",

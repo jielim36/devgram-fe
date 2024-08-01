@@ -5,7 +5,7 @@ export const routes = {
     reels: "/reels",
     following: "/following",
     profile: "/profile/:userId",
-    searchPage: "/search/:entity",
+    searchPage: "/search",
     chat: "/chat/:userId",
     chatWithoutUserId: "/chat",
     login: "/login",
