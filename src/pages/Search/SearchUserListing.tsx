@@ -111,7 +111,7 @@ const SearchUserListing: React.FC<SearchUserListingProps> = ({ searchValue }) =>
                 </div>
             }
 
-            {userResult &&
+            {userResult && userResult?.data?.total > 0 &&
                 <div className="mt-6">
                     <PaginationComponent
                         currentPage={currentPage}
