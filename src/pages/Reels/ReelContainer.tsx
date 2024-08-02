@@ -47,7 +47,7 @@ const ReelsContainer: React.FC<ReelsContainerProps> = ({
     }, [isPlaying]);
 
     return (
-        <div className='relative aspect-reel w-[300px] xs:w-[400px] left-1/2 -translate-x-1/2'>
+        <div className='relative aspect-reel w-[300px] xs:w-[400px]'>
             <AspectRatio ratio={9 / 16} className='rounded-md overflow-hidden cursor-pointer' onClick={onClick}>
                 <iframe
                     ref={iframeRef}

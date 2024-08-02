@@ -88,7 +88,9 @@ const ReelsSlider = () => {
             {popularReelsList.map((reel: Reel, index) => (
                 <SwiperSlide key={index} className="relative w-full flex flex-col justify-center items-center">
                     <SlidePrevButton className={`block md:hidden w-[300px] ${activeIndex === index ? "" : "hidden"} ${activeIndex === 0 ? "opacity-0" : ""}`} variant="ghost" disabled={activeIndex === 0} />
-                    <ReelsContainer reel={reel} isPlaying={activeIndex === index && play} onClick={() => setPlay(!play)} />
+                    <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+                        <ReelsContainer reel={reel} isPlaying={activeIndex === index && play} onClick={() => setPlay(!play)} />
+                    </div>
                     <SlideNextButton className="block md:hidden w-[300px]" variant="ghost" />
                 </SwiperSlide>
             ))}
