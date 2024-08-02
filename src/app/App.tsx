@@ -22,6 +22,7 @@ const Following = React.lazy(() => import('@/pages/Following/Following'));
 const Chat = React.lazy(() => import('@/pages/chat/Chat'));
 const Profile = React.lazy(() => import('@/pages/Profile/Profile'));
 const Login = React.lazy(() => import('../pages/Login/Login'));
+const Register = React.lazy(() => import('../pages/Login/Register'));
 const SearchPage = React.lazy(() => import('@/pages/Search/SearchPage'));
 const Error404NotFound = React.lazy(() => import('@/pages/InvalidPages/Error404NotFound'));
 
@@ -68,6 +69,7 @@ function App() {
                     <Route path={routes.chatWithoutUserId} element={<Chat />} />
                     <Route path="*" element={<Navigate to={routes.notFound} />} />
                     <Route path={routes.login} element={<Login />} />
+                    <Route path={routes.register} element={<Register />} />
                     <Route path={routes.notFound} element={<Error404NotFound />} />
                   </Routes>
                 </React.Suspense>

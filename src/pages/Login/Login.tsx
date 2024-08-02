@@ -30,6 +30,10 @@ const Login = () => {
         window.location.href = `${serverUrl}/oauth2/authorization/${provider}`;
     };
 
+    const handleGoToRegisterPage = () => {
+        window.location.href = "/register";
+    }
+
     return (
         <>
             <ThemeToggleButton className="absolute top-1 right-1" />
@@ -37,7 +41,8 @@ const Login = () => {
                 <Card className="w-[300px] sm:w-[400px] flex flex-col p-5 gap-4">
                     <AppTitle className={"text-center"} defaultColor={false} />
                     <LoginForm />
-                    <p className="text-center text-sm leading-none pt-4 text-muted-foreground">Login with third-party</p>
+                    <p className="text-end text-sm leading-none text-muted-foreground pr-2 cursor-pointer hover:underline" onClick={handleGoToRegisterPage}>Sign up for an account</p>
+                    <p className="text-center text-sm leading-none pt-4 text-muted-foreground select-none">Login with third-party</p>
                     <div className="flex flex-row gap-4 justify-center">
                         <Button variant="outline" size="icon" onClick={() => handleLogin('github')}>
                             <img src={theme === 'light' ? GithubLightIcon : GithubDarkIcon} alt="" width={32} />
