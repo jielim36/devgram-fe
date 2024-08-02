@@ -53,8 +53,8 @@ const SearchUserListing: React.FC<SearchUserListingProps> = ({ searchValue }) =>
                 {userList?.map((user: User, index) => (
                     <Card
                         key={index}
-                        className="flex flex-row gap-2 p-2"
-                    // onClick={() => handleJumpToProfile(user.id)}
+                        className="flex flex-row gap-2 p-2 hover:bg-muted cursor-pointer"
+                        onClick={() => handleJumpToProfile(user.id)}
                     >
                         <Avatar className={`w-9 h-9`}>
                             <AvatarImage src={user?.avatar_url} />
