@@ -47,12 +47,12 @@ const ReelsContainer: React.FC<ReelsContainerProps> = ({
     }, [isPlaying]);
 
     return (
-        <div className='relative aspect-reel w-[300px] xs:w-[400px]'>
+        <div className='relative aspect-reel w-[300px] xs:w-[400px] left-1/2 -translate-x-1/2'>
             <AspectRatio ratio={9 / 16} className='rounded-md overflow-hidden cursor-pointer' onClick={onClick}>
                 <iframe
                     ref={iframeRef}
                     title="YouTube Video"
-                    src={GenerateReelPlatformEmbedUrl(reel.reel_url, reel.platform) + "?autoplay=1&enablejsapi=1"}
+                    src={GenerateReelPlatformEmbedUrl(reel.reel_url, reel.platform) + "?enablejsapi=1"}
                     style={{
                         position: 'absolute',
                         top: 0,
