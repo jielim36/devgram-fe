@@ -13,12 +13,14 @@ import { useLikePost, useUnlikePost } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
 import React, { useEffect, useState } from "react";
 import Icon from "../Icon/Icon";
+import { HighlightedText } from "@/utils/ContentFormatter";
 
 type PostItemProps = {
     post: Post;
+    highlight?: string;
 }
 
-const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post }, ref) => {
+const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post, highlight }, ref) => {
 
     const { user } = useAuth();
     const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -101,7 +103,7 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post }, ref)
             {/* Information */}
             <div className="px-3 pb-3 flex flex-col">
                 {post?.likes && post.likes.length > 0 && <LikeMessageGenerate likes={post.likes} />}
-                <span className="line-clamp-2"><span className="font-bold">{post.user.username}</span> {post.description}</span>
+                <span className="line-clamp-2"><span className="font-bold">{post.user.username}</span> {highlight ? HighlightedText({ text: post?.description, highlight: highlight }) : post.description}</span>
                 <FloatPostItem postId={post.id} triggerClassName="w-fit mt-1" trigger={
                     <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all {post?.comments.length > 0 ? post.comments.length : ""} comments</span>
                 } />

@@ -25,24 +25,7 @@ import { AxiosError } from "axios";
 import ReelListing, { ReelDialogContainer } from "./ReelListing";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useMediaQuery } from "react-responsive";
-
-export const renderBioWithLinksAndBreaks = (bio: string | undefined) => {
-    // Sanitize the bio using DOMPurify
-    const sanitizedBio = DOMPurify.sanitize(bio || "");
-
-    // Convert URLs into anchor tags
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const linkStyle = "text-blue-500 hover:underline cursor-pointer";
-    const withLinks = sanitizedBio.replace(urlRegex, (url) => {
-        return `<a href="${url}" class="${linkStyle}" target="_blank" rel="noopener noreferrer">${url}</a>`;
-    });
-
-    // Convert newlines to <br>
-    const withLineBreaks = withLinks.replace(/\n/g, '<br>');
-
-    // Return as dangerouslySetInnerHTML safe string
-    return { __html: withLineBreaks };
-}
+import { renderBioWithLinksAndBreaks } from "@/utils/ContentFormatter";
 
 const Profile = () => {
 

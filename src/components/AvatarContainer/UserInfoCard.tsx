@@ -17,7 +17,7 @@ import { convertDateToReadableDate } from "@/utils/convertDateFormat"
 import { useEffect, useState } from "react"
 import { useGetUserByUserId, useGetUserInfoByUserId } from "@/hooks"
 import { ScrollArea } from "../ui/scroll-area"
-import { renderBioWithLinksAndBreaks } from "@/pages/Profile/Profile"
+import { renderBioWithLinksAndBreaks } from "@/utils/ContentFormatter";
 import { Badge } from "../ui/badge"
 import { calculateAge } from "@/utils/formatDate"
 

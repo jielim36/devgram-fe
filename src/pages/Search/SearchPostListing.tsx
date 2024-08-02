@@ -21,7 +21,6 @@ const SearchPostListing: React.FC<SearchPostListingProps> = ({ searchValue }) =>
     });
 
     useEffect(() => {
-        console.log(postResult);
         if (postResult?.data) {
             setPostList(postResult.data.data);
         }
@@ -40,6 +39,7 @@ const SearchPostListing: React.FC<SearchPostListingProps> = ({ searchValue }) =>
                     <PostItem
                         key={post.id}
                         post={post}
+                        highlight={searchValue}
                     />
                 ))}
             </div>

@@ -3,7 +3,6 @@ import { PaginationComponent } from "./Pagination";
 import { useEffect, useRef, useState } from "react";
 import { User } from "@/types";
 import { useGetSearchUsers } from "@/hooks";
-import { renderBioWithLinksAndBreaks } from "@/pages/Profile/Profile"
 import { calculateAge } from "@/utils/formatDate"
 import {
     Avatar,
@@ -15,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CalendarDays } from "lucide-react";
 import { convertDateToReadableDate } from "@/utils/convertDateFormat";
 import { Card } from "@/components/ui/card";
+import { HighlightedText, renderBioWithLinksAndBreaks, renderBioWithLinksAndBreaksAndHighlights } from "@/utils/ContentFormatter";
 
 type SearchUserListingProps = {
     searchValue: string;
@@ -32,7 +32,6 @@ const SearchUserListing: React.FC<SearchUserListingProps> = ({ searchValue }) =>
     });
 
     useEffect(() => {
-        console.log(userResult);
         if (userResult?.data) {
             setUserList(userResult.data.data);
         }
@@ -52,7 +51,11 @@ const SearchUserListing: React.FC<SearchUserListingProps> = ({ searchValue }) =>
             {/* User Listing */}
             <div className="flex flex-col gap-10" ref={userListingRef}>
                 {userList?.map((user: User, index) => (
-                    <Card className="flex flex-row gap-2 p-2" onClick={() => handleJumpToProfile(user.id)}>
+                    <Card
+                        key={index}
+                        className="flex flex-row gap-2 p-2"
+                    // onClick={() => handleJumpToProfile(user.id)}
+                    >
                         <Avatar className={`w-9 h-9`}>
                             <AvatarImage src={user?.avatar_url} />
                             <AvatarFallback className="">
@@ -60,10 +63,10 @@ const SearchUserListing: React.FC<SearchUserListingProps> = ({ searchValue }) =>
                             </AvatarFallback>
                         </Avatar>
                         <div className="grow">
-                            <h4 className="text-sm font-semibold">{user?.username}</h4>
-                            <ScrollArea className={`text-sm h-10 ${user?.userInfo?.bio ? "" : "text-muted-foreground"}`}>
+                            <h4 className="text-sm font-semibold">{HighlightedText({ text: user?.username, highlight: searchValue })}</h4>
+                            <ScrollArea className={`text-sm ${user?.userInfo?.bio ? "" : "text-muted-foreground"}`}>
                                 {user?.userInfo?.bio ?
-                                    <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(user?.userInfo?.bio)} />
+                                    <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaksAndHighlights(user?.userInfo?.bio, searchValue)} />
                                     :
                                     "No Bio Available"
                                 }
