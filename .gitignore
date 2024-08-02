@@ -25,3 +25,8 @@ dist-ssr
 
 # Ignore all environment files for security
 .env*
+
+# Ignore all secrets files for security
+*.key
+*.pem
+*.crt
