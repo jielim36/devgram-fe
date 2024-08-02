@@ -14,8 +14,14 @@ const AppTitle: React.FC<AppTitleProps> = ({ className, defaultColor = true, isB
 
     const { theme } = useTheme();
 
+
     return (
-        <div className={`h-12 font-bold text-4xl ${defaultColor ? "text-gradient" : ""} ${className}`}>{isBold ? bold : light}</div>
+        <div
+            className={`h-12 font-bold text-4xl cursor-pointer ${defaultColor ? "text-gradient" : ""} ${className}`}
+            onClick={() => window.location.href = "/"}
+        >
+            {isBold ? bold : light}
+        </div>
     );
 }
 

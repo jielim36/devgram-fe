@@ -57,6 +57,7 @@ import { UserList } from "@/pages/chat/Chat";
 import { useChatting } from "@/utils/ChattingProvider";
 import { EditProfileDialog, EditProfileDrawer } from "@/pages/Profile/EditProfile";
 import { SettingDrawer, SettingSheet } from "@/pages/Profile/Settings";
+import AppLogo from "@/assets/devgram-icon.svg";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -98,6 +99,10 @@ const Layout = () => {
         }
     ]
 
+    const handleBackToHome = () => {
+        window.location.href = '/';
+    }
+
     if (!user) {
         return (
             <div className="h-screen w-screen flex justify-center items-center">
@@ -108,10 +113,10 @@ const Layout = () => {
 
     return (
         <div className="min-h-screen h-full w-full flex flex-col">
-
             {/* Top Navigation */}
-            <Card className="absolute w-screen z-10 flex flex-row justify-end xs:justify-between items-center h-16 rounded-none px-2 xs:px-8">
-                <AppTitle className="flex-none text-white hidden md:block" defaultColor={theme === 'light'} isBold={true} />
+            <Card className="absolute w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-2 xs:px-8 rounded-none">
+                <AppTitle className="flex-none text-white hidden xs:block" defaultColor={theme === 'light'} isBold={true} />
+                <img src={AppLogo} alt="Devgram Logo" className="flex-none h-[90%] xs:hidden cursor-pointer" onClick={handleBackToHome} />
                 <div className="flex gap-4 items-center">
                     <DropdownMenu>
                         <DropdownMenuTrigger className="bg-gradient py-2 px-4 rounded-sm hover:scale-110 transition duration-300 ease-in-out">
