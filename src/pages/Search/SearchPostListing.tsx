@@ -67,7 +67,7 @@ const SearchPostListing: React.FC<SearchPostListingProps> = ({ searchValue }) =>
                 </div>
             }
 
-            {postResult && postResult?.data?.total &&
+            {postResult && postResult?.data?.total > 0 &&
                 <div className="mt-6">
                     <PaginationComponent
                         currentPage={currentPage}
