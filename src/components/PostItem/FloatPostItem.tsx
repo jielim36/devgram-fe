@@ -25,6 +25,7 @@ import DeleteCommentDialog from "./DeleteCommentDialog";
 import { useMediaQuery } from "react-responsive";
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 import { ScrollArea } from "../ui/scroll-area";
+import { renderBioWithLinksAndBreaks } from "@/utils/ContentFormatter";
 
 type FloatPostProps = {
     // post: Post;
@@ -262,7 +263,9 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                     <div className="h-full flex flex-col overflow-y-scroll px-2">
                         {/* Comments Area */}
                         <div className="grow flex flex-col gap-2 text-sm">
-                            <div className="flex flex-row">
+
+                            {/* Post Description as First Comment */}
+                            <div className="flex flex-row w-full">
                                 <div>
                                     <AvatarContainer
                                         userId={post?.user?.id}
@@ -270,7 +273,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                         hasStory={post?.user?.stories != undefined && post?.user.stories?.length > 0}
                                     />
                                 </div>
-                                <div className="grow flex-col px-2">
+                                <div className="flex-col px-2 w-full">
                                     {/* Comment Information: username and date*/}
                                     <div className="flex flex-row gap-1 items-center">
                                         <p className="font-bold">{post?.user?.username}</p>
@@ -279,11 +282,13 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                     </div>
 
                                     {/* comment content */}
-                                    <p className="">{post?.description}</p>
+                                    {/* <p className="">{post?.description}</p> */}
+                                    <div className="max-h-full w-full break-all" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(post?.description)} />
                                 </div>
                             </div>
                             {post?.comments && post?.comments?.length > 0 && buildCommentTree(post?.comments).map((comment, index) => (
-                                <div key={index} className={`flex flex-row ${currentReplyCommentId === comment?.id ? replyingStyle : ""}`}>
+                                // Comment Row
+                                <div key={index} className={`flex flex-row w-full ${currentReplyCommentId === comment?.id ? replyingStyle : ""}`}>
                                     <div>
                                         <AvatarContainer
                                             userId={comment?.user?.id}
@@ -293,8 +298,8 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                     </div>
                                     <div className="flex flex-col gap-1 w-full">
                                         {/* Parent comment */}
-                                        <div className="flex flex-row">
-                                            <div className="grow flex-col px-2">
+                                        <div className="flex flex-row break-all">
+                                            <div className="flex-col px-2 w-full">
                                                 {/* Comment Information: username and date*/}
                                                 <div className="flex flex-row gap-1 items-center">
                                                     <p className="font-bold">{comment?.user?.username}</p>
@@ -303,8 +308,9 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                                 </div>
 
                                                 {/* comment content */}
-                                                <p className="">{comment?.content}</p>
-                                                <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
+                                                {/* <p className="max-w-full">{comment?.content}</p> */}
+                                                <div className="max-h-full" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(comment?.content)} />
+                                                <div className="text-xs text-muted-foreground cursor-pointer flex flex-wrap gap-x-4">
                                                     <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
                                                     {comment.children && comment.children.length > 0 && (
                                                         <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
@@ -323,7 +329,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                                     className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
                                                     onClick={() => handleLikeComment(comment.id)}
                                                 />
-                                                <p className="text-xs">{comment?.likes || ""}</p>
+                                                <p className="text-xs">{comment?.likes && comment?.likes > 0 ? comment?.likes : ""}</p>
                                             </div>
                                         </div>
 
@@ -455,8 +461,8 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                         </div>
                                         <div className="flex flex-col gap-1 w-full">
                                             {/* Parent comment */}
-                                            <div className="flex flex-row">
-                                                <div className="grow flex-col px-2">
+                                            <div className="flex flex-row break-all">
+                                                <div className="flex-col px-2 w-full">
                                                     {/* Comment Information: username and date*/}
                                                     <div className="flex flex-row gap-1 items-center">
                                                         <p className="font-bold">{comment?.user?.username}</p>
@@ -465,8 +471,9 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                                     </div>
 
                                                     {/* comment content */}
-                                                    <p className="">{comment?.content}</p>
-                                                    <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
+                                                    {/* <p className="max-w-full">{comment?.content}</p> */}
+                                                    <div className="max-h-full" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(comment?.content)} />
+                                                    <div className="text-xs text-muted-foreground cursor-pointer flex flex-wrap gap-x-4">
                                                         <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
                                                         {comment.children && comment.children.length > 0 && (
                                                             <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
@@ -485,7 +492,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                                         className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
                                                         onClick={() => handleLikeComment(comment.id)}
                                                     />
-                                                    <p className="text-xs">{comment?.likes || ""}</p>
+                                                    <p className="text-xs">{comment?.likes && comment?.likes > 0 ? comment?.likes : ""}</p>
                                                 </div>
                                             </div>
 
@@ -606,7 +613,7 @@ const generateChildComments: React.FC<ChildCommentProps> = ({
 }) => {
     return (
         comments?.map((comment: Comment, index: number) => (
-            <div key={comment?.id} className={`flex flex-row`}>
+            <div key={comment?.id} className={`flex flex-row w-full`}>
                 <div>
                     <AvatarContainer
                         userId={comment?.user?.id}
@@ -616,8 +623,8 @@ const generateChildComments: React.FC<ChildCommentProps> = ({
                 </div>
                 <div className="flex flex-col gap-1 w-full">
                     {/* Parent comment */}
-                    <div className="flex flex-row">
-                        <div className="grow flex-col px-2">
+                    <div className="flex flex-row break-all">
+                        <div className="flex-col px-2 w-full">
                             {/* Comment Information: username and date*/}
                             <div className="flex flex-row gap-1 items-center">
                                 <p className="font-bold">{comment?.user?.username}</p>
@@ -626,15 +633,17 @@ const generateChildComments: React.FC<ChildCommentProps> = ({
                             </div>
 
                             {/* comment content */}
-                            <p className="">{comment?.content}</p>
-                            <div className="text-xs text-muted-foreground cursor-pointer flex flex-row gap-4">
-                                <p className="hover:underline" onClick={() => handleReplyBtn(comment?.parent_id || 0, comment?.user?.username)}>Reply</p>
+                            {/* <p className="max-w-full">{comment?.content}</p> */}
+                            <div className="max-h-full" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(comment?.content)} />
+                            <div className="text-xs text-muted-foreground cursor-pointer flex flex-wrap gap-x-4">
+                                <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
                                 {comment.children && comment.children.length > 0 && (
                                     <p className="hover:underline" onClick={() => toggleViewComments(comment.id)}>
                                         {expandedComments[comment.id] ? 'Hide comments' : 'View comments'}
                                     </p>
                                 )}
                                 {(comment?.user?.id === user?.id || post.user.id === user?.id) &&
+                                    // <p className="hover:underline" onClick={() => handleDeleteComment(comment.id)}>Delete</p>
                                     <DeleteCommentDialog commentId={comment.id} />
                                 }
                             </div>
@@ -645,7 +654,7 @@ const generateChildComments: React.FC<ChildCommentProps> = ({
                                 className={`cursor-pointer ${comment.is_liked ? "text-red-500" : ""}`}
                                 onClick={() => handleLikeComment(comment.id)}
                             />
-                            <p className="text-xs">{comment?.likes || ""}</p>
+                            <p className="text-xs">{comment?.likes && comment?.likes > 0 ? comment?.likes : ""}</p>
                         </div>
                     </div>
                 </div>
