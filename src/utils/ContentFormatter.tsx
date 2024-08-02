@@ -8,7 +8,7 @@ export const HighlightedText = ({ text, highlight }: { text: string, highlight: 
         <span>
             {parts.map((part, index) =>
                 part.toLowerCase() === highlight.toLowerCase() ? (
-                    <span key={index} className="bg-yellow-300">{part}</span>
+                    <span key={index} className="bg-yellow-300 dark:bg-orange-500">{part}</span>
                 ) : (
                     <span key={index}>{part}</span>
                 )
@@ -43,7 +43,7 @@ const highlightText = (text: string, highlight: string) => {
     return (
         `<span>${parts.map((part, index) =>
             part.toLowerCase() === highlight.toLowerCase() ?
-                `<span key=${index} class="bg-yellow-300">${part}</span>`
+                `<span key=${index} class="bg-yellow-300 dark:bg-teal-900">${part}</span>`
                 :
                 `<span key=${index}>${part}</span>`
         ).join('')}</span>`
