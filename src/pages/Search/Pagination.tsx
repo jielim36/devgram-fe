@@ -27,6 +27,7 @@ export const PaginationComponent: React.FC<PaginationProps> = ({
 
     const handleNext = () => {
         const nextPage = currentPage + 1;
+        if (nextPage > lastPage) return;
         setCurrentPage(currentPage + 1);
     }
 
@@ -53,7 +54,10 @@ export const PaginationComponent: React.FC<PaginationProps> = ({
 
         return pages.map(page => (
             <PaginationItem key={page}>
-                <PaginationLink isActive={page === currentPage} onClick={() => setCurrentPage(page)}>
+                <PaginationLink
+                    isActive={page === currentPage}
+                    onClick={() => setCurrentPage(page)}
+                >
                     {page}
                 </PaginationLink>
             </PaginationItem>
@@ -66,7 +70,7 @@ export const PaginationComponent: React.FC<PaginationProps> = ({
 
                 {/* Previous */}
                 <PaginationItem onClick={handlePrevious}>
-                    <PaginationPrevious />
+                    <PaginationPrevious className={`select-none ${currentPage === 1 ? "text-muted-foreground hover:text-muted-foreground" : ""}`} />
                 </PaginationItem>
 
                 {/* Specific button */}
@@ -80,7 +84,7 @@ export const PaginationComponent: React.FC<PaginationProps> = ({
 
                 {/* Next */}
                 <PaginationItem onClick={handleNext}>
-                    <PaginationNext />
+                    <PaginationNext className={`select-none ${currentPage >= lastPage ? "text-muted-foreground hover:text-muted-foreground" : ""}`} />
                 </PaginationItem>
             </PaginationContent>
         </Pagination>
