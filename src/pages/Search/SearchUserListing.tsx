@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CalendarDays } from "lucide-react";
 import { convertDateToReadableDate } from "@/utils/convertDateFormat";
 import { Card } from "@/components/ui/card";
-import { HighlightedText, renderBioWithLinksAndBreaks, renderBioWithLinksAndBreaksAndHighlights } from "@/utils/ContentFormatter";
+import { HighlightedText, renderContentWithLinksAndBreaks, renderContentWithLinksAndBreaksAndHighlights } from "@/utils/ContentFormatter";
 
 type SearchUserListingProps = {
     searchValue: string;
@@ -66,7 +66,7 @@ const SearchUserListing: React.FC<SearchUserListingProps> = ({ searchValue }) =>
                             <h4 className="text-sm font-semibold">{HighlightedText({ text: user?.username, highlight: searchValue })}</h4>
                             <ScrollArea className={`text-sm ${user?.userInfo?.bio ? "" : "text-muted-foreground"}`}>
                                 {user?.userInfo?.bio ?
-                                    <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaksAndHighlights(user?.userInfo?.bio, searchValue)} />
+                                    <div dangerouslySetInnerHTML={renderContentWithLinksAndBreaksAndHighlights(user?.userInfo?.bio, searchValue)} />
                                     :
                                     "No Bio Available"
                                 }

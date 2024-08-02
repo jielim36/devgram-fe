@@ -25,7 +25,7 @@ import { AxiosError } from "axios";
 import ReelListing, { ReelDialogContainer } from "./ReelListing";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useMediaQuery } from "react-responsive";
-import { renderBioWithLinksAndBreaks } from "@/utils/ContentFormatter";
+import { renderContentWithLinksAndBreaks } from "@/utils/ContentFormatter";
 
 const Profile = () => {
 
@@ -280,7 +280,7 @@ const Profile = () => {
 
                     {/* Bio */}
                     <article className="grow text-ellipsis max-h-44 overflow-auto">
-                        <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(userInfoData?.data?.bio)} />
+                        <div dangerouslySetInnerHTML={renderContentWithLinksAndBreaks(userInfoData?.data?.bio)} />
                         {!userInfoData?.data?.bio && <p className="text-muted-foreground">No Bio</p>}
                     </article>
                 </div>

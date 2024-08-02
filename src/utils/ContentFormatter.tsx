@@ -17,7 +17,7 @@ export const HighlightedText = ({ text, highlight }: { text: string, highlight: 
     );
 };
 
-export const renderBioWithLinksAndBreaks = (bio: string | undefined) => {
+export const renderContentWithLinksAndBreaks = (bio: string | undefined) => {
     // Sanitize the bio using DOMPurify
     const sanitizedBio = DOMPurify.sanitize(bio || "");
 
@@ -50,7 +50,7 @@ const highlightText = (text: string, highlight: string) => {
     );
 };
 
-export const renderBioWithLinksAndBreaksAndHighlights = (bio: string | undefined, highlight: string) => {
+export const renderContentWithLinksAndBreaksAndHighlights = (bio: string | undefined, highlight: string) => {
     // Sanitize the bio using DOMPurify
     const sanitizedBio = DOMPurify.sanitize(bio || "");
 

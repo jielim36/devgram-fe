@@ -25,7 +25,7 @@ import DeleteCommentDialog from "./DeleteCommentDialog";
 import { useMediaQuery } from "react-responsive";
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 import { ScrollArea } from "../ui/scroll-area";
-import { renderBioWithLinksAndBreaks } from "@/utils/ContentFormatter";
+import { renderContentWithLinksAndBreaks } from "@/utils/ContentFormatter";
 
 type FloatPostProps = {
     // post: Post;
@@ -283,7 +283,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
 
                                     {/* comment content */}
                                     {/* <p className="">{post?.description}</p> */}
-                                    <div className="max-h-full w-full break-all" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(post?.description)} />
+                                    <div className="max-h-full w-full break-all" dangerouslySetInnerHTML={renderContentWithLinksAndBreaks(post?.description)} />
                                 </div>
                             </div>
                             {post?.comments && post?.comments?.length > 0 && buildCommentTree(post?.comments).map((comment, index) => (
@@ -309,7 +309,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
 
                                                 {/* comment content */}
                                                 {/* <p className="max-w-full">{comment?.content}</p> */}
-                                                <div className="max-h-full" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(comment?.content)} />
+                                                <div className="max-h-full" dangerouslySetInnerHTML={renderContentWithLinksAndBreaks(comment?.content)} />
                                                 <div className="text-xs text-muted-foreground cursor-pointer flex flex-wrap gap-x-4">
                                                     <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
                                                     {comment.children && comment.children.length > 0 && (
@@ -472,7 +472,7 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
 
                                                     {/* comment content */}
                                                     {/* <p className="max-w-full">{comment?.content}</p> */}
-                                                    <div className="max-h-full" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(comment?.content)} />
+                                                    <div className="max-h-full" dangerouslySetInnerHTML={renderContentWithLinksAndBreaks(comment?.content)} />
                                                     <div className="text-xs text-muted-foreground cursor-pointer flex flex-wrap gap-x-4">
                                                         <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
                                                         {comment.children && comment.children.length > 0 && (
@@ -634,7 +634,7 @@ const generateChildComments: React.FC<ChildCommentProps> = ({
 
                             {/* comment content */}
                             {/* <p className="max-w-full">{comment?.content}</p> */}
-                            <div className="max-h-full" dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(comment?.content)} />
+                            <div className="max-h-full" dangerouslySetInnerHTML={renderContentWithLinksAndBreaks(comment?.content)} />
                             <div className="text-xs text-muted-foreground cursor-pointer flex flex-wrap gap-x-4">
                                 <p className="hover:underline" onClick={() => handleReplyBtn(comment?.id, comment?.user?.username)}>Reply</p>
                                 {comment.children && comment.children.length > 0 && (

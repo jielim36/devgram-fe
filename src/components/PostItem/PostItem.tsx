@@ -13,7 +13,7 @@ import { useLikePost, useUnlikePost } from "@/hooks";
 import { useAuth } from "@/utils/AuthProvider";
 import React, { useEffect, useState } from "react";
 import Icon from "../Icon/Icon";
-import { HighlightedText } from "@/utils/ContentFormatter";
+import { HighlightedText, renderContentWithLinksAndBreaks, renderContentWithLinksAndBreaksAndHighlights } from "@/utils/ContentFormatter";
 
 type PostItemProps = {
     post: Post;
@@ -60,6 +60,16 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post, highli
         }
     }
 
+    const getProcessedDescription = () => {
+        if (highlight) {
+            return (
+                <div dangerouslySetInnerHTML={renderContentWithLinksAndBreaksAndHighlights(post?.description, highlight)} />
+            );
+        }
+
+        return <div dangerouslySetInnerHTML={renderContentWithLinksAndBreaks(post?.description)} />
+    }
+
     return (
         <Card ref={ref} className="flex flex-col">
             <div className="flex flex-row gap-2 py-1 px-2 justify-center items-center">
@@ -103,7 +113,7 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post, highli
             {/* Information */}
             <div className="px-3 pb-3 flex flex-col">
                 {post?.likes && post.likes.length > 0 && <LikeMessageGenerate likes={post.likes} />}
-                <span className="line-clamp-2"><span className="font-bold">{post.user.username}</span> {highlight ? HighlightedText({ text: post?.description, highlight: highlight }) : post.description}</span>
+                <span className="line-clamp-3 break-all"><span className="font-bold">{post.user.username}</span> {getProcessedDescription()}</span>
                 <FloatPostItem postId={post.id} triggerClassName="w-fit mt-1" trigger={
                     <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all {post?.comments.length > 0 ? post.comments.length : ""} comments</span>
                 } />
@@ -111,7 +121,7 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post, highli
                     {post?.comments && post.comments.length > 0 && post.comments.filter((comment) => comment.parent_id === 0).slice(0, 2).map((comment, index) => (
                         <div key={index} className="flex flex-row gap-1">
                             <p className="font-bold">{comment.user.username}</p>
-                            <p className="line-clamp-1">{comment.content}</p>
+                            <p className="line-clamp-1 break-all truncate">{comment.content}</p>
                         </div>
                     ))}
                 </div>

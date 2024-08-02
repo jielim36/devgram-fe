@@ -17,7 +17,7 @@ import { convertDateToReadableDate } from "@/utils/convertDateFormat"
 import { useEffect, useState } from "react"
 import { useGetUserByUserId, useGetUserInfoByUserId } from "@/hooks"
 import { ScrollArea } from "../ui/scroll-area"
-import { renderBioWithLinksAndBreaks } from "@/utils/ContentFormatter";
+import { renderContentWithLinksAndBreaks } from "@/utils/ContentFormatter";
 import { Badge } from "../ui/badge"
 import { calculateAge } from "@/utils/formatDate"
 
@@ -39,7 +39,7 @@ export function UserInfoCard({ trigger, userId }: { trigger: React.ReactNode, us
                     <h4 className="text-sm font-semibold">{userData?.data?.username}</h4>
                     <ScrollArea className={`h-10 text-sm ${userInfoData?.data?.bio ? "" : "text-muted-foreground"}`}>
                         {userInfoData?.data?.bio ?
-                            <div dangerouslySetInnerHTML={renderBioWithLinksAndBreaks(userInfoData?.data?.bio)} />
+                            <div dangerouslySetInnerHTML={renderContentWithLinksAndBreaks(userInfoData?.data?.bio)} />
                             :
                             "No Bio Available"
                         }
