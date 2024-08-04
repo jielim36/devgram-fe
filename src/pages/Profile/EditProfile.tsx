@@ -160,7 +160,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
         defaultValues: {
             username: user.username || "",
             bio: userInfo?.bio || "",
-            birthday: userInfo?.birthday,
+            birthday: userInfo?.birthday || "",
             gender: userInfo?.gender || undefined,
         },
     })
@@ -170,7 +170,8 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
     function onSubmit(values: z.infer<typeof userInfoFormSchema>) {
         if (updateUserInfoMutation.isPending) return;
         const { username, bio, birthday, gender } = values;
-        if (username === user.username && bio === userInfo?.bio && birthday === userInfo?.birthday && gender === userInfo?.gender) {
+
+        if (username === user.username && bio === userInfo?.bio && (birthday === userInfo?.birthday || birthday === "") && gender === userInfo?.gender) {
             toast.error("No changes detected.")
             return;
         }
@@ -180,7 +181,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
             userInfoEntity: {
                 user_id: user.id,
                 bio: values.bio,
-                birthday: values.birthday,
+                birthday: values.birthday === "" ? undefined : values.birthday,
                 gender: values.gender,
             }
         }
@@ -308,7 +309,11 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Save</Button>
+
+                <div className="flex flex-row gap-2">
+                    <Button type="submit">Save</Button>
+                    <Button type="button" variant={"ghost"} onClick={() => setOpen(false)}>Close</Button>
+                </div>
             </form>
         </Form>
     );
