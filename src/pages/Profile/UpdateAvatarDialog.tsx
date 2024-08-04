@@ -57,8 +57,8 @@ const ImageCrop: React.FC<ImageCropProps> = ({
     const [avatarImage, setAvatarImage] = useState<ImgType | null>(null);
     const uploadAvatarMutation = useUploadAvatar({
         onSuccess: () => {
-            // queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
-            setIsOpen(false);
+            window.location.reload();
+            // setIsOpen(false);
         }
     });
 

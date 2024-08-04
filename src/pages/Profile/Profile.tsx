@@ -160,15 +160,18 @@ const Profile = () => {
                             disableHoverInfoCard
                             disableClickEvent
                             children={
-                                <div className="flex absolute rounded-full m-[6px] inset-0 bg-gray-900 bg-opacity-70 flex-row gap-6 items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 text-white">
-                                    <p className="text-xs text-center">Change Avatar</p>
-                                </div>
+                                isOwner ?
+                                    <div className="flex absolute rounded-full m-[6px] inset-0 bg-gray-900 bg-opacity-70 flex-row gap-6 items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 text-white">
+                                        <p className="text-xs text-center">Change Avatar</p>
+                                    </div>
+                                    :
+                                    null
                             }
                         />
                     </div>
 
                     <AvatarUploaderDialog
-                        isOpen={isOpenAvatarUploader}
+                        isOpen={isOpenAvatarUploader && isOwner}
                         setIsOpen={setIsOpenAvatarUploader}
                         trigger={
                             <div className="hidden">
@@ -357,7 +360,7 @@ const Profile = () => {
                     <ReelListing
                         profileUserId={Number(userId)}
                         onClickReel={onClickReel}
-                        allowToViewProfile={allowedToViewProfile}                        
+                        allowToViewProfile={allowedToViewProfile}
                     />
                 </TabsContent>
             </Tabs>
