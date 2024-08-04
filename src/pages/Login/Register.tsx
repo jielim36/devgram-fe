@@ -76,10 +76,10 @@ const RegisterForm = () => {
     const form = useForm<z.infer<typeof userRegisterFormSchema>>({
         resolver: zodResolver(userRegisterFormSchema),
         defaultValues: {
-            username: "dev1",
-            email: "jielim@gmail.com",
-            password: "1234",
-            confirmPassword: "1234",
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
         },
     })
 
