@@ -37,3 +37,16 @@ export const getSearchUserWithPagination = async (page: number, searchValue: str
     );
     return response.data;
 }
+
+export const uploadAvatar = async (avatar: Blob): Promise<ResponseBody<boolean>> => {
+    const formData = new FormData();
+    formData.append("avatarImg", avatar);
+
+    const response = await axiosClient.post(`/user/avatar`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+
+    return response.data;
+}

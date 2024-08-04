@@ -26,6 +26,8 @@ import ReelListing, { ReelDialogContainer } from "./ReelListing";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useMediaQuery } from "react-responsive";
 import { renderContentWithLinksAndBreaks } from "@/utils/ContentFormatter";
+import { Card } from "@/components/ui/card";
+import AvatarUploaderDialog from "./UpdateAvatarDialog";
 
 const Profile = () => {
 
@@ -39,6 +41,7 @@ const Profile = () => {
     const [allowedToViewProfile, setAllowedToViewProfile] = useState(true);
     const [selectedReel, setSelectedReel] = useState<Reel | null>(null);
     const isWidthGreaterThanHeight = useMediaQuery({ query: '(min-aspect-ratio: 1/1)' });
+    const [isOpenAvatarUploader, setIsOpenAvatarUploader] = useState(false);
 
 
     const { data: postData, isError: isGetPostError, error: getPostError } = useGetPostsByUserId({
@@ -140,21 +143,41 @@ const Profile = () => {
 
                 {/* Avatar */}
                 <div className="
+                    relative
                     flex flex-row gap-3
                     md:col-span-2 md:flex md:justify-center md:items-center"
                 >
-                    <AvatarContainer
-                        userId={user?.id}
-                        avatar_url={user?.avatar_url}
-                        hasStory={user?.stories != undefined && user?.stories?.length > 0}
-                        className="w-1/4 h-fit md:w-auto md:h-40 aspect-square"
-                        avatarClassName="h-fit w-full"
-                        boldBorder
-                        fallbackStrokeWidth={0.7}
-                        fallbackClassName="w-full h-full"
-                        disableHoverInfoCard
-                    />
+                    <div className="w-1/4 h-fit md:w-auto md:h-40 aspect-square" onClick={() => setIsOpenAvatarUploader(true)}>
+                        <AvatarContainer
+                            userId={user?.id}
+                            avatar_url={user?.avatar_url}
+                            hasStory={user?.stories != undefined && user?.stories?.length > 0}
+                            className="w-full h-full"
+                            avatarClassName="h-fit w-full"
+                            boldBorder
+                            fallbackStrokeWidth={0.7}
+                            fallbackClassName="w-full h-full"
+                            disableHoverInfoCard
+                            disableClickEvent
+                            children={
+                                <div className="flex absolute rounded-full m-[6px] inset-0 bg-gray-900 bg-opacity-70 flex-row gap-6 items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 text-white">
+                                    <p className="text-xs text-center">Change Avatar</p>
+                                </div>
+                            }
+                        />
+                    </div>
 
+                    <AvatarUploaderDialog
+                        isOpen={isOpenAvatarUploader}
+                        setIsOpen={setIsOpenAvatarUploader}
+                        trigger={
+                            <div className="hidden">
+                                <Button size={"icon"} className="rounded-full">
+                                    <Icon name="camera" />
+                                </Button>
+                            </div>
+                        }
+                    />
                     {/* User Info for Mobile */}
                     <div className="w-3/4 h-fit flex flex-col gap-1 justify-between items-start md:hidden">
                         <p className="text-lg font-semibold pr-4 truncate">

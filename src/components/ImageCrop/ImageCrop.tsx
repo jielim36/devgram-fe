@@ -20,7 +20,7 @@ import SortableImageList from "./SortableImageList";
 import toast from "react-hot-toast";
 
 
-type ImageCropContainerProps = {
+export type ImageCropContainerProps = {
     trigger: React.ReactNode;
     // user: User;
 }
@@ -332,11 +332,12 @@ type EditPanelProps = {
     onZoomChange: (zoom: number) => void;
     onRotationChange: (rotation: number) => void;
     onCropComplete: (croppedArea: Area, croppedAreaPixels: Area) => void;
+    containerClassName?: string;
 }
 
-const EditPanel: React.FC<EditPanelProps> = ({ imageSrc, crop, zoom, rotation, onCropChange, onZoomChange, onRotationChange, onCropComplete }) => {
+export const EditPanel: React.FC<EditPanelProps> = ({ imageSrc, crop, zoom, rotation, onCropChange, onZoomChange, onRotationChange, onCropComplete, containerClassName }) => {
     return (
-        <div className="flex flex-col sm:flex-row sm:items-center  px-4 h-[16%] sm:h-fit mt-2">
+        <div className={containerClassName ?? "flex flex-col sm:flex-row sm:items-center  px-4 h-[16%] sm:h-fit mt-2"}>
             <div className="flex flex-row w-full">
                 <p className="w-16 sm:w-fit">Zoom</p>
                 <p>: {zoom}</p>

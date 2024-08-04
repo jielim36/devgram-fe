@@ -1,6 +1,6 @@
 import { queryClient } from '@/app/App';
 import { USER_QUERY_KEY } from '@/constants';
-import { getMe, getSearchUserWithPagination, getUserByUserId, getUserInfoByUserId, getUsers, updateUserInfo } from '@/services';
+import { getMe, getSearchUserWithPagination, getUserByUserId, getUserInfoByUserId, getUsers, updateUserInfo, uploadAvatar } from '@/services';
 import { ResponseBody, UpdateUserInfo, User, UserInfo } from '@/types';
 import {
     useQuery,
@@ -78,5 +78,13 @@ export const useGetSearchUsers = ({ enabled, searchValue, page }: { enabled: boo
             return await getSearchUserWithPagination(Number(page), searchValue);
         },
         enabled: enabled
+    });
+}
+
+export const useUploadAvatar = () => {
+    return useMutation({
+        mutationFn: async (data: { imgBlob: Blob }) => {
+            return await uploadAvatar(data.imgBlob);
+        },
     });
 }

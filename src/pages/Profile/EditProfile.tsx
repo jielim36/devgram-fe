@@ -54,6 +54,9 @@ import {
 import { useUpdateUserInfo } from "@/hooks";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import AvatarUploaderDialog from "./UpdateAvatarDialog";
+import { Card } from "@/components/ui/card";
+import AvatarContainer from "@/components/AvatarContainer/AvatarContainer";
 
 
 

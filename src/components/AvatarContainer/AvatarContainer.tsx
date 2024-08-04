@@ -16,6 +16,8 @@ type AvatarContainerProps = {
     fallbackStrokeWidth?: number;
     fallbackClassName?: string;
     disableHoverInfoCard?: boolean;
+    disableClickEvent?: boolean;
+    children?: React.ReactNode;
 };
 
 const AvatarContainer: React.FC<AvatarContainerProps> = React.memo(({
@@ -27,7 +29,9 @@ const AvatarContainer: React.FC<AvatarContainerProps> = React.memo(({
     userId,
     fallbackStrokeWidth = 2,
     fallbackClassName,
-    disableHoverInfoCard = false
+    disableHoverInfoCard = false,
+    disableClickEvent = false,
+    children
 }) => {
 
     const padding = boldBorder ? "p-[4px]" : "p-[2px]";
@@ -36,6 +40,7 @@ const AvatarContainer: React.FC<AvatarContainerProps> = React.memo(({
     const [isOpenHoverCard, setIsOpenHoverCard] = useState(false);
 
     const handleAvatarClick = () => {
+        if (disableClickEvent) return;
         if (hasStory) {
             // pop up story
         } else if (userId) {
@@ -46,7 +51,7 @@ const AvatarContainer: React.FC<AvatarContainerProps> = React.memo(({
     const UserAvatarContainer = () => {
         return (
             <div
-                className={`${hasStory ? "bg-gradient-2" : ""} ${padding} rounded-full cursor-pointer ${className}`}
+                className={`relative ${hasStory ? "bg-gradient-2" : ""} ${padding} rounded-full cursor-pointer ${className}`}
                 onClick={handleAvatarClick}
             >
                 <div className={`rounded-full ${childPadding} card-color h-fit`}>
@@ -57,6 +62,7 @@ const AvatarContainer: React.FC<AvatarContainerProps> = React.memo(({
                         </AvatarFallback>
                     </Avatar>
                 </div>
+                {children}
             </div>
         );
     };
