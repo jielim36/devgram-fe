@@ -23,6 +23,7 @@ import {
     restrictToVerticalAxis,
     restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
+import Icon from '../Icon/Icon';
 
 interface SortableImageProps {
     id: number;
@@ -30,6 +31,7 @@ interface SortableImageProps {
     isActive: boolean;
     isDark: boolean;
     setCurrentIndex: () => void;
+    onDeleteImg: (imgId: number) => void;
 }
 
 const SortableImage: React.FC<SortableImageProps> = ({
@@ -37,7 +39,8 @@ const SortableImage: React.FC<SortableImageProps> = ({
     src,
     isActive = false,
     isDark = false,
-    setCurrentIndex
+    setCurrentIndex,
+    onDeleteImg
 }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
@@ -53,14 +56,20 @@ const SortableImage: React.FC<SortableImageProps> = ({
         <Card
             ref={setNodeRef}
             style={style}
-            className={`h-[50px] w-[50px] aspect-square overflow-hidden flex items-center justify-center
+            className={`relative h-[50px] w-[50px] aspect-square flex items-center justify-center
                 ${isActive ? activeStyle + " " + activeBorderStyle : ''}`}
             onClick={() => {
                 setCurrentIndex();
             }}
             {...attributes} {...listeners}
         >
-            <img src={src} alt={`img-${id}`} className='object-cover h-full w-auto' />
+            <img src={src} alt={`img-${id}`} className='object-cover h-full w-auto rounded-md overflow-hidden' />
+            <div className='absolute -top-1 -right-1 bg-red-500 rounded-full p-[1px]' onClick={(e) => {
+                e.stopPropagation();
+                onDeleteImg(id);
+            }}>
+                <Icon name='x' className='text-white' width={12} height={12} />
+            </div>
         </Card>
     );
 };
@@ -70,6 +79,7 @@ type SortableImageListProps = {
     setImgList: React.Dispatch<React.SetStateAction<ImgType[]>>;
     currentEditingIndex: number;
     setCurrentEditingIndex: React.Dispatch<React.SetStateAction<number>>;
+    onDeleteImg: (imgId: number) => void;
 };
 
 const SortableImageList: React.FC<SortableImageListProps> = ({
@@ -77,6 +87,7 @@ const SortableImageList: React.FC<SortableImageListProps> = ({
     setImgList,
     currentEditingIndex,
     setCurrentEditingIndex,
+    onDeleteImg
 }) => {
 
     const { theme } = useTheme();
@@ -122,6 +133,7 @@ const SortableImageList: React.FC<SortableImageListProps> = ({
                                 isDark={theme === 'dark'}
                                 isActive={currentEditingIndex === index}
                                 setCurrentIndex={() => setCurrentEditingIndex(index)}
+                                onDeleteImg={onDeleteImg}
                             />
                         ))}
                     </div>

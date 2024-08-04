@@ -194,6 +194,8 @@ const ImageCrop: React.FC<ImageCrop> = () => {
             });
             return newImgList;
         });
+
+        setCurrentEditingIndex(0);
     }
 
     const onAddNewImage = () => {
@@ -281,6 +283,7 @@ const ImageCrop: React.FC<ImageCrop> = () => {
                             setImgList={setImgList}
                             currentEditingIndex={currentEditingIndex}
                             setCurrentEditingIndex={setCurrentEditingIndex}
+                            onDeleteImg={handleDeleteImg}
                         />
                     </div>
                     <Button className="h-[50px]" onClick={onAddNewImage} disabled={imgList?.length >= 9}>
@@ -306,10 +309,10 @@ const ImageCrop: React.FC<ImageCrop> = () => {
             </div>
 
             <EditPanel
-                imageSrc={imgList[currentEditingIndex].src}
-                crop={imgList[currentEditingIndex].crop}
-                zoom={imgList[currentEditingIndex].zoom}
-                rotation={imgList[currentEditingIndex].rotation}
+                imageSrc={imgList[currentEditingIndex]?.src}
+                crop={imgList[currentEditingIndex]?.crop}
+                zoom={imgList[currentEditingIndex]?.zoom}
+                rotation={imgList[currentEditingIndex]?.rotation}
                 onCropChange={onSetCrop}
                 onZoomChange={onSetZoom}
                 onRotationChange={onSetRotation}
