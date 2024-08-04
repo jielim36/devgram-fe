@@ -28,6 +28,7 @@ import { useMediaQuery } from "react-responsive";
 import { renderContentWithLinksAndBreaks } from "@/utils/ContentFormatter";
 import { Card } from "@/components/ui/card";
 import AvatarUploaderDialog from "./UpdateAvatarDialog";
+import PostListing from "./PostListing";
 
 const Profile = () => {
 
@@ -98,13 +99,12 @@ const Profile = () => {
 
     useEffect(() => {
         if (isGetPostError) {
-            const error = getPostError as AxiosError;
-            const data = error?.response?.data as ResponseBody<string>;
-            if (data.data === "Not allowed to access this profile") {
-                setAllowedToViewProfile(false);
-            }
-
-            // setAllowedToViewProfile(false);
+            // const error = getPostError as AxiosError;
+            // const data = error?.response?.data as ResponseBody<string>;
+            // if (data.data.startsWith === "Not allowed to access this profile") {
+            //     setAllowedToViewProfile(false);
+            // }
+            setAllowedToViewProfile(false);
         }
     }, [isGetPostError]);
 
@@ -323,57 +323,45 @@ const Profile = () => {
             </div> */}
 
             {/* User posts Listing */}
-            {allowedToViewProfile &&
-                <Tabs defaultValue="posts" className="w-full mt-4 pb-20 xs:pb-8">
-                    <TabsList className="flex items-center mx-auto w-fit">
-                        <TabsTrigger value="posts">
-                            <div className="flex flex-row gap-1 items-center">
-                                <Icon name="grid-2x2" />
-                                Posts
-                            </div>
-                        </TabsTrigger>
-                        <TabsTrigger value="reels">
-                            <div className="flex flex-row gap-1 items-center">
-                                <Icon name="clapperboard" />
-                                Reels
-                            </div>
-                        </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="posts" className="grid grid-cols-3 gap-1">
-                        {posts?.map((post) => {
-                            return (
-                                <PostCard
-                                    post={post}
-                                    userId={user?.id}
-                                    key={post.id}
-                                />
-                            )
-                        })}
-                    </TabsContent>
-                    {!posts &&
+            <Tabs defaultValue="posts" className="w-full mt-4 pb-20 xs:pb-8">
+                <TabsList className="flex items-center mx-auto w-fit">
+                    <TabsTrigger value="posts">
+                        <div className="flex flex-row gap-1 items-center">
+                            <Icon name="grid-2x2" />
+                            Posts
+                        </div>
+                    </TabsTrigger>
+                    <TabsTrigger value="reels">
+                        <div className="flex flex-row gap-1 items-center">
+                            <Icon name="clapperboard" />
+                            Reels
+                        </div>
+                    </TabsTrigger>
+                </TabsList>
+                <TabsContent value="posts">
+                    <PostListing
+                        posts={posts}
+                        user={user}
+                        allowToViewProfile={allowedToViewProfile}
+                        error={getPostError}
+                        isError={isGetPostError}
+                    />
+
+                    {!posts && !isGetPostError &&
                         <div className="w-full py-10 text-muted-foreground flex flex-col items-center justify-center">
                             <Icon name="loader-circle" className="animate-spin mx-auto" />
                         </div>
                     }
-                    <TabsContent value="reels">
-                        <ReelListing profileUserId={Number(userId)} onClickReel={onClickReel} />
-                    </TabsContent>
-                </Tabs>
-            }
+                </TabsContent>
+                <TabsContent value="reels">
+                    <ReelListing
+                        profileUserId={Number(userId)}
+                        onClickReel={onClickReel}
+                        allowToViewProfile={allowedToViewProfile}                        
+                    />
+                </TabsContent>
+            </Tabs>
 
-            {!allowedToViewProfile &&
-                <div className="w-full py-10 text-muted-foreground flex flex-col items-center justify-center">
-                    <Icon name="ban" className="w-10 h-10 font-light" />
-                    <p className="text-xl">You are not allowed to access this profile</p>
-                </div>
-            }
-
-            {posts?.length === 0 &&
-                <div className="w-full xs:py-14 text-muted-foreground flex flex-col items-center justify-center">
-                    <Icon name="camera-off" className="w-10 h-10 font-light mb-2" />
-                    <p className="text-xl font-semibold">No posts yet</p>
-                </div>
-            }
 
             <Dialog open={!!selectedReel} onOpenChange={() => { setSelectedReel(null) }}>
                 <DialogContent

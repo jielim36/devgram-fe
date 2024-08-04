@@ -8,6 +8,7 @@ import {
     useQueryClient,
     QueryFunctionContext,
 } from '@tanstack/react-query'
+import { ResponseHandlerType } from '.';
 
 export const useUsers = () => useQuery({
     queryKey: USER_QUERY_KEY,
@@ -81,10 +82,12 @@ export const useGetSearchUsers = ({ enabled, searchValue, page }: { enabled: boo
     });
 }
 
-export const useUploadAvatar = () => {
+export const useUploadAvatar = ({ onSuccess, onError }: ResponseHandlerType<boolean>) => {
     return useMutation({
         mutationFn: async (data: { imgBlob: Blob }) => {
             return await uploadAvatar(data.imgBlob);
         },
+        onSuccess: onSuccess,
+        onError: onError
     });
 }

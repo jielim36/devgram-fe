@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import Icon from "@/components/Icon/Icon";
 import { uploadAvatar } from "@/services";
 import { useUploadAvatar } from "@/hooks";
+import { queryClient } from "@/app/App";
+import { USER_QUERY_KEY } from "@/constants";
 
 type customAvatarContainerProps = {
     isOpen: boolean;
@@ -53,7 +55,12 @@ const ImageCrop: React.FC<ImageCropProps> = ({
     setIsOpen
 }) => {
     const [avatarImage, setAvatarImage] = useState<ImgType | null>(null);
-    const uploadAvatarMutation = useUploadAvatar();
+    const uploadAvatarMutation = useUploadAvatar({
+        onSuccess: () => {
+            // queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
+            setIsOpen(false);
+        }
+    });
 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
