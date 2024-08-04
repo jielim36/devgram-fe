@@ -15,22 +15,20 @@ const axiosClient: AxiosInstance = axios.create({
     }
 });
 
-// // 添加请求拦截器
-// axiosClient.interceptors.request.use(
-//     (config) => {
-//         // 在发送请求之前做些什么，比如添加 Token
-//         const token = localStorage.getItem('token');
-//         if (token) {
-//             config.headers = config.headers || {};
-//             config.headers['Authorization'] = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error: AxiosError): Promise<AxiosError> => {
-//         // 对请求错误做些什么
-//         return Promise.reject(error);
-//     }
-// );
+// add token to request header
+axiosClient.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers = config.headers || {};
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    // (error: AxiosError): Promise<AxiosError> => {
+    //     return Promise.reject(error);
+    // }
+);
 
 const notify = (message: string) => {
     toast.error(message);
@@ -51,7 +49,7 @@ axiosClient.interceptors.response.use(
         if (error.response && error.response.status === 401) {
             // 处理未授权错误，例如重定向到登录页
             notify('Unauthorized');
-            window.location.href = websiteURL + '/login';
+            // window.location.href = websiteURL + '/login';
         } else {
             // notify(error.message);
         }

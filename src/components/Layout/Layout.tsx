@@ -58,6 +58,7 @@ import { useChatting } from "@/utils/ChattingProvider";
 import { EditProfileDialog, EditProfileDrawer } from "@/pages/Profile/EditProfile";
 import { SettingDrawer, SettingSheet } from "@/pages/Profile/Settings";
 import AppLogo from "@/assets/devgram-icon.svg";
+import { clearAppData } from "@/utils/ClearAppData";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -253,11 +254,18 @@ const ProfileMenu = ({ user }: { user: User }) => {
     }
 
     const handleLogout = () => {
-        toast.promise(logoutMutation.mutateAsync(), {
-            loading: "Logging out",
-            success: "Logged out",
-            error: "Error logging out"
-        });
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.promise(logoutMutation.mutateAsync(), {
+                loading: "Logging out",
+                success: "Logged out",
+                error: "Error logging out"
+            });
+
+            return;
+        }
+        clearAppData();
+        window.location.href = '/login';
     }
 
     const handleJumpProfile = () => {

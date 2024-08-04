@@ -9,6 +9,7 @@ export * from "./Reel";
 export * from "./Message";
 export * from "./Chat";
 export * from "./FirebaseNotificationRequest";
+export * from "./Authentication";
 
 export type ResponseBody<T> = {
     code: number;
