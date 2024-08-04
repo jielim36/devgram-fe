@@ -26,7 +26,7 @@ import { AuthenticationRequest } from "@/types";
 import { useGetMe } from "@/hooks";
 import axiosClient from "@/utils/axiosClient";
 import { useEffect } from "react";
-import { clearAppData, clearOAuthCookie, clearToken } from "@/utils/ClearAppData";
+import { clearAppData, clearToken } from "@/utils/ClearAppData";
 
 const Login = () => {
 
@@ -90,7 +90,6 @@ const LoginForm = () => {
 
     const useLoginMutation = useLogin({
         onSuccess: (data) => {
-            console.log(data);
             // save token in localStorage
             if (!data?.data.token) return;
             localStorage.setItem("token", data?.data.token);

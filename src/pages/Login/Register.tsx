@@ -102,7 +102,6 @@ const RegisterForm = () => {
     });
 
     function onSubmit(values: z.infer<typeof userRegisterFormSchema>) {
-        // console.log(values)
         const registerRequest: RegisterRequest = values;
         toast.promise(useRegisterMutation.mutateAsync(registerRequest), {
             loading: "Registering...",
