@@ -163,9 +163,11 @@ const Chat = () => {
 
                 {/* Chat Container */}
                 <ResizablePanel defaultSize={75} className="min-w-[50%] border-2 dark:bg-slate-900 rounded-md">
-                    {userId && chattingUser && <ChatRoom user={chattingUser} />}
+                    {userId && chattingUser &&
+                        <ChatRoom user={chattingUser} />
+                    }
                     {!userId &&
-                        <div className="flex flex-col items-center justify-center h-full text-muted select-none">
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground opacity-20 select-none">
                             <Icon name="message-circle-dashed" className="h-52 w-52" />
                             <p className="text-5xl font-bold tracking-wider">Chat</p>
                         </div>
@@ -215,7 +217,7 @@ export const UserList: React.FC<UserListProps> = ({
 
     return (
         <ScrollArea className={`h-full w-full py-2 ${className}`} >
-            {
+            {chatRooms?.length > 0 &&
                 chatRooms.map((chat) => (
                     <div key={chat.id} className={`flex flex-row items-end gap-1 px-4 py-3 hover:bg-muted cursor-pointer ${isCurrentChat(chat) ? "bg-muted" : ""}`} onClick={() => handleUserClick(chat.user1.id === me.id ? chat.user2 : chat.user1)}>
                         <AvatarContainer avatar_url={chat.user1.id === me.id ? chat.user2.avatar_url : chat.user1.avatar_url} hasStory={true} className="h-fit" />
@@ -228,6 +230,13 @@ export const UserList: React.FC<UserListProps> = ({
                         </div>
                     </div>
                 ))
+            }
+            {chatRooms?.length === 0 && (
+                <div className="w-full h-full min-h-[300px] flex flex-col justify-center items-center select-none">
+                    <Icon name="inbox" className="w-40 h-40 text-muted-foreground opacity-20" />
+                    <p className="text-3xl font-bold text-muted-foreground opacity-20">No Messages</p>
+                </div>
+            )
             }
         </ScrollArea >
     );
