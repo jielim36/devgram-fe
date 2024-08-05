@@ -113,7 +113,10 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post, highli
             {/* Information */}
             <div className="px-3 pb-3 flex flex-col">
                 {post?.likes && post.likes.length > 0 && <LikeMessageGenerate likes={post.likes} />}
-                <span className="line-clamp-3 break-all"><span className="font-bold">{post.user.username}</span> {getProcessedDescription()}</span>
+                <div className="line-clamp-3 break-all flex flex-wrap gap-1">
+                    <span className="font-bold">{post.user.username}</span>
+                    {getProcessedDescription()}
+                </div>
                 <FloatPostItem postId={post.id} triggerClassName="w-fit mt-1" trigger={
                     <span className="text-muted-foreground cursor-pointer text-sm hover:underline" onClick={() => { }}>View all {post?.comments.length > 0 ? post.comments.length : ""} comments</span>
                 } />
