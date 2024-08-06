@@ -131,6 +131,10 @@ const Profile = () => {
         setSelectedReel(reel);
     }
 
+    const handleSendMessage = () => {
+        window.location.href = `/chat/${userId}`;
+    }
+
 
     return (
         <div className="w-full h-full px-4 sm:px-14 xl:px-40">
@@ -202,7 +206,7 @@ const Profile = () => {
                                 <SettingDrawer />
                             }
                             {!isOwner && <Button className="flex-none" onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</Button>}
-                            {!isOwner && <Button className="flex-none">Message</Button>}
+                            {!isOwner && <Button className="flex-none" onClick={handleSendMessage}>Message</Button>}
                             {!isOwner &&
                                 <Button variant="ghost" className="flex-none">
                                     <Icon name="ellipsis" />
