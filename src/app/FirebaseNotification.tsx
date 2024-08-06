@@ -10,6 +10,7 @@ import { FirebaseNotificationRequest, FirebaseSaveTokenRequest, User } from "@/t
 import { useAuth } from "@/utils/AuthProvider";
 import { XIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { useMediaQuery } from "react-responsive";
 
 interface NotificationPayloadProps {
     data?: MessagePayload | undefined;
@@ -31,7 +32,9 @@ const Message: React.FC<MessageProps> = ({
         <>
             <div className="relative flex flex-row gap-2 overflow-hidden w-[300px]">
                 {notification.image && (
-                    < AvatarContainer userId={-1} avatar_url={notification.image} hasStory={false} avatarClassName="card-color" />
+                    <AvatarContainer
+                        userId={-1}
+                        disableClickEvent avatar_url={notification.image} hasStory={false} avatarClassName="card-color" />
                 )}
                 <div className="flex flex-col overflow-hidden">
                     <p className="font-bold truncate break-all">{notification.title}</p>
@@ -49,6 +52,7 @@ const Message: React.FC<MessageProps> = ({
 function FirebaseNotification() {
 
     const { user } = useAuth();
+    const isMediumScreen = useMediaQuery({ minWidth: 768 });
 
     const saveTokenMutation = useSaveFirebaseToken({
         onSuccess: () => { }
@@ -61,8 +65,14 @@ function FirebaseNotification() {
         const messagingResolve = await messaging;
         if (messagingResolve) {
             onMessage(messagingResolve, (payload: MessagePayload) => {
+                console.log("RECEIVED");
+
                 if (!payload?.notification) return;
-                toast((t) => <Message notification={payload?.notification} onClose={() => toast.dismiss(t.id)} />);
+                console.log("Notification received. ", payload.notification);
+
+                toast((t) => <Message notification={payload?.notification} onClose={() => toast.dismiss(t.id)} />, {
+                    position: isMediumScreen ? "bottom-right" : "top-center"
+                });
             });
         }
     })();
@@ -88,6 +98,8 @@ function FirebaseNotification() {
 
     // Need this handle FCM token generation when a user manually blocks or allows notification
     useEffect(() => {
+        console.log("Notification Permission:", window.Notification?.permission);
+
         if (
             "Notification" in window &&
             window.Notification?.permission === "granted"
