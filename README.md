@@ -1,30 +1,35 @@
-# React + TypeScript + Vite
+# Getting Started
+---
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+#### Step 1:
+Environment File: create a `.env` file in root path (`/devgram-fe/.env`)
+```
+# Web Config
+VITE_SERVER_URL=http://localhost:8080
+VITE_WEBSITE_URL=http://localhost:3000
+VITE_GOOGLE_MAP_API_KEY=xxx
+VITE_PORT=3000
 
-Currently, two official plugins are available:
+# Pusher Config
+VITE_PUSHER_APP_ID = "xxx"
+VITE_PUSHER_KEY = "xxx"
+VITE_PUSHER_SECRET = "xxx"
+VITE_PUSHER_CLUSTER = "xxx"
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+# Firebase Config
+VITE_FIREBASE_API_KEY=xxx
+VITE_FIREBASE_AUTH_DOMAIN=xxx
+VITE_FIREBASE_PROJECT_ID=xxx
+VITE_FIREBASE_STORAGE_BUCKET=xxx
+VITE_FIREBASE_MESSAGING_SENDER_ID=xxx
+VITE_FIREBASE_APP_ID=xxx
+VITE_FIREBASE_MEASUREMENT_ID=xxx
+VITE_FIREBASE_VAPID_KEY=xxx
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+#### Step 2:
+Open terminal in root path:
+```
+$ pnpm i
+$ pnmm dev
+```
