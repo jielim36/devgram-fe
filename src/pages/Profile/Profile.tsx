@@ -235,7 +235,7 @@ const Profile = () => {
                             <SettingSheet />
                         }
                         {!isOwner && <Button className="flex-none" onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</Button>}
-                        {!isOwner && <Button className="flex-none">Message</Button>}
+                        {!isOwner && <Button className="flex-none" onClick={handleSendMessage}>Message</Button>}
                         {!isOwner &&
                             <Button variant="ghost" className="flex-none">
                                 <Icon name="ellipsis" />
