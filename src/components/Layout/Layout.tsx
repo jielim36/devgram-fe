@@ -59,6 +59,7 @@ import { EditProfileDialog, EditProfileDrawer } from "@/pages/Profile/EditProfil
 import { SettingDrawer, SettingSheet } from "@/pages/Profile/Settings";
 import AppLogo from "@/assets/devgram-icon.svg";
 import { clearAppData } from "@/utils/ClearAppData";
+import { useGetUserInfoByUserId } from "@/hooks";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -248,6 +249,8 @@ const ProfileMenu = ({ user }: { user: User }) => {
         }
     });
 
+    const { data: userInfoData } = useGetUserInfoByUserId(user.id);
+
 
     const handleChangeTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -290,21 +293,27 @@ const ProfileMenu = ({ user }: { user: User }) => {
                             {/* Edit Profile settings */}
                             {/* Desktop */}
                             <div className="hidden md:block">
-                                <EditProfileDialog user={user} trigger={
-                                    <Button variant={"ghost"} className="w-full flex flex-row gap-1 justify-start items-center">
-                                        <Icon name="user" />
-                                        Edit Profile
-                                    </Button>
-                                } />
+                                <EditProfileDialog
+                                    user={user}
+                                    userInfo={userInfoData?.data}
+                                    trigger={
+                                        <Button variant={"ghost"} className="w-full flex flex-row gap-1 justify-start items-center">
+                                            <Icon name="user" />
+                                            Edit Profile
+                                        </Button>
+                                    } />
                             </div>
                             {/* Mobile */}
                             <div className="md:hidden">
-                                <EditProfileDrawer user={user} trigger={
-                                    <Button variant={"ghost"} className="w-full flex flex-row gap-1  justify-start items-center">
-                                        <Icon name="user" />
-                                        Edit Profile
-                                    </Button>
-                                } />
+                                <EditProfileDrawer
+                                    user={user}
+                                    userInfo={userInfoData?.data}
+                                    trigger={
+                                        <Button variant={"ghost"} className="w-full flex flex-row gap-1  justify-start items-center">
+                                            <Icon name="user" />
+                                            Edit Profile
+                                        </Button>
+                                    } />
                             </div>
 
                             {/* Privacy Settings */}
