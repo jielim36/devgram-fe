@@ -56,7 +56,7 @@ const SearchPostListing: React.FC<SearchPostListingProps> = ({ searchValue }) =>
                 </div>
             }
 
-            {postList?.length === 0 && searchValue
+            {postList?.length === 0 && searchValue && !isError
                 && <p className="text-center text-muted-foreground">No Post found</p>
             }
 
