@@ -51,6 +51,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
         onSuccess: (data) => {
             setMessage("");
             setMessages([...messages, data.data]);
+            setReplyMessageId(undefined);
         },
     });
     const useUpdateIsReadMutation = useUpdateIsRead({
@@ -387,11 +388,15 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
             <Separator />
             <div className="flex flex-col pl-4 pr-2 py-2 gap-1">
                 {replyMessageId && (
-                    <div className="mx-2 pr-2 flex flex-row gap-2 items-center bg-muted rounded-md overflow-hidden text-nowrap">
+                    <div className="relative mx-2 pr-2 flex flex-row gap-2 items-center bg-muted rounded-md overflow-hidden text-nowrap">
                         <div className="w-1 bg-muted-foreground h-full" />
                         <div className="flex flex-row w-full py-2 gap-1 overflow-hidden">
                             <p className="text-muted-foreground">Replying to:</p>
                             <p className="text-muted-foreground truncate break-all">{messages.find(msg => msg.id === replyMessageId)?.content}</p>
+                        </div>
+                        {/* Cancel Button */}
+                        <div className="absolute top-0 right-0 p-[1px] cursor-pointer" onClick={() => setReplyMessageId(undefined)}>
+                            <Icon name="x" className="text-muted-foreground" width={16} height={16} />
                         </div>
                     </div>
                 )}
