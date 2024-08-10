@@ -150,14 +150,14 @@ const ImageCrop: React.FC<ImageCropProps> = ({
     }
 
     return (
-        <div className="w-[90vw] min-h-[85vh] max-h-screen lg:w-[70vw] relative">
+        <div className="relative">
             {/* <p className="">Change Image</p> */}
-            <div className="relative bg-primary text-white rounded-md rounded-bl-none rounded-br-none cursor-pointer h-8 hover:opacity-95">
+            <div className="relative bg-muted rounded-md rounded-bl-none rounded-br-none cursor-pointer h-8 hover:bg-muted-foreground">
                 <Icon name="upload" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[2px] select-none" />
                 <Input id="editAvatar" type="file" className="w-full h-full opacity-0 cursor-pointer" onChange={onSelectFile} />
             </div>
 
-            <div className="relative h-[80%] sm:h-[80%] rounded-md rounded-tl-none rounded-tr-none overflow-hidden">
+            <div className="relative h-[80vh] w-[90vw] lg:w-[70vw] rounded-md rounded-tl-none rounded-tr-none overflow-hidden">
                 <Cropper
                     image={avatarImage?.src}
                     crop={avatarImage?.crop || { x: 0, y: 0 }}
