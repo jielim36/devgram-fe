@@ -101,9 +101,9 @@ const PostItem = React.forwardRef<HTMLDivElement, PostItemProps>(({ post, highli
                         <HeartIcon fill={isLiked ? "rgb(239 68 68 / var(--tw-text-opacity))" : "transparent"} className={isLiked ? "text-red-500" : ""} />
                     </Button>
                     <FloatPostItem postId={post.id} trigger={<Icon name="message-circle" />} />
-                    <Button variant={"link"} size="icon">
+                    {/* <Button variant={"link"} size="icon">
                         <Icon name="send" />
-                    </Button>
+                    </Button> */}
                 </div>
                 {/* <Button variant={"link"} size="icon">
                     <Icon name="bookmark" />

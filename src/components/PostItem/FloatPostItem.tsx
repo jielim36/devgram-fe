@@ -364,9 +364,9 @@ const FloatPost: React.FC<FloatPostProps> = ({ postId }) => {
                                 <Button variant={"link"} size="icon" onClick={handleMessageBtn}>
                                     <Icon name="message-circle" />
                                 </Button>
-                                <Button variant={"link"} size="icon">
+                                {/* <Button variant={"link"} size="icon">
                                     <Icon name="send" />
-                                </Button>
+                                </Button> */}
                             </div>
                             {/* <Button variant={"link"} size="icon">
                                 <Icon name="bookmark" />
