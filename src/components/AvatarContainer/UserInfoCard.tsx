@@ -25,10 +25,15 @@ export function UserInfoCard({ trigger, userId }: { trigger: React.ReactNode, us
 
     const { data: userData } = useGetUserByUserId(userId);
     const { data: userInfoData } = useGetUserInfoByUserId(userId);
+    const userProfilePath = `/profile/${userId}`;
+
+    const handleAvatarClick = () => {
+        window.location.href = userProfilePath;
+    };
 
     const UserInfoCard = () => {
         return (
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2" onClick={handleAvatarClick}>
                 <Avatar className={`w-9 h-9`}>
                     <AvatarImage src={userData?.data?.avatar_url} />
                     <AvatarFallback className="">
