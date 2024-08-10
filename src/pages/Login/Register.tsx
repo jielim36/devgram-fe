@@ -22,15 +22,23 @@ import { useRegister } from "@/hooks/useAuth";
 import toast from "react-hot-toast";
 import { RegisterRequest, ResponseBody } from "@/types";
 import { useState } from "react";
+import Icon from "@/components/Icon/Icon";
 
 
 const Register = () => {
 
     const { theme } = useTheme();
 
+    const handleJumpToLoginPage = () => {
+        window.location.href = "/login";
+    }
+
     return (
         <>
             <ThemeToggleButton className="absolute top-1 right-1" />
+            <div onClick={handleJumpToLoginPage} className="absolute top-1 left-1 cursor-pointer">
+                <Icon name="arrow-left" className="text-white" />
+            </div>
             <div className={`w-screen h-screen flex justify-center items-center ${theme === 'light' ? "bg-gradient" : "bg-gradient-dark"}`}>
                 <Card className="w-[300px] sm:w-[400px] flex flex-col p-5 gap-4">
                     <AppTitle className={"text-center"} defaultColor={false} />
