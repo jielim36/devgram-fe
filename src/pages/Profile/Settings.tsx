@@ -246,7 +246,7 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                                 <FormLabel className="h-fit mt-2">Only Follower</FormLabel>
                                 <FormControl>
                                     <Switch
-                                        disabled={isAllowedAll || isAllowedFriend}
+                                        disabled={isAllowedAll}
                                         className=""
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
@@ -264,7 +264,7 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                                 <FormLabel className="h-fit mt-2">Only Following</FormLabel>
                                 <FormControl>
                                     <Switch
-                                        disabled={isAllowedAll || isAllowedFriend}
+                                        disabled={isAllowedAll}
                                         className=""
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
