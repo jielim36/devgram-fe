@@ -9,6 +9,7 @@ import {
     QueryFunctionContext,
 } from '@tanstack/react-query'
 import { ResponseHandlerType } from '.';
+import { useAuth } from '@/utils/AuthProvider';
 
 export const useUsers = () => useQuery({
     queryKey: USER_QUERY_KEY,
@@ -45,6 +46,8 @@ export const useGetUserInfoByUserId = (userId: number, enabled?: boolean) => {
 }
 
 export const useUpdateUserInfo = () => {
+    const { user, setUser } = useAuth();
+
     return useMutation({
         mutationFn: async (data: { updateUserInfo: UpdateUserInfo }) => {
             return await updateUserInfo(data.updateUserInfo);
@@ -63,7 +66,14 @@ export const useUpdateUserInfo = () => {
                         ...oldData,
                         data: data,
                     })
+                    // update username only
                 );
+                if (user && context.updateUserInfo.username) {
+                    setUser({
+                        ...user,
+                        username: context.updateUserInfo.username
+                    })
+                }
             }
         },
         onError: async (error, variables, context) => {
