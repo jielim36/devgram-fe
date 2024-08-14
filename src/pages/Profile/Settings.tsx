@@ -170,6 +170,12 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
     }, [isAllowedFriend]);
 
     useEffect(() => {
+        if (isAllowedFollower || isAllowedFollowing) {
+            form.setValue("canSeePostFriend", true);
+        }
+    }, [isAllowedFollower, isAllowedFollowing]);
+
+    useEffect(() => {
         if (privacySetting) {
             const { canSeePostFollower, canSeePostFollowing, canSeePostFriend, canSeePostAll, postVisibilityDurationFollower, postVisibilityDurationFollowing, postVisibilityDurationFriend, postVisibilityDurationAll } = privacySetting.data;
             form.reset({
@@ -282,7 +288,7 @@ const PrivacySettings = ({ setOpen }: { setOpen: (isOpen: boolean) => void }) =>
                                 <FormLabel className="h-fit mt-2">Only Friend</FormLabel>
                                 <FormControl>
                                     <Switch
-                                        disabled={isAllowedAll}
+                                        disabled={isAllowedAll || isAllowedFollower || isAllowedFollowing}
                                         className=""
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
