@@ -38,7 +38,7 @@ type ReelUploaderProps = {
 const FormSchema = z.object({
     reelLink: z.string()
         .refine((val) => val.startsWith("https://www.youtube.com/shorts/"), {
-            message: "reelLink must start with 'https://www.youtube.com/shorts/'",
+            message: "Reel Link must start with 'https://www.youtube.com/shorts/'",
         }),
     description: z.string().optional(),
 })
