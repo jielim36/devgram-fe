@@ -60,6 +60,7 @@ import { SettingDrawer, SettingSheet } from "@/pages/Profile/Settings";
 import AppLogo from "@/assets/devgram-icon.svg";
 import { clearAppData } from "@/utils/ClearAppData";
 import { useGetUserInfoByUserId } from "@/hooks";
+import { MessageCircleIcon } from "lucide-react";
 
 type LeftSideNavigationItem = {
     title: string;
@@ -118,7 +119,8 @@ const Layout = () => {
             {/* Top Navigation */}
             <Card className="absolute w-screen z-10 flex flex-row justify-between items-center h-16 rounded-none px-2 xs:px-8 rounded-none">
                 <AppTitle className="flex-none text-white hidden xs:block" defaultColor={theme === 'light'} isBold={true} />
-                <img src={AppLogo} alt="Devgram Logo" className="flex-none h-[90%] xs:hidden cursor-pointer" onClick={handleBackToHome} />
+                {/* <img src={AppLogo} alt="Devgram Logo" className="flex-none h-[90%] xs:hidden cursor-pointer" onClick={handleBackToHome} /> */}
+                <MessageCircleIcon className="ml-1 flex-none h-[90%] xs:hidden cursor-pointer" onClick={handleBackToHome} height={40} width={40} />
                 <div className="flex gap-4 items-center">
                     <DropdownMenu>
                         <DropdownMenuTrigger className="bg-gradient py-2 px-4 rounded-sm hover:scale-110 transition duration-300 ease-in-out">
