@@ -295,7 +295,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ user }) => {
                 <AvatarContainer avatar_url={user.avatar_url} hasStory={true} className="h-fit" />
                 <div className="flex flex-col">
                     <p className="font-semibold">{user.username}</p>
-                    <div className="flex flex-row gap-1 items-center opacity-0">
+                    <div className="flex flex-row gap-1 items-center hidden">
                         <div className="bg-green-500 h-2 w-2 rounded-full" />
                         <p className="text-xs">Online</p>
                     </div>
