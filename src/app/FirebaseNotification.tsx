@@ -11,6 +11,7 @@ import { useAuth } from "@/utils/AuthProvider";
 import { XIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useMediaQuery } from "react-responsive";
+import { useLocation } from "react-router-dom";
 
 interface NotificationPayloadProps {
     data?: MessagePayload | undefined;
@@ -53,6 +54,8 @@ function FirebaseNotification() {
 
     const { user } = useAuth();
     const isMediumScreen = useMediaQuery({ minWidth: 768 });
+    const location = useLocation();
+    const isChatting = location.pathname.startsWith("/chat");
 
     const saveTokenMutation = useSaveFirebaseToken({
         onSuccess: () => { }
@@ -69,7 +72,7 @@ function FirebaseNotification() {
 
                 if (!payload?.notification) return;
                 console.log("Notification received. ", payload.notification);
-
+                if (isChatting) return;
                 toast((t) => <Message notification={payload?.notification} onClose={() => toast.dismiss(t.id)} />, {
                     position: isMediumScreen ? "bottom-right" : "top-center"
                 });
